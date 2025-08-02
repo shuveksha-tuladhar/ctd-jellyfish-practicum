@@ -57,3 +57,5 @@ group :development do
 end
 # Postgres
 gem "pg"
+
+gem "dotenv-rails", groups: [ :development, :test ]
