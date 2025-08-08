@@ -1,29 +1,40 @@
 ### Description of Changes
 
-_A clear and concise description of the changes in this pull request. What problem are you solving? What new features are you adding? Add screenshots if applicable._
+_A clear and concise description of the changes in this pull request. What problem are you solving? What new features are you adding?_
 
 ---
 
-### How to Test
+### Changelog
 
-_Describe the steps a reviewer needs to take to test your changes. Include any specific commands or a link to a deployed version._
+Internal changes
+- (add your own items to this checklist to show what changes were added to this PR)
+- (example: remove old tests)
+- (example: refactor search method)
 
-1.  Step one to test...
-2.  Step two to test...
-3.  Step three to test...
+External changes
+- (example: add "save" button)
+- (example: fix bug on front page)
 
 ---
 
-### Pre PR Checklist
+### Screenshots/Recordings
+
+_Include before/after screenshots of any user-facing changes._
+
+---
+
+### Pre PR Posting Checklist
 
 - [ ] Tests are included if appropriate (especially if a bug fix).
 - [ ] If models and tables have been amended to have required fields, factories have been updated.
 - [ ] Tests have passed locally.
+- [ ] Remove debugging statements like `console.log`, `byebug`, `puts`, `prints`, `p`, `pp`
 
 ---
 
-### Pre Merge Checklist
+### Merge Checklist
 
 - [ ] PR has been approved by rest of team.
-- [ ] Branch is rebased onto the latest version of main.
+- [ ] Branch is rebased onto the latest version of `main`.
 - [ ] All tests are passing.
+- [ ] Team is notified of anything they may need to do once this is merged (i.e. migrations, gem installs)
