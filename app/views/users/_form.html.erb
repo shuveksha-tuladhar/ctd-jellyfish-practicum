@@ -35,13 +35,16 @@
         </div>
 
         <div>
-            <%= form.label :password_digit, style: "display: block" %>
-            <%= form.password_field :password_digit %>
+            <%= form.label :phone_number, style: "display: block" %>
+            <%= form.telephone_field :phone_number%>
         </div>
 
-        <div>
-            <%= form.label :phone_number, style: "display: block" %>
-            <%= form.tel_field :phone_number%>
+         <div>
+            <%= form.label :password, style: "display: block margin-right: 8px;" %>
+            <div>
+                <%= form.password_field :password, id: "password_digit_field" %>
+                <button type="button" id="toggle_password_btn" style="padding: 4px 4px;">Show</button>
+            </div>
         </div>
 
         <div>
@@ -50,3 +53,26 @@
 
     <% end %>
 </div>
+
+<script>
+  document.addEventListener("turbo:load", function() {
+    const toggleBtn = document.getElementById("toggle_password_btn");
+    const passwordField = document.getElementById("password_digit_field");
+
+    if (!toggleBtn || !passwordField) return;
+
+    // Remove any existing listener before adding a new one (to avoid duplicates)
+    toggleBtn.replaceWith(toggleBtn.cloneNode(true));
+    const newToggleBtn = document.getElementById("toggle_password_btn");
+
+    newToggleBtn.addEventListener("click", function() {
+      if (passwordField.type === "password") {
+        passwordField.type = "text";
+        newToggleBtn.textContent = "Hide";
+      } else {
+        passwordField.type = "password";
+        newToggleBtn.textContent = "Show";
+      }
+    });
+  });
+</script>

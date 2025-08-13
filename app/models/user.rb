@@ -1,9 +1,9 @@
 class User < ApplicationRecord 
-    has_one_attached :profile_picture 
+    has_one_attached :profile_picture, dependent: :destroy
     has_secure_password 
     attr_accessor :reset_token 
 
-    validates :name, :email, presence: true 
+    validates :first_name, :last_name, :email, presence: true 
     validates :email, uniqueness: true, format: { with: URI::MailTo::EMAIL_REGEXP }
     validates :phone_number, uniqueness: true, format: { 
         with: /\A\d{10}\z/,

@@ -1,5 +1,6 @@
 class UsersController < ApplicationController 
     before_action :set_user, only: [:show, :edit, :update, :destroy, :upload_photo]
+    include Rails.application.routes.url_helpers
 
     # GET /users or /users.json
     def index 
@@ -57,6 +58,10 @@ class UsersController < ApplicationController
         end 
     end 
 
+    def profile_picture_url 
+        url_for(profile_picture) if profile_picture.attached?
+    end 
+
 
     def upload_photo
         @user = User.find(params[:id])
@@ -75,7 +80,7 @@ class UsersController < ApplicationController
 
         # Only allow a list of trusted parameters through.
         def user_params 
-            params.require(:user).permit(:name, :email, :password, :phone_number, :profile_picture)
+            params.require(:user).permit(:first_name, :last_name, :email, :password, :phone_number, :profile_picture)
         end 
     end 
 

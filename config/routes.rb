@@ -5,6 +5,7 @@ Rails.application.routes.draw do
   get "login", to: "sessions#new"
   post "login", to: "sessions#create"
   delete "logout", to: "sessions#destroy"
+  get "/signup", to: "users#new", as: "signup"
 
   get "password_resets", to: redirect("/password_resets/new")
 
@@ -27,5 +28,5 @@ Rails.application.routes.draw do
   # get "service-worker" => "rails/pwa#service_worker", as: :pwa_service_worker
 
   # Defines the root path route ("/")
-  root "posts#index"
+  root "sessions#new"
 end
