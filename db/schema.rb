@@ -11,20 +11,14 @@
 # It's strongly recommended that you check this file into your version control system.
 
 ActiveRecord::Schema[8.0].define(version: 2025_08_08_020734) do
+  # These are extensions that must be enabled in order to support this database
+  enable_extension "pg_catalog.plpgsql"
+
   create_table "expenses", force: :cascade do |t|
     t.string "title"
     t.decimal "amount", precision: 10, scale: 2
     t.string "split_type"
-    t.integer "user_id", null: false
-    t.integer "category_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["category_id"], name: "index_expenses_on_category_id"
-    t.index ["user_id"], name: "index_expenses_on_user_id"
   end
-
-  add_foreign_key "expenses", "categories"
-  add_foreign_key "expenses", "users"
-
-  enable_extension "pg_catalog.plpgsql"
 end
