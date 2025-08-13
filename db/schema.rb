@@ -25,4 +25,6 @@ ActiveRecord::Schema[8.0].define(version: 2025_08_08_020734) do
 
   add_foreign_key "expenses", "categories"
   add_foreign_key "expenses", "users"
+
+  enable_extension "pg_catalog.plpgsql"
 end
