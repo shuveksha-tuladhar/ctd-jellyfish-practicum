@@ -1,11 +1,425 @@
 <div>
-    <% content_for :title, "Editing User" %>
-    <h3>Editting User</h3>
-    <%= render "form", user: @user %>
-    <br>
-    
-    <div>
-        <%= link_to "View", @user, class: "action-link" %>
-        <%= link_to "All", users_path, class: "action-link" %>
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="navbar-left">
+            <h4>
+                <span class="dollar-logo">
+                    <%= image_tag "logo00.png", alt: "Logo" %>
+                </span>
+                CostShare
+            </h4>
+        </div>
+        <div class="navbar-center">
+            <button class="nav-btn">Add Expense</button>
+            <button class="nav-btn">Settle Up</button>
+        </div>
+        <div class="navbar-right">
+            <div class="profile-info">
+                <div class="navbar-profile-pic">
+                    <% if @user.profile_picture.attached? %>
+                        <%= image_tag url_for(@user.profile_picture), style: "border-radius: 50%; width: 40px; height: 40px; object-fit: cover;" %>
+                    <% else %>
+                        <i class="bi bi-person-circle" style="font-size: 40px; color: gray;"></i>
+                    <% end %>
+                </div>
+                <p><%= @user.first_name %> <%= @user.last_name %></p>
+            </div>
+            <%= link_to "Logout", logout_path, method: :delete, class: "nav-btn" %>
+        </div>
+    </nav>
+
+    <!-- Main layout -->
+    <div class="main-container">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <ul>
+                <li>🏠 Home</li>
+                <li>💰 Expense</li>
+                <li>👥 Groups</li>
+                <li>📜 Activity</li>
+                <li>📊 Balances</li>
+                <li>⚙ Settings</li>
+            </ul>
+        </div>
+
+        <!-- Profile section -->
+        <div class="profile-container">
+            <h3 style="text-align: center;">Update Profile</h3>
+            <%= form_with(model: @user, url: user_path(@user), method: :patch, local: true) do |f| %>
+                <!-- Profile Info Card -->
+                <div class="profile-card">
+                    <div class="card-header">
+                        <h3>Profile Information</h3>
+                    </div>
+                    <div class="profile-body">
+                        <!-- Left: Profile Picture -->
+                        <div class="profile-picture">
+                            <% if @user.profile_picture.attached? %>
+                                <%= image_tag url_for(@user.profile_picture), style: "border-radius: 50%; width: 100px; height: 100px; object-fit: cover;" %>
+                            <% else %>
+                                <i class="bi bi-person-circle" style="font-size: 100px; color: gray;"></i>
+                            <% end %>
+                            <%= link_to edit_user_path(@user), style: "text-decoration: none; margin: 0 4px;", title: "Edit" do %>
+                                <i class="bi bi-pencil"></i> 
+                            <% end %>
+                            <p><%= @user.first_name %> <%= @user.last_name %></p>
+                        </div>
+
+                        <!-- Right: Profile Info Form -->
+                        <div class="profile-details">
+                            <div class="row">
+                                <%= f.label :first_name, "First Name" %>
+                                <%= f.text_field :first_name %>
+                            </div>
+                            <div class="row">
+                                <%= f.label :last_name, "Last Name" %>
+                                <%= f.text_field :last_name %>
+                            </div>
+                            <div class="row">
+                                <%= f.label :email, "Email" %>
+                                <%= f.email_field :email %>
+                            </div>
+                            <div class="row">
+                                <%= f.label :phone_number, "Phone Number" %>
+                                <%= f.telephone_field :phone_number %>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="save-btn" style="display: flex; justify-content: end;">
+                        <%= f.submit "Save Changes", class: "edit-btn" %>
+                    </div>
+                </div>
+
+                <!-- Password Info Card -->
+                <div class="profile-card">
+                    <div class="card-header">
+                        <h3>Password</h3>
+                    </div>
+                    <div class="change-password">
+                        <div class="row">
+                            <%= f.label :current_password, "Current Password" %>
+                            <%= f.password_field :current_password, placeholder: "Enter current password" %>
+                        </div>
+                        <div class="row">
+                            <%= f.label :password, "New Password" %>
+                            <%= f.password_field :password, placeholder: "Enter new password" %>
+                        </div>
+                        <div class="row">
+                            <%= f.label :password_confirmation, "Confirm New Password" %>
+                            <%= f.password_field :password_confirmation, placeholder: "Confirm new password" %>
+                        </div>
+                    </div>
+                    <div class="save-btn" style="display: flex; justify-content: end;">
+                        <%= f.submit "Change Password", class: "edit-btn" %>
+                    </div>
+                </div>
+            <% end %>
+            <div class="cancel-btn" style="display: flex; justify-content: center; align-items: center;">
+                <%= link_to "Cancel", user_path(@user), style: "text-decoration: none; margin: 0 4px;", class: "edit-btn" %>
+            </div>
+        </div>
+
+        <!-- Right section -->
+        <div class="summary-section">
+            <div class="summary-card">
+                <h3>Account Summary</h3>
+                <div>
+                    <label>Member Since</label>
+                    <p>March 15, 2022</p>
+                </div>
+                <div>
+                    <label>Next Billing Date</label>
+                    <p>June 15, 2023</p>
+                </div>
+            </div>
+            <div class="summary-card">
+                <h3>Overall Balance</h3>
+                <div><label>You are owed</label><p>$245.40</p></div>
+                <div><label>You owe</label><p>$78.25</p></div>
+            </div>
+            <div class="summary-card">
+                <div>
+                    <h3>Net Balance</h3>
+                    <p>+$167.25</p>
+                </div>
+                <button class="view-details-btn">View Details</button>
+            </div>
+        </div>
     </div>
 </div>
+
+<style>
+/* Reset and Base Styles */
+body, html {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    font-family: Arial, sans-serif;
+    background-color: #f3f3f3;
+}
+
+/* Navbar */
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #1d917a;
+    padding: 10px 20px;
+    color: white;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    box-sizing: border-box;
+    z-index: 1000;
+}
+.navbar h4 {
+    display: flex;
+    align-items: center;
+    margin: 0;
+}
+.navbar .dollar-logo img {
+    width: 30px;
+    height: 30px;
+    margin-right: 8px;
+}
+.nav-btn {
+    background: white;
+    color: #1d917a;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-left: 8px;
+    font-size: 14px;
+}
+.nav-btn:hover {
+    background-color: #0ca694;
+    color: white;
+}
+.navbar-right,
+.profile-info {
+    display: flex;
+    align-items: center;
+}
+.profile-info {
+    gap: 8px;
+}
+.navbar-right {
+    gap: 12px;
+}
+
+/* Main Layout */
+.main-container {
+    display: flex;
+    gap: 20px;
+    padding: 20px;
+    padding-top: 100px; 
+    box-sizing: border-box;
+    align-items: stretch; 
+    height: calc(100vh - 120px); 
+}
+
+/* Sidebar */
+.sidebar {
+    background: white;
+    padding: 15px 20px;
+    width: 220px;
+    border-radius: 8px;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+}
+.sidebar ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+.sidebar li {
+    padding: 10px 0;
+    font-size: 14px;
+    color: black;
+    cursor: pointer;
+}
+.sidebar li:hover {
+    color: #1d917a;
+}
+
+/* Profile Container */
+.profile-container {
+    flex: 2;
+    display: flex;
+    flex-direction: column;
+}
+.profile-container h3 {
+    margin-top: 0;
+    text-align: center;
+}
+.profile-card {
+    background: white;
+    padding: 20px;
+    margin-top: 15px;
+    border-radius: 8px;
+    box-sizing: border-box;
+}
+.card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.edit-btn {
+    background-color: #1d917a;
+    color: white;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    text-decoration: none;
+    font-size: 14px;
+}
+.edit-btn:hover {
+    background-color: #0ca694;
+}
+
+/* Profile Body */
+.profile-body {
+    display: flex;
+    gap: 40px;
+    margin-top: 15px;
+    align-items: center;
+}
+.profile-picture {
+    text-align: center;
+}
+.profile-picture p {
+    margin-top: 10px;
+    font-weight: bold;
+}
+.profile-details {
+    flex: 1;
+}
+.row {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 10px;
+}
+.row label {
+    font-weight: bold;
+    font-size: 14px;
+    margin-bottom: 6px;
+}
+.row input {
+    font-size: 14px;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+/* Summary Section */
+.summary-section {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+.summary-card {
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-sizing: border-box;
+}
+.summary-card label {
+    font-weight: bold;
+}
+.view-details-btn {
+    background-color: #1d917a;
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-top: 10px;
+}
+.view-details-btn:hover {
+    background-color: #0ca694;
+}
+
+/* Cancel Button Row */
+.cancel-btn {
+    margin-top: 20px;
+}
+
+/* Responsive Layout */
+@media (max-width: 768px) {
+    .main-container {
+        padding-top: 80px;
+        flex-direction: column;
+        height: auto;
+    }
+    .main-container h3 {
+        font-size: 16px;
+    }
+    .sidebar, .profile-container, .summary-section {
+        width: 100%;
+    }
+    .profile-body {
+        flex-direction: column;
+        align-items: center;
+        gap: 20px;
+        width: 100%;
+    }
+    .profile-details {
+        width: 100%;
+    }
+    .profile-container h3 {
+        text-align: center;
+    }
+    .profile-info p {
+        font-size: 14px;
+    }
+    .summary-section p {
+        font-size: 14px;
+    }
+    .summary-section label,
+    .summary-section h3 {
+        font-size: 16px;
+    }
+}
+
+@media (max-width: 600px) {
+    .navbar {
+        padding: 6px 10px;
+    }
+    .navbar h4 {
+        font-size: 14px;
+    }
+    .navbar .dollar-logo img {
+        width: 22px;
+        height: 22px;
+        margin-right: 5px;
+    }
+    .nav-btn {
+        padding: 4px 8px;
+        font-size: 12px;
+        margin-left: 4px;
+    }
+    .navbar-right {
+        gap: 6px;
+    }
+    .profile-info {
+        gap: 4px;
+    }
+    .profile-body {
+        gap: 15px;
+    }
+    .profile-picture p {
+        font-size: 14px;
+    }
+    .row label,
+    .row input {
+        font-size: 13px;
+    }
+}
+</style>
+

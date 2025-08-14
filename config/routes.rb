@@ -10,6 +10,14 @@ Rails.application.routes.draw do
   get "password_resets", to: redirect("/password_resets/new")
 
   resources :password_resets, only: [ :new, :create, :edit, :update ]
+
+  resources :users, only: [:edit, :update] do
+    member do
+      get :edit_password
+      patch :update_password
+    end
+  end
+  
   
   resources :users do 
     member do 
