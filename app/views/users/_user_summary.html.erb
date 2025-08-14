@@ -24,7 +24,7 @@
                 </div>
                 <p><%= user.first_name %> <%= user.last_name %></p>
             </div>
-            <button class="nav-btn">Logout</button>
+            <%= link_to "Logout", logout_path, data: { turbo_method: :delete }, class: "nav-btn" %>
         </div>
     </nav>
 
@@ -41,7 +41,7 @@
                 <li>⚙ Settings</li>
             </ul>
             <div>
-                <%= link_to logout_path, method: :delete, class: "logout-btn" do %>
+                <%= link_to logout_path, data: { turbo_method: :delete }, class: "logout-btn" do %>
                     <i class="fas fa-sign-out-alt" style="margin-right: 6px;"></i>Logout
                 <% end %>
             </div>
@@ -168,6 +168,7 @@ body, html {
     cursor: pointer;
     margin-left: 8px;
     font-size: 14px;
+    text-decoration: none; 
 }
 .nav-btn:hover {
     background-color: #0ca694;

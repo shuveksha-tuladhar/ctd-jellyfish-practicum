@@ -1,8 +1,8 @@
 class SessionsController < ApplicationController 
 
     def create 
-        user = User.find_by(email: params[:session][:email].downcase)
-        if user&.authenticate(params[:session][:password])
+        user = User.find_by(email: params[:email]&.downcase)
+        if user&.authenticate(params[:password])
             log_in(user)
             redirect_to user 
         else  
@@ -12,7 +12,7 @@ class SessionsController < ApplicationController
     end 
 
     def destroy 
-        session.delete(:user_id)
-        redirect_to login_path, notice: "Logged out successfully"
+        session[:user_id] = nil 
+        redirect_to login_path, notice: "You have been logged out."
     end 
 end 
