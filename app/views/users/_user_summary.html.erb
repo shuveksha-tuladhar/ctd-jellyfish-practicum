@@ -40,6 +40,11 @@
                 <li>📊 Balances</li>
                 <li>⚙ Settings</li>
             </ul>
+            <div>
+                <%= link_to logout_path, method: :delete, class: "logout-btn" do %>
+                    <i class="fas fa-sign-out-alt" style="margin-right: 6px;"></i>Logout
+                <% end %>
+            </div>
         </div>
 
         <!-- Profile section -->
@@ -197,6 +202,9 @@ body, html {
     width: 220px;
     border-radius: 8px;
     box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
 }
 .sidebar ul {
     list-style: none;
@@ -211,6 +219,24 @@ body, html {
 }
 .sidebar li:hover {
     color: #1d917a;
+}
+
+.logout-btn {
+  background: white;
+  color: #1d917a;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+}
+
+.logout-btn:hover {
+  background-color: #0ca694;
+  color: white;
 }
 
 /* Profile Container */
@@ -340,6 +366,15 @@ body, html {
     }
     .navbar-center, .navbar-right {
         margin-top: 10px;
+    }
+    .profile-info p {
+        font-size: 14px;
+    }
+    .summary-section p {
+        font-size: 14px;
+    }
+    h3 {
+        font-size: 16px;
     }
 }
 
