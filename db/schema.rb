@@ -18,6 +18,8 @@ ActiveRecord::Schema[8.0].define(version: 2025_08_08_020734) do
     t.string "title"
     t.decimal "amount", precision: 10, scale: 2
     t.string "split_type"
+    t.integer "user_id"
+    t.integer "category_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end

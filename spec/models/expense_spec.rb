@@ -34,6 +34,7 @@ RSpec.describe Expense, type: :model do
   end
 
 
+  # Unskip once foreign key is added to user, category table
   describe "associations" , skip: true do
     it "belongs to a user" do
       assoc = described_class.reflect_on_association(:user)
