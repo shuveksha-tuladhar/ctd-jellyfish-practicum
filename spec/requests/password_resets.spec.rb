@@ -1,17 +1,17 @@
 require 'rails_helper'
 
-RSpec.describe "PasswordResets", type: :request do 
-    describe "GET /new" do 
-        it "returns http success" do 
+RSpec.describe "PasswordResets", type: :request do
+    describe "GET /new" do
+        it "returns http success" do
             get "/password_reset/new"
             expect(response).to have_http_status(:success)
-        end 
-    end 
+        end
+    end
 
-    describe "GET /edit" do 
-        it "returns http success" do 
+    describe "GET /edit" do
+        it "returns http success" do
             get "/password_resets/edit"
             expect(response).to have_http_status(:success)
-        end 
-    end 
-end 
+        end
+    end
+end

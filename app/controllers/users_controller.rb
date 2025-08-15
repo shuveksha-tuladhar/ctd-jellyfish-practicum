@@ -1,36 +1,36 @@
 class UsersController < ApplicationController
-    before_action :set_user, only: [:show, :edit, :update, :destroy, :upload_photo]
-  
+    before_action :set_user, only: [ :show, :edit, :update, :destroy, :upload_photo ]
+
     include Rails.application.routes.url_helpers
-  
+
     # GET /users or /users.json
     def index
       @users = User.all
     end
-  
+
     # GET /users/1 or /users/1.json
     def show
     end
-  
+
     # GET /users/new
     def new
       @user = User.new
     end
-  
+
     # GET /users/1/edit
     def edit
     end
-  
+
     # POST /users or /users.json
     def create
       @user = User.new(user_params)
-      if @user.save 
-        redirect_to @user 
-      else  
-        render :new 
-      end 
+      if @user.save
+        redirect_to @user
+      else
+        render :new
+      end
     end
-  
+
     # PATCH/PUT /users/1
     def update
       # If password fields are filled, update password as well
@@ -56,57 +56,56 @@ class UsersController < ApplicationController
         end
       end
     end
-  
+
     # DELETE /users/1
     def destroy
       @user.destroy!
-  
+
       respond_to do |format|
         format.html { redirect_to users_path, status: :see_other, notice: "User was successfully destroyed." }
         format.json { head :no_content }
       end
     end
-  
+
     def profile_picture_url
       url_for(profile_picture) if profile_picture.attached?
     end
-  
+
     def upload_photo
       @user = User.find(params[:id])
-    
+
       if @user.update(profile_picture_params)
         flash[:notice] = "Profile picture uploaded successfully."
       else
         flash[:alert] = "Failed to upload profile picture."
       end
-    
+
       redirect_to @user
-    end    
-      
-  
+    end
+
+
     private
-    def profile_picture_params 
+    def profile_picture_params
       params.require(:user).permit(:profile_picture)
-    end 
-  
+    end
+
     def set_user
       @user = User.find(params[:id])
     end
-  
+
     def user_params
       params.require(:user).permit(:first_name, :last_name, :email, :phone_number, :profile_picture, :password)
     end
-  
+
     def password_params
       params.require(:user).permit(:password, :password_confirmation)
     end
-  
+
     def user_params_with_password
       user_params.merge(password_params)
     end
-  
+
     def password_present?
       params[:user][:password].present? || params[:user][:password_confirmation].present? || params[:user][:current_password].present?
     end
-  end
-  
+end

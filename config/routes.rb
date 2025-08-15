@@ -11,20 +11,20 @@ Rails.application.routes.draw do
 
   resources :password_resets, only: [ :new, :create, :edit, :update ]
 
-  resources :users, only: [:edit, :update] do
+  resources :users, only: [ :edit, :update ] do
     member do
       get :edit_password
       patch :update_password
     end
   end
-  
-  
-  resources :users do 
-    member do 
-      get :upload_photo 
+
+
+  resources :users do
+    member do
+      get :upload_photo
       patch :upload_photo
-    end 
-  end 
+    end
+  end
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
   # Reveal health status on /up that returns 200 if the app boots with no exceptions, otherwise 500.
