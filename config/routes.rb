@@ -13,4 +13,6 @@ Rails.application.routes.draw do
   # root "posts#index"
 
   resources :expenses
+
+  root "expenses#index"
 end

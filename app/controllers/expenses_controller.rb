@@ -1,68 +1,49 @@
 class ExpensesController < ApplicationController
-  before_action :set_expense, only: %i[ show edit update destroy ]
+  before_action :set_expense
 
-  # GET /expenses or /expenses.json
+  # GET /expenses
   def index
-    @expenses = Expense.all
+    @expenses = current_user.expenses.includes(:category)
   end
 
-  # GET /expenses/1 or /expenses/1.json
-  def show
-  end
-
-  # GET /expenses/new
+  # GET /expenses/new (for modal)
   def new
-    @expense = Expense.new
+    @expense = current_user.expenses.new
+
+    if request.headers["Turbo-Frame"]
+      render partial: "modal", locals: { expense: @expense }
+    else
+      redirect_to expenses_path
+    end
   end
 
-  # GET /expenses/1/edit
-  def edit
-  end
-
-  # POST /expenses or /expenses.json
+  # POST /expenses
   def create
-    @expense = Expense.new(expense_params)
+    @expense = current_user.expenses.new(expense_params)
 
-    respond_to do |format|
-      if @expense.save
-        format.html { redirect_to @expense, notice: "Expense was successfully created." }
-        format.json { render :show, status: :created, location: @expense }
-      else
-        format.html { render :new, status: :unprocessable_entity }
-        format.json { render json: @expense.errors, status: :unprocessable_entity }
+    if @expense.save
+      respond_to do |format|
+        format.html { redirect_to expenses_path, notice: "Expense created successfully." }
+        format.turbo_stream { render turbo_stream: turbo_stream.append("expenses-list", partial: "expenses/expense", locals: { expense: @expense }) }
       end
+    else
+      render partial: "modal", locals: { expense: @expense }, status: :unprocessable_entity
     end
   end
 
-  # PATCH/PUT /expenses/1 or /expenses/1.json
-  def update
-    respond_to do |format|
-      if @expense.update(expense_params)
-        format.html { redirect_to @expense, notice: "Expense was successfully updated." }
-        format.json { render :show, status: :ok, location: @expense }
-      else
-        format.html { render :edit, status: :unprocessable_entity }
-        format.json { render json: @expense.errors, status: :unprocessable_entity }
-      end
-    end
-  end
-
-  # DELETE /expenses/1 or /expenses/1.json
+  # DELETE /expenses/:id
   def destroy
-    @expense.destroy!
-
-    respond_to do |format|
-      format.html { redirect_to expenses_path, status: :see_other, notice: "Expense was successfully destroyed." }
-      format.json { head :no_content }
-    end
+    @expense.destroy
+    redirect_to expenses_path, notice: "Expense deleted successfully."
   end
 
   private
-      def set_expense
-      @expense = Expense.find(params.expect[:id])
-    end
 
-    def expense_params
-      params.require(:expense).permit(:title, :amount, :user_id, :category_id)
-    end
+  def set_expense
+    @expense = current_user.expenses.find(params[:id])
+  end
+
+  def expense_params
+    params.require(:expense).permit(:title, :amount, :category_id)
+  end
 end
