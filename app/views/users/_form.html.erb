@@ -1,78 +1,136 @@
-<div style="display: flex; flex-direction: column; align-items: center;">
-    <%= form_with(model: user, local: true) do |form| %>
 
-        <%# Error message %>
-        <% if user.errors.any? %>
-            <div style="color: red">
-                <h3><%= pluralize(user.errors.count, "error") %> Prohibited this user from being save:</h3>
-                <ul>
-                    <% user.errors.full_messages.each do |message| %>
-                        <li><%= message %></li>
-                    <% end %>
-                </ul>
-            </div>
-        <% end %>
+<div class="form-container">
+  <%= form_with(model: user, local: true) do |form| %>
 
-        <%# profile pic %>
-        <div>
-            <%= form.label :profile_picture %>
-            <%= form.file_field :profile_picture%>
-        </div>
-
-        <div>
-            <%= form.label :first_name, style: "display: block" %>
-            <%= form.text_field :first_name %>
-        </div>
-
-        <div>
-            <%= form.label :last_name, style: "display: block" %>
-            <%= form.text_field :last_name %>
-        </div>
-
-        <div>
-            <%= form.label :email, style: "display: block" %>
-            <%= form.text_field :email %>
-        </div>
-
-        <div>
-            <%= form.label :phone_number, style: "display: block" %>
-            <%= form.telephone_field :phone_number%>
-        </div>
-
-         <div>
-            <%= form.label :password, style: "display: block margin-right: 8px;" %>
-            <div>
-                <%= form.password_field :password, id: "password_digit_field" %>
-                <button type="button" id="toggle_password_btn" style="padding: 4px 4px;">Show</button>
-            </div>
-        </div>
-
-        <div>
-            <%= form.submit %>
-        </div>
-
+    <% if user.errors.any? %>
+      <div class="form-error-messages">
+        <h3><%= pluralize(user.errors.count, "error") %> prohibited this user from being saved:</h3>
+        <ul>
+          <% user.errors.full_messages.each do |msg| %>
+            <li><%= msg %></li>
+          <% end %>
+        </ul>
+      </div>
     <% end %>
+
+    <div class="form-group">
+      <%= form.label :profile_picture %>
+      <%= form.file_field :profile_picture, class: "input-field" %>
+    </div>
+
+    <div class="form-group">
+      <%= form.label :first_name %>
+      <%= form.text_field :first_name, class: "input-field" %>
+    </div>
+
+    <div class="form-group">
+      <%= form.label :last_name %>
+      <%= form.text_field :last_name, class: "input-field" %>
+    </div>
+
+    <div class="form-group">
+      <%= form.label :email %>
+      <%= form.text_field :email, class: "input-field" %>
+    </div>
+
+    <div class="form-group">
+      <%= form.label :phone_number %>
+      <%= form.telephone_field :phone_number, class: "input-field" %>
+    </div>
+
+     <div class="form-group password-wrapper" style="position: relative;">
+        <%= form.label :password %>
+        <%= form.password_field :password, class: "input-field", id: "password-field" %>
+        <i id="toggle-password" class="fa-solid fa-eye-slash"></i>
+    </div>
+
+    <div class="form-group">
+      <%= form.submit "Sign Up", class: "sign-in-btn" %>
+    </div>
+
+    <p>Already have an account? <%= link_to "Sign In", login_path %></p>
+
+  <% end %>
 </div>
 
+<style>
+  .form-container {
+    width: 100%;
+    max-width: 350px;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .form-error-messages {
+    color: red;
+    margin-bottom: 1rem;
+  }
+
+  .form-error-messages h3 {
+    margin-bottom: 0.5rem;
+  }
+
+  .form-group {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .form-group label {
+    font-weight: 600;
+    margin-bottom: 0.25rem;
+  }
+
+  .input-field {
+    padding: 0.5rem 0.75rem;
+    font-size: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 0.25rem;
+    box-sizing: border-box;
+  }
+
+  .password-wrapper {
+    position: relative;
+  }
+
+  #toggle-password {
+    position: absolute;
+    top: 38px;
+    right: 10px;
+    cursor: pointer;
+    color: #999;
+    font-size: 1rem;
+  }
+
+  .sign-in-btn {
+    background-color: #0ca694;
+    color: white;
+    width: 100%;
+    padding: 0.5rem 0;
+    border: none;
+    border-radius: 0.375rem;
+    font-weight: 600;
+    font-size: 1rem;
+    cursor: pointer;
+    text-decoration: none;
+  }
+
+  .sign-in-btn:hover {
+    background-color: #0a807a;
+  }
+</style>
+
 <script>
-  document.addEventListener("turbo:load", function() {
-    const toggleBtn = document.getElementById("toggle_password_btn");
-    const passwordField = document.getElementById("password_digit_field");
+    document.addEventListener("DOMContentLoaded", function () {
+        const togglePassword = document.getElementById("toggle-password");
+        const passwordField = document.getElementById("password-field");
 
-    if (!toggleBtn || !passwordField) return;
+        togglePassword.addEventListener("click", function () {
+            const isPassword = passwordField.type === "password";
+            passwordField.type = isPassword ? "text" : "password";
 
-    // Remove any existing listener before adding a new one (to avoid duplicates)
-    toggleBtn.replaceWith(toggleBtn.cloneNode(true));
-    const newToggleBtn = document.getElementById("toggle_password_btn");
-
-    newToggleBtn.addEventListener("click", function() {
-      if (passwordField.type === "password") {
-        passwordField.type = "text";
-        newToggleBtn.textContent = "Hide";
-      } else {
-        passwordField.type = "password";
-        newToggleBtn.textContent = "Show";
-      }
-    });
-  });
+            this.classList.toggle("fa-eye");
+            this.classList.toggle("fa-eye-slash");
+        })
+    })
 </script>

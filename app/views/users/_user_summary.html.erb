@@ -19,7 +19,7 @@
                     <% if user.profile_picture.attached? %>
                         <%= image_tag url_for(user.profile_picture), style: "border-radius: 50%; width: 40px; height: 40px; object-fit: cover;" %>
                     <% else %>
-                        <i class="bi bi-person-circle" style="font-size: 100px; color: gray;"></i>
+                        <i class="bi bi-person-circle" style="font-size: 40px; color: white;"></i>
                         <% end %>
                 </div>
                 <p><%= user.first_name %> <%= user.last_name %></p>
@@ -59,16 +59,30 @@
                 </div>
 
                 <div class="profile-body">
-                    <div class="profile-left">
+                    <div class="profile-left" style="text-align: center;">
+                        <%# Show existing profile picture or placeholder %>
                         <% if user.profile_picture.attached? %>
                             <%= image_tag url_for(user.profile_picture), style: "border-radius: 50%; width: 100px; height: 100px; object-fit: cover;" %>
                         <% else %>
                             <i class="bi bi-person-circle" style="font-size: 100px; color: gray;"></i>
                         <% end %>
-                        <%= link_to edit_user_path(user), style: "text-decoration: none; margin: 0 4px;", title: "Edit" do %>
-                            <i class="bi bi-pencil"></i> 
-                        <% end %>
+
                         <p><%= user.first_name %> <%= user.last_name %></p>
+
+                        <%= form_with model: user, url: upload_photo_user_path(user), method: :patch, local: true, html: { multipart: true, id: "upload-photo-form" } do |f| %>
+                            <div style="margin-top: 10px; text-align: center;">
+                                <label for="profile_upload" class="change-photo-btn">
+                                Choose New Photo
+                                </label>
+
+                                <%= f.file_field :profile_picture, id: "profile_upload", style: "opacity: 0; position: absolute; left: -9999px;" %>
+
+                                <div id="upload-btn-wrapper" style="margin-top: 10px; display: none;">
+                                <%= f.submit "Upload", class: "upload-photo-btn" %>
+                                </div>
+                            </div>
+                        <% end %>
+
                     </div>
 
                     <div class="profile-content">
@@ -294,7 +308,8 @@ body, html {
 }
 
 /* Change Photo Button */
-.change-photo-btn {
+.change-photo-btn,
+.upload-photo-btn {
     background: #1d917a;
     color: white;
     border: none;
@@ -302,8 +317,10 @@ body, html {
     margin-top: 10px;
     border-radius: 4px;
     cursor: pointer;
+    font-size: 14px;
 }
-.change-photo-btn:hover {
+.change-photo-btn:hover,
+.upload-photo-btn:hover {
     background-color: #0ca694;
 }
 
@@ -414,3 +431,37 @@ body, html {
     }
 }
 </style>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const fileInput = document.getElementById("profile_upload");
+    const uploadBtnWrapper = document.getElementById("upload-btn-wrapper");
+    const form = document.getElementById("upload-photo-form");
+
+    // Force reset so same file can be selected again
+    fileInput.addEventListener("click", function () {
+      this.value = null;
+    });
+
+    // Show Upload button when a file is selected
+    fileInput.addEventListener("change", function () {
+      if (fileInput.files.length > 0) {
+        uploadBtnWrapper.style.display = "block";
+      } else {
+        uploadBtnWrapper.style.display = "none";
+      }
+    });
+
+    // Reset button after form submission
+    form.addEventListener("submit", function () {
+      // Optional delay to allow the form to post first
+      setTimeout(() => {
+        fileInput.value = "";
+        uploadBtnWrapper.style.display = "none";
+      }, 100);
+    });
+  });
+</script>
+
+
+

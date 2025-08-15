@@ -1,5 +1,5 @@
 class User < ApplicationRecord 
-    has_one_attached :profile_picture, dependent: :destroy
+    has_one_attached :profile_picture
     has_secure_password 
     attr_accessor :reset_token 
 

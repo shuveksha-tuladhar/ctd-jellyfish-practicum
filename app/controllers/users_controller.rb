@@ -24,16 +24,11 @@ class UsersController < ApplicationController
     # POST /users or /users.json
     def create
       @user = User.new(user_params)
-  
-      respond_to do |format|
-        if @user.save
-          format.html { redirect_to @user, notice: "User was successfully created." }
-          format.json { render :show, status: :created, location: @user }
-        else
-          format.html { render :new, status: :unprocessable_entity }
-          format.json { render json: @user.errors, status: :unprocessable_entity }
-        end
-      end
+      if @user.save 
+        redirect_to @user 
+      else  
+        render :new 
+      end 
     end
   
     # PATCH/PUT /users/1
@@ -77,21 +72,29 @@ class UsersController < ApplicationController
     end
   
     def upload_photo
-      if @user.update(user_params)
-        redirect_to @user, notice: "Profile picture updated"
+      @user = User.find(params[:id])
+    
+      if @user.update(profile_picture_params)
+        flash[:notice] = "Profile picture uploaded successfully."
       else
-        render :upload_photo
+        flash[:alert] = "Failed to upload profile picture."
       end
-    end
+    
+      redirect_to @user
+    end    
+      
   
     private
+    def profile_picture_params 
+      params.require(:user).permit(:profile_picture)
+    end 
   
     def set_user
       @user = User.find(params[:id])
     end
   
     def user_params
-      params.require(:user).permit(:first_name, :last_name, :email, :phone_number, :currency, :language, :profile_picture)
+      params.require(:user).permit(:first_name, :last_name, :email, :phone_number, :profile_picture, :password)
     end
   
     def password_params

@@ -19,12 +19,12 @@
                     <% if @user.profile_picture.attached? %>
                         <%= image_tag url_for(@user.profile_picture), style: "border-radius: 50%; width: 40px; height: 40px; object-fit: cover;" %>
                     <% else %>
-                        <i class="bi bi-person-circle" style="font-size: 40px; color: gray;"></i>
+                        <i class="bi bi-person-circle" style="font-size: 40px; color: white;"></i>
                     <% end %>
                 </div>
                 <p><%= @user.first_name %> <%= @user.last_name %></p>
             </div>
-            <%= link_to "Logout", logout_path, method: :delete, class: "nav-btn" %>
+            <%= link_to "Logout", logout_path, data: { turbo_method: :delete }, class: "nav-btn" %>
         </div>
     </nav>
 
@@ -41,7 +41,7 @@
                 <li>⚙ Settings</li>
             </ul>
             <div>
-                <%= link_to logout_path, method: :delete, class: "logout-btn" do %>
+                <%= link_to logout_path, data: { turbo_method: :delete }, class: "logout-btn" do %>
                     <i class="fas fa-sign-out-alt" style="margin-right: 6px;"></i>Logout
                 <% end %>
             </div>
@@ -50,6 +50,17 @@
         <!-- Profile section -->
         <div class="profile-container">
             <h3 style="text-align: center;">Update Profile</h3>
+            <%# notice %>
+            <% if flash[:notice] %>
+                <div id="pw-change-status" class="pw-change-status notice">
+                    <p><%= flash[:notice] %></p>
+                </div>
+            <% elsif flash[:alert] %>
+                <div id="pw-change-status" class="pw-change-status alert">
+                    <p><%= flash[:alert] %></p>
+                </div>
+            <% end %>
+
             <%= form_with(model: @user, url: user_path(@user), method: :patch, local: true) do |f| %>
                 <!-- Profile Info Card -->
                 <div class="profile-card">
@@ -63,9 +74,6 @@
                                 <%= image_tag url_for(@user.profile_picture), style: "border-radius: 50%; width: 100px; height: 100px; object-fit: cover;" %>
                             <% else %>
                                 <i class="bi bi-person-circle" style="font-size: 100px; color: gray;"></i>
-                            <% end %>
-                            <%= link_to edit_user_path(@user), style: "text-decoration: none; margin: 0 4px;", title: "Edit" do %>
-                                <i class="bi bi-pencil"></i> 
                             <% end %>
                             <p><%= @user.first_name %> <%= @user.last_name %></p>
                         </div>
@@ -100,18 +108,30 @@
                     <div class="card-header">
                         <h3>Password</h3>
                     </div>
+
                     <div class="change-password">
                         <div class="row">
                             <%= f.label :current_password, "Current Password" %>
-                            <%= f.password_field :current_password, placeholder: "Enter current password" %>
+                            <%= f.password_field :current_password, placeholder: "Enter current password", id: "current-password" %>
+                            <% if @user.errors[:current_password].present? %>
+                                <span class="error-message"><%= @user.errors[:current_password].first %></span>
+                            <% end %>
                         </div>
+
                         <div class="row">
                             <%= f.label :password, "New Password" %>
-                            <%= f.password_field :password, placeholder: "Enter new password" %>
+                            <%= f.password_field :password, placeholder: "Enter new password", id: "new-password" %>
+                            <% if @user.errors[:password].present? %>
+                                <span class="error-message"><%= @user.errors[:password].first %></span>
+                            <% end %>
                         </div>
+
                         <div class="row">
                             <%= f.label :password_confirmation, "Confirm New Password" %>
-                            <%= f.password_field :password_confirmation, placeholder: "Confirm new password" %>
+                            <%= f.password_field :password_confirmation, placeholder: "Confirm new password", id: "confirm-password" %>
+                            <% if @user.errors[:password_confirmation].present? %>
+                                <span class="error-message"><%= @user.errors[:password_confirmation].first %></span>
+                            <% end %>
                         </div>
                     </div>
                     <div class="save-btn" style="display: flex; justify-content: end;">
@@ -197,6 +217,7 @@ body, html {
     cursor: pointer;
     margin-left: 8px;
     font-size: 14px;
+    text-decoration: none; 
 }
 .nav-btn:hover {
     background-color: #0ca694;
@@ -338,6 +359,30 @@ body, html {
     border-radius: 4px;
 }
 
+/* change password notice and alert */
+ .pw-change-status {
+    padding: 1px;
+    margin: 1px;
+    border-radius: 6px;
+    text-align: center;
+  }
+
+  .notice {
+    background-color: #d4edda;
+    color: #155724;
+  }
+
+  .alert {
+    background-color: #f8d7da;
+    color: #721c24;
+  }
+
+  .error-message {
+  color: red;
+  font-size: 0.85rem;
+}
+
+
 /* Summary Section */
 .summary-section {
     flex: 1;
@@ -444,4 +489,36 @@ body, html {
     }
 }
 </style>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+    const currentPassword = document.getElementById("current-password");
+    const newPassword = document.getElementById("new-password");
+    const confirmPassword = document.getElementById("confirm-password");
+
+    const submitBtn = document.querySelector(".profile-card:last-child .edit-btn"); 
+    // This targets the last profile-card's edit-btn (i.e. Change Password)
+
+    const pwStatus = document.getElementById("pw-change-status");
+
+    if (pwStatus) {
+        setTimeout(() => {
+        pwStatus.remove();
+        }, 30000); // 30 seconds
+    }
+
+    function checkFields() {
+        submitBtn.disabled = !(currentPassword.value && newPassword.value && confirmPassword.value);
+    }
+
+    [currentPassword, newPassword, confirmPassword].forEach(input => {
+        input.addEventListener("input", checkFields);
+    });
+
+    checkFields();
+    });
+
+</script>
+
+
 
