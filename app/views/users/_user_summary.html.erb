@@ -1,51 +1,9 @@
 <div>
-    <!-- Navbar -->
-    <nav class="navbar">
-        <div class="navbar-left">
-            <h4>
-                <span class="dollar-logo">
-                    <%= image_tag "logo00.png", alt: "Logo" %>
-                </span>
-                CostShare
-            </h4>
-        </div>
-        <div class="navbar-center">
-            <button class="nav-btn">Add Expense</button>
-            <button class="nav-btn">Settle Up</button>
-        </div>
-        <div class="navbar-right">
-            <div class="profile-info">
-                <div class="navbar-profile-pic">
-                    <% if user.profile_picture.attached? %>
-                        <%= image_tag url_for(user.profile_picture), style: "border-radius: 50%; width: 40px; height: 40px; object-fit: cover;" %>
-                    <% else %>
-                        <i class="bi bi-person-circle" style="font-size: 40px; color: white;"></i>
-                        <% end %>
-                </div>
-                <p><%= user.first_name %> <%= user.last_name %></p>
-            </div>
-            <%= link_to "Logout", logout_path, data: { turbo_method: :delete }, class: "nav-btn" %>
-        </div>
-    </nav>
-
+    <%= render "shared/navbar" %>
     <!-- Main layout -->
     <div class="main-container">
         <!-- Sidebar -->
-        <div class="sidebar">
-            <ul>
-                <li>🏠 Home</li>
-                <li>💰 Expense</li>
-                <li>👥 Groups</li>
-                <li>📜 Activity</li>
-                <li>📊 Balances</li>
-                <li>⚙ Settings</li>
-            </ul>
-            <div>
-                <%= link_to logout_path, data: { turbo_method: :delete }, class: "logout-btn" do %>
-                    <i class="fas fa-sign-out-alt" style="margin-right: 6px;"></i>Logout
-                <% end %>
-            </div>
-        </div>
+        <%= render "shared/sidebar" %>
 
         <!-- Profile section -->
         <div class="profile-container">
@@ -148,58 +106,6 @@ body, html {
     background-color: #f3f3f3;
 }
 
-/* Navbar */
-.navbar {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background-color: #1d917a;
-    padding: 10px 20px;
-    color: white;
-    position: fixed; 
-    top: 0;
-    left: 0;
-    width: 100%;
-    box-sizing: border-box;
-    z-index: 1000;
-}
-.navbar h4 {
-    display: flex;
-    align-items: center;
-    margin: 0;
-}
-.navbar .dollar-logo img {
-    width: 30px;
-    height: 30px;
-    margin-right: 8px;
-}
-.nav-btn {
-    background: white;
-    color: #1d917a;
-    border: none;
-    padding: 6px 12px;
-    border-radius: 4px;
-    cursor: pointer;
-    margin-left: 8px;
-    font-size: 14px;
-    text-decoration: none; 
-}
-.nav-btn:hover {
-    background-color: #0ca694;
-    color: white;
-}
-.navbar-right,
-.profile-info {
-    display: flex;
-    align-items: center;
-}
-.profile-info {
-    gap: 8px;
-}
-.navbar-right {
-    gap: 12px;
-}
-
 /* Main Layout */
 .main-container {
     display: flex;
@@ -207,33 +113,6 @@ body, html {
     padding: 20px;
     padding-top: 80px;
     box-sizing: border-box;
-}
-
-/* Sidebar */
-.sidebar {
-    background: white;
-    padding: 15px 20px;
-    flex-shrink: 0;
-    width: 220px;
-    border-radius: 8px;
-    box-sizing: border-box;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-}
-.sidebar ul {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-}
-.sidebar li {
-    padding: 10px 0;
-    font-size: 14px;
-    color: black;
-    cursor: pointer;
-}
-.sidebar li:hover {
-    color: #1d917a;
 }
 
 .logout-btn {
@@ -368,7 +247,7 @@ body, html {
     .main-container {
         flex-direction: column;
     }
-    .sidebar, .profile-container, .summary-section {
+    .profile-container, .summary-section {
         width: 100%;
     }
     .profile-container h3 {
@@ -378,15 +257,6 @@ body, html {
         flex-direction: column;
         align-items: center;
         gap: 20px;
-    }
-    .navbar {
-        padding: 10px;
-    }
-    .navbar-center, .navbar-right {
-        margin-top: 10px;
-    }
-    .profile-info p {
-        font-size: 14px;
     }
     .summary-section p {
         font-size: 14px;
@@ -398,25 +268,6 @@ body, html {
 
 /* Small screens */
 @media (max-width: 600px) {
-    .navbar {
-        padding: 6px 10px;
-    }
-    .navbar h4 {
-        font-size: 14px;
-    }
-    .navbar .dollar-logo img {
-        width: 22px;
-        height: 22px;
-        margin-right: 5px;
-    }
-    .nav-btn {
-        padding: 4px 8px;
-        font-size: 12px;
-        margin-left: 4px;
-    }
-    .navbar-right {
-        gap: 6px;
-    }
     .profile-info {
         gap: 4px;
     }
