@@ -1,0 +1,235 @@
+<div class="login-section">
+  <!-- Left side: Sign in -->
+    <div class="left-side">
+        <div class="logo-part">
+            <h4>
+                <span class="dollar-logo">
+                    <%= image_tag "logo00.png", alt: "Logo" %>
+                </span>
+                CostShare
+            </h4>
+            <h3>Welcome!</h3>
+            <p>Please enter your details to sign in</p>
+        </div>
+
+        <%= form_with url: login_path, method: :post, local: true, class: "form-container" do |f| %>
+            <div>
+                <label>Email</label>
+                <%= f.email_field :email, class: "input-field" %>
+            </div>
+            <div class="password-wrapper" style="position: relative;">
+                <label>Password</label>
+                <%= f.password_field :password, class: "input-field", id: "password-field" %>
+                <!-- Toggle icon -->
+                <i id="toggle-password" class="fa-solid fa-eye-slash"></i>
+            </div>
+            <div class="options-row">
+                <label>
+                    <input type="checkbox" name="remember_me">Remember me 
+                </label>
+                <%= link_to "Forgot password?", password_resets_path, class: "link-button" %>
+            </div>
+
+            <%= f.submit "Sign In", class: "sign-in-btn" %>
+
+            <p class="signup-text">
+                Don't have an account? <%= link_to "Sign up", signup_path, class: "signup-link" %>
+            </p>
+        <% end %>
+  </div>
+
+  <!-- Right side: Image -->
+  <div class="right-side">
+    <%= image_tag "image01.jpg", alt: "Login Image", class: "login-image" %>
+  </div>
+</div>
+
+<style>
+  html, body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+  }
+
+  /* Container flex */
+  .login-section {
+    display: flex;
+    min-height: 100vh;
+    flex-wrap: wrap;
+  }
+
+  /* Left side styles */
+  .left-side {
+    width: 100%;
+    max-width: 600px;
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    box-sizing: border-box;
+  }
+
+  /* Dollar icon next to title */
+    .dollar-logo img {
+    width: 50px;
+    height: 50px;
+    vertical-align: middle;
+    margin-right: 0.5rem;
+    }
+
+  /* Headings */
+  .left-side h4 {
+    font-size: 1.25rem;
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+    display: flex;
+    color: #0ca694;
+    align-items: center;
+  }
+  .left-side h3 {
+    font-weight: bold;
+    font-size: 1.125rem;
+    margin-bottom: 1rem;
+  }
+  .left-side p {
+    margin-bottom: 1.5rem;
+  }
+
+  .left-side h4,
+  .left-side h3, 
+  .left-side p {
+    align-self: flex-start;
+  }
+
+  /* Form container */
+  .form-container,
+  .logo-part {
+    width: 100%;
+    max-width: 350px;
+  }
+
+  /* Inputs */
+  label {
+    display: block;
+    margin-bottom: 0.25rem;
+    font-weight: 600;
+  }
+
+  .input-field {
+    width: 100%;
+    padding: 0.5rem 0.75rem;
+    margin-bottom: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 0.25rem;
+    box-sizing: border-box;
+    font-size: 1rem;
+  }
+
+  #toggle-password {
+    position: absolute;
+    top: 34px;
+    right: 10px;
+    cursor: pointer;
+    color: #999;
+    font-size: 14px;
+  }
+
+  /* Options row */
+  .options-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+  }
+
+  .options-row label {
+    font-weight: normal;
+  }
+
+  .link-button {
+    background: none;
+    border: none;
+    color: #1d917a;
+    cursor: pointer;
+    font-size: 0.875rem;
+    text-decoration: underline;
+    padding: 0;
+  }
+  .link-button:hover {
+    color: #0ca694;
+  }
+
+  /* Sign in button with custom green color */
+  .sign-in-btn {
+    background-color: #0ca694;
+    color: white;
+    width: 100%;
+    padding: 0.5rem 0;
+    border: none;
+    border-radius: 0.375rem;
+    font-weight: 600;
+    font-size: 1rem;
+    cursor: pointer;
+    text-decoration: none;
+  }
+  .sign-in-btn:hover {
+    background-color: #0a807a;
+  }
+
+  /* Signup text */
+  .signup-text {
+    text-align: center;
+    margin-top: 1rem;
+  }
+  .signup-link {
+    color: #0ca694;
+    text-decoration: underline;
+  }
+  .signup-link:hover {
+    color: #0a807a;
+  }
+
+  /* Right side */
+  .right-side {
+    flex: 1;
+    min-width: 300px;
+    height: 100vh;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+  }
+
+  /* Image styling */
+  .login-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  /* Responsive: On smaller screens, stack left and right vertically */
+  @media (max-width: 1024px) {
+    .login-section {
+      flex-direction: column;
+    }
+    .right-side {
+      height: 300px; /* fixed height for smaller screens */
+    }
+  }
+</style>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const togglePassword = document.getElementById("toggle-password");
+        const passwordField = document.getElementById("password-field");
+
+        togglePassword.addEventListener("click", function () {
+            const isPassword = passwordField.type === "password";
+            passwordField.type = isPassword ? "text" : "password";
+
+            this.classList.toggle("fa-eye");
+            this.classList.toggle("fa-eye-slash");
+        })
+    })
+</script>

@@ -1,0 +1,52 @@
+<!-- Sidebar -->
+<div class="sidebar">
+    <ul>
+        <li>🏠 Home</li>
+        <li>💰 Expense</li>
+        <li>👥 Groups</li>
+        <li>📜 Activity</li>
+        <li>📊 Balances</li>
+        <li>⚙ Settings</li>
+    </ul>
+    <div>
+        <%= link_to logout_path, data: { turbo_method: :delete }, class: "logout-btn" do %>
+            <i class="fas fa-sign-out-alt" style="margin-right: 6px;"></i>Logout
+        <% end %>
+    </div>
+</div>     
+
+<style>
+/* Sidebar */
+.sidebar {
+    background: white;
+    padding: 15px 20px;
+    flex-shrink: 0;
+    width: 220px;
+    border-radius: 8px;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+.sidebar ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+.sidebar li {
+    padding: 10px 0;
+    font-size: 14px;
+    color: black;
+    cursor: pointer;
+}
+.sidebar li:hover {
+    color: #1d917a;
+}
+
+/* Responsive Layout */
+@media (max-width: 768px) {
+    .sidebar {
+        width: 100%;
+    }
+}
+</style>
