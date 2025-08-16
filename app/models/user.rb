@@ -2,6 +2,7 @@ class User < ApplicationRecord
     has_one_attached :profile_picture
     has_secure_password
     attr_accessor :reset_token
+    has_many :expenses, dependent: :destroy
 
     validates :first_name, :last_name, :email, presence: true
     validates :email, uniqueness: true, format: { with: URI::MailTo::EMAIL_REGEXP }

@@ -1,9 +1,9 @@
 class ExpensesController < ApplicationController
-  before_action :set_expense
+  before_action :set_expense, only: [:destroy]
 
   # GET /expenses
   def index
-    @expenses = current_user.expenses.includes(:category)
+    @expenses = current_user.expenses
   end
 
   # GET /expenses/new (for modal)
@@ -44,6 +44,6 @@ class ExpensesController < ApplicationController
   end
 
   def expense_params
-    params.require(:expense).permit(:title, :amount, :category_id)
+    params.require(:expense).permit(:title, :amount)
   end
 end

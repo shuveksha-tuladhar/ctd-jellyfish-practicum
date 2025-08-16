@@ -1,11 +1,13 @@
 require 'rails_helper'
 
 RSpec.describe Expense, type: :model do
+    let(:user) { User.create!(first_name: "Test", last_name: "User", email: "test@example.com", password: "password", phone_number: "1231231234") }
+
   subject do
     described_class.new(
       title: "Sample Expense",
-      amount: 50.0
-      # no user or category associations for now
+      amount: 50.0,
+      user: user
     )
   end
 
@@ -34,21 +36,17 @@ RSpec.describe Expense, type: :model do
   end
 
 
-  # Unskip once foreign key is added to user, category table
-  describe "associations", skip: true do
+  # Unskip once foreign key is added to category table
+  describe "associations" do
     it "belongs to a user" do
       assoc = described_class.reflect_on_association(:user)
       expect(assoc.macro).to eq :belongs_to
     end
 
-    it "belongs to a category" do
+    it "belongs to a category", skip: true do
       assoc = described_class.reflect_on_association(:category)
       expect(assoc.macro).to eq :belongs_to
     end
 
-    it "can have many users through user_expenses" do
-      assoc = described_class.reflect_on_association(:users)
-      expect(assoc.macro).to eq :has_many
-    end
   end
 end
