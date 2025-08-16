@@ -1,0 +1,136 @@
+
+<div class="form-container">
+  <%= form_with(model: user, local: true) do |form| %>
+
+    <% if user.errors.any? %>
+      <div class="form-error-messages">
+        <h3><%= pluralize(user.errors.count, "error") %> prohibited this user from being saved:</h3>
+        <ul>
+          <% user.errors.full_messages.each do |msg| %>
+            <li><%= msg %></li>
+          <% end %>
+        </ul>
+      </div>
+    <% end %>
+
+    <div class="form-group">
+      <%= form.label :profile_picture %>
+      <%= form.file_field :profile_picture, class: "input-field" %>
+    </div>
+
+    <div class="form-group">
+      <%= form.label :first_name %>
+      <%= form.text_field :first_name, class: "input-field" %>
+    </div>
+
+    <div class="form-group">
+      <%= form.label :last_name %>
+      <%= form.text_field :last_name, class: "input-field" %>
+    </div>
+
+    <div class="form-group">
+      <%= form.label :email %>
+      <%= form.text_field :email, class: "input-field" %>
+    </div>
+
+    <div class="form-group">
+      <%= form.label :phone_number %>
+      <%= form.telephone_field :phone_number, class: "input-field" %>
+    </div>
+
+     <div class="form-group password-wrapper" style="position: relative;">
+        <%= form.label :password %>
+        <%= form.password_field :password, class: "input-field", id: "password-field" %>
+        <i id="toggle-password" class="fa-solid fa-eye-slash"></i>
+    </div>
+
+    <div class="form-group">
+      <%= form.submit "Sign Up", class: "sign-in-btn" %>
+    </div>
+
+    <p>Already have an account? <%= link_to "Sign In", login_path %></p>
+
+  <% end %>
+</div>
+
+<style>
+  .form-container {
+    width: 100%;
+    max-width: 350px;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .form-error-messages {
+    color: red;
+    margin-bottom: 1rem;
+  }
+
+  .form-error-messages h3 {
+    margin-bottom: 0.5rem;
+  }
+
+  .form-group {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .form-group label {
+    font-weight: 600;
+    margin-bottom: 0.25rem;
+  }
+
+  .input-field {
+    padding: 0.5rem 0.75rem;
+    font-size: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 0.25rem;
+    box-sizing: border-box;
+  }
+
+  .password-wrapper {
+    position: relative;
+  }
+
+  #toggle-password {
+    position: absolute;
+    top: 38px;
+    right: 10px;
+    cursor: pointer;
+    color: #999;
+    font-size: 1rem;
+  }
+
+  .sign-in-btn {
+    background-color: #0ca694;
+    color: white;
+    width: 100%;
+    padding: 0.5rem 0;
+    border: none;
+    border-radius: 0.375rem;
+    font-weight: 600;
+    font-size: 1rem;
+    cursor: pointer;
+    text-decoration: none;
+  }
+
+  .sign-in-btn:hover {
+    background-color: #0a807a;
+  }
+</style>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const togglePassword = document.getElementById("toggle-password");
+        const passwordField = document.getElementById("password-field");
+
+        togglePassword.addEventListener("click", function () {
+            const isPassword = passwordField.type === "password";
+            passwordField.type = isPassword ? "text" : "password";
+
+            this.classList.toggle("fa-eye");
+            this.classList.toggle("fa-eye-slash");
+        })
+    })
+</script>
