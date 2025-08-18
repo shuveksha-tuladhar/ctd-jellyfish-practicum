@@ -41,13 +41,13 @@ RSpec.describe "Sessions", type: :request do
     describe "DELETE /logout" do
         let!(:user) do
             User.create!(
-                first_name: "test", 
-                last_name: "test", 
-                email: "test2@axample.com", 
-                password: "password", 
+                first_name: "test",
+                last_name: "test",
+                email: "test2@axample.com",
+                password: "password",
                 phone_number: "1234567890"
-            ) 
-        end 
+            )
+        end
 
         before do
             post login_path, params: { session: { email: user.email, password: "password" } }
