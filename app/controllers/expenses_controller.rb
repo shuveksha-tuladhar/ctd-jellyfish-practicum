@@ -1,33 +1,42 @@
 class ExpensesController < ApplicationController
-  before_action :set_expense, only: [:destroy]
+  before_action :require_login
+  before_action :set_expense, only: [ :edit, :update, :destroy ]
 
   # GET /expenses
   def index
-    @expenses = current_user.expenses
+    if current_user
+      @expenses = current_user.expenses
+    else
+      redirect_to login_path, alert: "Please log in."
+    end
   end
 
-  # GET /expenses/new (for modal)
+  # GET /expenses/new
   def new
-    @expense = current_user.expenses.new
-
-    if request.headers["Turbo-Frame"]
-      render partial: "modal", locals: { expense: @expense }
-    else
-      redirect_to expenses_path
-    end
+    @expense = Expense.new
   end
 
   # POST /expenses
   def create
-    @expense = current_user.expenses.new(expense_params)
-
+    @expense = current_user.expenses.build(expense_params)
     if @expense.save
-      respond_to do |format|
-        format.html { redirect_to expenses_path, notice: "Expense created successfully." }
-        format.turbo_stream { render turbo_stream: turbo_stream.append("expenses-list", partial: "expenses/expense", locals: { expense: @expense }) }
-      end
+      redirect_to expenses_path, notice: "Expense added successfully."
     else
-      render partial: "modal", locals: { expense: @expense }, status: :unprocessable_entity
+      render :new, status: :unprocessable_entity
+    end
+  end
+
+  # GET /expenses/:id/edit
+  def edit
+    # @expense is already set by set_expense
+  end
+
+  # PATCH/PUT /expenses/:id
+  def update
+    if @expense.update(expense_params)
+      redirect_to expenses_path, notice: "Expense updated successfully."
+    else
+      render :edit, status: :unprocessable_entity
     end
   end
 
@@ -45,5 +54,9 @@ class ExpensesController < ApplicationController
 
   def expense_params
     params.require(:expense).permit(:title, :amount)
+  end
+
+  def require_login
+    redirect_to login_path, alert: "Please log in." unless current_user
   end
 end

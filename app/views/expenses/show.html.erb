@@ -1,0 +1,7 @@
+<h1><%= @expense.title %></h1>
+
+<p><strong>Amount:</strong> <%= number_to_currency(@expense.amount) %></p>
+<p><strong>Split Type:</strong> <%= @expense.split_type %></p>
+
+<%= link_to "Edit", edit_expense_path(@expense) %> |
+<%= link_to "Back", expenses_path %>
