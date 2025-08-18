@@ -52,4 +52,45 @@ jobs:
 
       - name: Lint code for consistent style
         run: bin/rubocop -f github
+  rspec:
+    runs-on: ubuntu-latest 
+    services:
+      postgres:
+        image: postgres:13 
+        ports: ['5432:5432']
+        env:
+          POSTGRES_USER: myappuser
+          POSTGRES_PASSWORD: mypassword 
+          POSTGRES_DB: ctd_jellyfish_test
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+    
+    steps:
+      - name: Checkout code 
+        uses: actions/checkout@v4
+
+      - name: Set up Ruby 
+        uses: ruby/setup-ruby@v1
+        with: 
+          ruby-version: .ruby-version 
+          bundler-cache: true 
+        
+      - name: Set up Node.js
+        uses: actions/setup-node@v3 
+        with: 
+          node-version: '20'
+
+      - name: Set up Database 
+        run: |
+          sudo apt-get -yqq install libpq-dev
+          bin/rails db:create db:schema:load RAILS_ENV=test 
+        
+      - name: Run RSpec tests
+        run: bin/rspec
+
+        
+
 

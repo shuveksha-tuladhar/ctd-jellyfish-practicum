@@ -61,6 +61,4 @@ end
 # Postgres
 gem "pg"
 
-group :development, :test do
-  gem "rspec-rails"
-end
+gem "rspec-rails", "~> 8.0", groups: [ :development, :test ]

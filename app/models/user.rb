@@ -1,5 +1,14 @@
 class User < ApplicationRecord
     has_one_attached :profile_picture
+
+    # User initiates the following
+    has_many :friendships, foreign_key: :user_id, dependent: :destroy
+    has_many :friends, through: :friendships, source: :friend
+
+    # User recieves the follow
+    has_many :received_friendships, class_name: "Friendship", foreign_key: :friend_id, dependent: :destroy
+    has_many :received_friends, through: :received_friendships, source: :user
+
     has_secure_password
     attr_accessor :reset_token
     has_many :expenses, dependent: :destroy
