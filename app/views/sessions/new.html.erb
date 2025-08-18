@@ -12,7 +12,7 @@
             <p>Please enter your details to sign in</p>
         </div>
 
-        <%= form_with url: login_path, method: :post, local: true, class: "form-container" do |f| %>
+        <%= form_with url: login_path, scope: :session, local: true, class: "form-container" do |f| %>
             <div>
                 <label>Email</label>
                 <%= f.email_field :email, class: "input-field" %>
@@ -29,7 +29,9 @@
                 </label>
                 <%= link_to "Forgot password?", password_resets_path, class: "link-button" %>
             </div>
-
+            <% if flash[:alert] %>
+              <div class="alert"><%= flash[:alert] %></div>
+            <% end %>
             <%= f.submit "Sign In", class: "sign-in-btn" %>
 
             <p class="signup-text">
