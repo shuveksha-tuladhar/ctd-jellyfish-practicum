@@ -47,6 +47,5 @@ RSpec.describe Expense, type: :model do
       assoc = described_class.reflect_on_association(:category)
       expect(assoc.macro).to eq :belongs_to
     end
-
   end
 end
