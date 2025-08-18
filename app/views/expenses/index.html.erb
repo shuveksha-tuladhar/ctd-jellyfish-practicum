@@ -19,6 +19,7 @@
           <span class="expense-title"><%= expense.title %></span>
           <span class="expense-amount"><%= number_to_currency(expense.amount) %></span>
           <span class="expense-actions">
+            <%= link_to "View", expense_path(expense), class: "action-btn view-btn" %>
             <%= link_to "Edit", edit_expense_path(expense), class: "action-btn edit-btn" %>
             <%= link_to "Delete", expense, data: { turbo_method: :delete, confirm: "Are you sure?" }, class: "action-btn delete-btn" %>
           </span>
@@ -133,6 +134,15 @@
       gap: 5px;
       margin-left: 15px;
   }
+
+  .view-btn {
+    background-color: #1d917a; 
+    color: white;
+}
+
+.view-btn:hover {
+    background-color: #145d4d; 
+}
 
   /* Edit/Delete buttons */
   .action-btn {

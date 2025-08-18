@@ -1,6 +1,6 @@
 class ExpensesController < ApplicationController
   before_action :require_login
-  before_action :set_expense, only: [ :edit, :update, :destroy ]
+  before_action :set_expense, only: [ :show, :edit, :update, :destroy ]
 
   # GET /expenses
   def index
@@ -31,6 +31,10 @@ class ExpensesController < ApplicationController
     # @expense is already set by set_expense
   end
 
+  def show
+    @expense = current_user.expenses.find(params[:id])
+  end
+
   # PATCH/PUT /expenses/:id
   def update
     if @expense.update(expense_params)
@@ -49,7 +53,8 @@ class ExpensesController < ApplicationController
   private
 
   def set_expense
-    @expense = current_user.expenses.find(params[:id])
+    @expense = current_user.expenses.find_by(id: params[:id])
+    redirect_to expenses_path, alert: "Expense not found." unless @expense
   end
 
   def expense_params
