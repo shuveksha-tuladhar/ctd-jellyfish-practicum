@@ -1,0 +1,18 @@
+<%= form_with model: expense, local: true do |f| %>
+  <div>
+    <%= f.label :title %>
+    <%= f.text_field :title, required: true %>
+  </div>
+
+  <div>
+    <%= f.label :amount %>
+    <%= f.number_field :amount, step: 0.01, required: true %>
+  </div>
+
+  <div>
+    <%= f.label :split_type %>
+    <%= f.select :split_type, ["Equal", "Percentage"], prompt: "Select split type" %>
+  </div>
+
+  <%= f.submit %>
+<% end %>

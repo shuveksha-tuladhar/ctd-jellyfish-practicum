@@ -9,19 +9,19 @@
             </h4>
         </div>
         <div class="navbar-center">
-            <button class="nav-btn">Add Expense</button>
+            <%= link_to "Add Expense", new_expense_path, class: "nav-btn" %>
             <button class="nav-btn">Settle Up</button>
         </div>
         <div class="navbar-right">
             <div class="profile-info">
                 <div class="navbar-profile-pic">
-                    <% if @user.profile_picture.attached? %>
+                    <% if current_user&.profile_picture&.attached? %>
                         <%= image_tag url_for(@user.profile_picture), style: "border-radius: 50%; width: 40px; height: 40px; object-fit: cover;" %>
                     <% else %>
                         <i class="bi bi-person-circle" style="font-size: 40px; color: white;"></i>
                     <% end %>
                 </div>
-                <p><%= @user.first_name %> <%= @user.last_name %></p>
+               <p><%= "#{current_user&.first_name} #{current_user&.last_name}" %></p>
             </div>
             <%= link_to "Logout", logout_path, data: { turbo_method: :delete }, class: "nav-btn" %>
         </div>

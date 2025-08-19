@@ -1,0 +1,215 @@
+<div>
+  <!-- Navbar -->
+  <%= render "shared/navbar" %>
+
+  <!-- Main layout -->
+  <div class="main-container">
+    <!-- Sidebar -->
+    <%= render "shared/sidebar" %>
+
+    <!-- Expenses section -->
+    <div class="profile-container">
+  <h3 style="text-align: center;">Expenses List</h3>
+
+  <% if @expenses.any? %>
+    <!-- Expenses List -->
+    <ul class="expense-list">
+      <% @expenses.each do |expense| %>
+        <li class="expense-item">
+          <span class="expense-title"><%= expense.title %></span>
+          <span class="expense-amount"><%= number_to_currency(expense.amount) %></span>
+          <span class="expense-actions">
+            <%= link_to "View", expense_path(expense), class: "action-btn view-btn" %>
+            <%= link_to "Edit", edit_expense_path(expense), class: "action-btn edit-btn" %>
+            <%= link_to "Delete", expense, data: { turbo_method: :delete, confirm: "Are you sure?" }, class: "action-btn delete-btn" %>
+          </span>
+        </li>
+      <% end %>
+    </ul>
+  <% else %>
+    <p class="empty-message">No expenses added yet. Click below to add your first expense!</p>
+  <% end %>
+
+  <!-- Add Expense Button -->
+  <%= link_to "Add Expense", new_expense_path, class: "btn add-expense-btn" %>
+</div>
+
+  <style>
+  /* Reset and Base Styles */
+  body, html {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      font-family: Arial, sans-serif;
+      background-color: #f3f3f3;
+  }
+
+  /* Main Layout */
+  .main-container {
+      display: flex;
+      gap: 20px;
+      padding: 20px;
+      padding-top: 100px; 
+      box-sizing: border-box;
+      align-items: stretch; 
+      height: calc(100vh - 120px); 
+  }
+
+  /* Sidebar */
+  .sidebar {
+      width: 250px;
+      background-color: #fff;
+      padding: 15px;
+      border-radius: 6px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+      flex-shrink: 0;
+  }
+
+  /* Expenses section */
+  .profile-container {
+      flex-grow: 1;
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 6px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  }
+
+  .empty-message {
+    text-align: center;
+    font-size: 16px;
+    color: #555;
+    margin: 20px 0;
+    padding: 10px;
+    background-color: #f9f9f9;
+    border-radius: 6px;
+}
+
+  /* Add Expense button */
+  .btn {
+      display: inline-block;
+      padding: 8px 12px;
+      background-color: #1d917a;
+      color: white;
+      text-decoration: none;
+      border-radius: 4px;
+      margin-bottom: 15px;
+  }
+
+  .btn:hover {
+      background-color: #145d4d;
+  }
+
+  /* Expense List */
+  .expense-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+  }
+
+  .expense-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 12px;
+      border-bottom: 1px solid #ddd;
+      transition: background-color 0.2s;
+  }
+
+  .expense-item:hover {
+      background-color: #f0f8f5;
+  }
+
+  .expense-title {
+      font-weight: 500;
+  }
+
+  .expense-amount {
+      font-weight: bold;
+      color: #1d917a;
+      margin-left: 10px;
+  }
+
+  .expense-actions {
+      display: flex;
+      gap: 5px;
+      margin-left: 15px;
+  }
+
+  .view-btn {
+    background-color: #1d917a; 
+    color: white;
+}
+
+.view-btn:hover {
+    background-color: #145d4d; 
+}
+
+  /* Edit/Delete buttons */
+  .action-btn {
+      display: inline-block;
+      padding: 5px 10px;
+      border-radius: 4px;
+      text-decoration: none;
+      font-size: 13px;
+      font-weight: 500;
+      transition: background-color 0.2s, color 0.2s;
+  }
+
+  .edit-btn {
+    background-color: #1d917a; 
+    color: white;
+}
+
+.edit-btn:hover {
+    background-color: #145d4d; 
+}
+
+.delete-btn {
+    background-color: #e08c79; 
+    color: white;
+}
+
+.delete-btn:hover {
+    background-color: #c76b5c; 
+}
+
+.add-expense-btn {
+    margin-top: 15px;
+}
+  /* Logout button */
+  .logout-btn {
+      background: white;
+      color: #1d917a;
+      border: none;
+      padding: 6px 12px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 14px;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+  }
+
+  .logout-btn:hover {
+      background-color: #0ca694;
+      color: white;
+  }
+
+  /* Responsive */
+  @media (max-width: 768px) {
+      .main-container {
+          flex-direction: column;
+          padding: 15px;
+      }
+
+      .sidebar {
+          width: 100%;
+          margin-bottom: 15px;
+      }
+
+      .profile-container {
+          width: 100%;
+      }
+  }
+  </style>
+</div>
