@@ -1,6 +1,6 @@
 class CategoriesController < ApplicationController
   before_action :require_login
-  before_action :set_category, only: [:destroy ]
+  before_action :set_category, only: [ :destroy ]
 
   def new
     @category = Category.new
