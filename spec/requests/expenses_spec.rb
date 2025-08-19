@@ -12,7 +12,7 @@ RSpec.describe "Expenses", type: :request do
   end
 
   before do
-    post login_path, params: { email: user.email, password: "password" }
+    post login_path, params: { session: { email: user.email, password: "password" } }
   end
 
   describe "GET /expenses" do
