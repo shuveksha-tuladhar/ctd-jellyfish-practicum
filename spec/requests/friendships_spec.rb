@@ -17,7 +17,7 @@ RSpec.describe "Friendships", type: :request do
 
       duplicate = Friendship.new(user: user, friend: friend, status: "accepted")
       expect(duplicate).not_to be_valid
-      expect(duplicate.errors[:user_id]).to include("has already been taken")
+      expect(duplicate.errors[:friend_id]).to include("friendship already exists")
     end
   end
 end
