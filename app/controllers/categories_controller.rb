@@ -1,13 +1,6 @@
 class CategoriesController < ApplicationController
   before_action :require_login
-  before_action :set_category, only: [ :edit, :update, :destroy, :show ]
-
-  def index
-    @categories = Category.all
-  end
-
-  def show
-  end
+  before_action :set_category, only: [:destroy ]
 
   def new
     @category = Category.new
@@ -19,17 +12,6 @@ class CategoriesController < ApplicationController
       redirect_to categories_path, notice: "Category created successfully."
     else
       render :new, status: :unprocessable_entity
-    end
-  end
-
-  def edit
-  end
-
-  def update
-    if @category.update(category_params)
-      redirect_to categories_path, notice: "Category updated successfully."
-    else
-      render :edit, status: :unprocessable_entity
     end
   end
 
