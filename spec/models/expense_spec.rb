@@ -35,15 +35,13 @@ RSpec.describe Expense, type: :model do
     end
   end
 
-
-  # Unskip once foreign key is added to category table
   describe "associations" do
     it "belongs to a user" do
       assoc = described_class.reflect_on_association(:user)
       expect(assoc.macro).to eq :belongs_to
     end
 
-    it "belongs to a category", skip: true do
+    it "belongs to a category" do
       assoc = described_class.reflect_on_association(:category)
       expect(assoc.macro).to eq :belongs_to
     end

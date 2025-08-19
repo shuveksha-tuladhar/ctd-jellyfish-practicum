@@ -32,6 +32,7 @@ Rails.application.routes.draw do
   # root "posts#index"
 
   resources :expenses
+  resources :categories
 
   root "sessions#new"
 end
