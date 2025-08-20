@@ -4,7 +4,7 @@
   <% end %>
 
   <%= content_for :title, "Users" %>
-  <h3 style="text-align: center; margin-bottom: 20px;">Users</h3>
+  <h3 class="section-title">Users</h3>
 
   <!-- Search Form -->
   <div class="search-container">
@@ -14,7 +14,7 @@
     <% end %>
   </div>
 
-  <% if @users.any? %>
+  <% if @users.present? %>
     <div id="users" class="users-list">
       <% @users.each do |user| %>
         <div class="user-card">
@@ -36,6 +36,12 @@
 </div>
 
 <style>
+/* Section title */
+.section-title {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
 /* Notice */
 .notice-message {
   color: green;
