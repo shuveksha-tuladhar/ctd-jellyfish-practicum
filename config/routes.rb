@@ -18,6 +18,9 @@ Rails.application.routes.draw do
     end
   end
 
+  resources :users do
+    resources :friendships
+  end
 
   resources :users do
     member do

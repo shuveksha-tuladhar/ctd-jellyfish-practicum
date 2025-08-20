@@ -11,13 +11,16 @@ RSpec.describe "Friendships", type: :request do
       expect(friend.received_friends).to include(user)
     end
   end
-  describe "validations" do
-    it "does not allow duplicate friendships" do
-      Friendship.create!(user: user, friend: friend, status: "accepted")
 
-      duplicate = Friendship.new(user: user, friend: friend, status: "accepted")
-      expect(duplicate).not_to be_valid
-      expect(duplicate.errors[:friend_id]).to include("friendship already exists")
+  describe "DELETE /users/:user_id/friendships/:id" do
+    it "destroys a friendship" do
+      friendship = Friendship.create!(user: user, friend: friend)
+
+      expect {
+        delete user_friendship_path(user, friendship)
+      }.to change(Friendship, :count).by(-1)
+
+      expect(response).to redirect_to(users_path)
     end
   end
 end

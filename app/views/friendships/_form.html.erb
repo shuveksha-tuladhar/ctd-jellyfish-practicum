@@ -1,0 +1,9 @@
+<p>Form</p>
+
+<%= form_with(model: [@user, @friendship], local: true )do |f| %>
+  <%=f.label :status%>
+  <%=f.text_field :status%>
+
+
+  <%=f.submit%>
+<%end%>
