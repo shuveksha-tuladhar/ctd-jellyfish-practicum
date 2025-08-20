@@ -1,16 +1,157 @@
-<div>
-    <p style="color: green"><%= notice %></p>
-    <%= content_for :title, "Users" %>
-    <h3>Users</h3>
+<div class="profile-container">
+  <% if notice %>
+    <p class="notice-message"><%= notice %></p>
+  <% end %>
 
-    <div id="users">
-        <% @users.each do |user| %>
-            <%= render user %>
-            <p>
-                <%= link_to "View", user %>
-            </p>
-        <% end %>
+  <%= content_for :title, "Users" %>
+  <h3 style="text-align: center; margin-bottom: 20px;">Users</h3>
+
+  <!-- Search Form -->
+  <div class="search-container">
+    <%= form_with url: users_path, method: :get, local: true do %>
+      <%= text_field_tag :query, params[:query], placeholder: "Search by name or email", class: "search-input" %>
+      <%= submit_tag "Search", class: "btn search-btn" %>
+    <% end %>
+  </div>
+
+  <% if @users.any? %>
+    <div id="users" class="users-list">
+      <% @users.each do |user| %>
+        <div class="user-card">
+          <div class="user-info">
+            <p class="user-name"><%= user.first_name %> <%= user.last_name %></p>
+            <p class="user-email"><%= user.email %></p>
+          </div>
+          <div class="user-actions">
+            <%= link_to "View", user, class: "btn view-btn" %>
+          </div>
+        </div>
+      <% end %>
     </div>
+  <% else %>
+    <p class="empty-message">No users found.</p>
+  <% end %>
 
-    <%= link_to "New user", new_user_path, class: "action-link" %>
+  <%= link_to "New user", new_user_path, class: "btn add-user-btn" %>
 </div>
+
+<style>
+/* Notice */
+.notice-message {
+  color: green;
+  text-align: center;
+  margin-bottom: 15px;
+}
+
+/* Search */
+.search-container {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.search-input {
+  padding: 8px 10px;
+  width: 60%;
+  max-width: 300px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  margin-right: 8px;
+}
+
+.search-btn {
+  background-color: #1d917a;
+  color: white;
+  border-radius: 6px;
+  padding: 8px 12px;
+  border: none;
+}
+
+.search-btn:hover {
+  background-color: #145d4d;
+}
+
+/* Users list */
+.users-list {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.user-card {
+  background-color: #fff;
+  padding: 15px;
+  border-radius: 10px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: background-color 0.2s;
+}
+
+.user-card:hover {
+  background-color: #f0f8f5;
+}
+
+.user-name {
+  font-weight: 500;
+  margin: 0;
+}
+
+.user-email {
+  font-size: 13px;
+  color: #888;
+  margin: 2px 0 0 0;
+}
+
+/* Actions */
+.user-actions {
+  display: flex;
+  gap: 5px;
+}
+
+.view-btn {
+  background-color: #1d917a;
+  color: white;
+  padding: 6px 10px;
+  border-radius: 6px;
+  text-decoration: none;
+  font-size: 13px;
+}
+
+.view-btn:hover {
+  background-color: #145d4d;
+}
+
+/* New user button */
+.add-user-btn {
+  display: inline-block;
+  margin-top: 20px;
+  background-color: #1d917a;
+  color: white;
+  padding: 8px 12px;
+  border-radius: 6px;
+  text-decoration: none;
+}
+
+.add-user-btn:hover {
+  background-color: #145d4d;
+}
+
+/* Empty message */
+.empty-message {
+  text-align: center;
+  font-size: 16px;
+  color: #555;
+  margin: 20px 0;
+  padding: 10px;
+  background-color: #f9f9f9;
+  border-radius: 6px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .search-input {
+    width: 80%;
+  }
+}
+</style>

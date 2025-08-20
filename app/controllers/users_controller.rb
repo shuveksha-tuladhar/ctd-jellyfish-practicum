@@ -5,7 +5,7 @@ class UsersController < ApplicationController
 
     # GET /users or /users.json
     def index
-      @users = User.all
+      @users = User.search(params[:query])
     end
 
     # GET /users/1 or /users/1.json
@@ -108,4 +108,9 @@ class UsersController < ApplicationController
     def password_present?
       params[:user][:password].present? || params[:user][:password_confirmation].present? || params[:user][:current_password].present?
     end
+
+    def self.search(query)
+      return all if query.blank?
+      where("first_name ILIKE :q OR last_name ILIKE :q OR email ILIKE :q", q: "%#{query}%")
+  end
 end
