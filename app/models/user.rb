@@ -26,4 +26,17 @@ class User < ApplicationRecord
         self.reset_sent_at = Time.current
         save!
     end
+
+    def self.search(query)
+        return all if query.blank?
+
+        query = query.strip.downcase
+
+        where(
+        "LOWER(first_name) LIKE :q OR LOWER(last_name) LIKE :q OR LOWER(email) LIKE :q
+        OR (LOWER(first_name) || ' ' || LOWER(last_name)) LIKE :q
+        OR (LOWER(last_name) || ' ' || LOWER(first_name)) LIKE :q",
+        q: "%#{query}%"
+        )
+  end
 end
