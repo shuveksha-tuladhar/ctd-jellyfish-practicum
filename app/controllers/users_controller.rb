@@ -5,7 +5,11 @@ class UsersController < ApplicationController
 
     # GET /users or /users.json
     def index
-      @users = User.search(params[:query])
+      if params[:query].present?
+        @users = User.search(params[:query])
+      else
+        @users = User.all
+      end
     end
 
     # GET /users/1 or /users/1.json
