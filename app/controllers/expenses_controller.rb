@@ -58,7 +58,7 @@ class ExpensesController < ApplicationController
   end
 
   def expense_params
-    params.require(:expense).permit(:title, :amount)
+    params.require(:expense).permit(:title, :amount, :category_id)
   end
 
   def require_login
