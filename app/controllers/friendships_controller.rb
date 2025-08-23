@@ -29,16 +29,21 @@ class FriendshipsController < ApplicationController
 
   def new
     @friendship = Friendship.new
+    @users = User.where.not(id: @user.id)
   end
 
-  def create
-    @friendship = @user.friendships.build(friend_id: params[:friend_id])
-    if @friendship.save
-      redirect_to users_path
-    else
-      render :new, status: :unprocessable_entity
-    end
+def create
+  @friendship = @user.friendships.build(
+    friend_id: params[:friendship][:friend_id],
+    status: "pending"
+  )
+
+  if @friendship.save
+    redirect_to user_friendships_path(@user)
+  else
+    render :new, status: :unprocessable_entity
   end
+end
 
   def destroy
     @friendship = @user.friendships.find(params[:id])
