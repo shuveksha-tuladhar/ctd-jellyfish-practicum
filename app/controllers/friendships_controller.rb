@@ -41,6 +41,7 @@ def create
   if @friendship.save
     redirect_to user_friendships_path(@user)
   else
+    puts @friendship.errors.full_messages
     render :new, status: :unprocessable_entity
   end
 end
