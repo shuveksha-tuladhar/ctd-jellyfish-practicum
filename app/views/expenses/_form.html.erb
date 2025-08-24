@@ -14,5 +14,10 @@
     <%= f.select :split_type, ["Equal", "Percentage"], prompt: "Select split type" %>
   </div>
 
+  <div>
+    <%= f.label :category_id, "Category" %>
+    <%= f.collection_select :category_id, Category.all.order(:name), :id, :name, prompt: "Select a category" %>
+  </div>
+
   <%= f.submit %>
 <% end %>
