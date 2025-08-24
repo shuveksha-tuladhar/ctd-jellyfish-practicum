@@ -6,7 +6,7 @@ FactoryBot.define do
       password { "password" }
       phone_number { Faker::Number.number(digits: 10).to_s }
 
-  
+
       trait :with_expenses do
         after(:create) do |user|
           create_list(:expense, 3, user: user)
@@ -14,4 +14,3 @@ FactoryBot.define do
       end
     end
 end
-  
