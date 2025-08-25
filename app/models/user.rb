@@ -38,5 +38,5 @@ class User < ApplicationRecord
         OR (LOWER(last_name) || ' ' || LOWER(first_name)) LIKE :q",
         q: "%#{query}%"
         )
-  end
+    end
 end

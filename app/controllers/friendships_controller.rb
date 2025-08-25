@@ -55,6 +55,12 @@ end
   private
   def set_user
     @user = User.find(params[:user_id])
+    if @user == current_user
+      @user
+    else
+      flash[:alert] = "Unauthorized user"
+      redirect_to root_path
+    end
   end
 
   def require_login
