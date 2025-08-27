@@ -4,5 +4,7 @@ class UserGroup < ApplicationRecord
   has_many :group_members, dependent: :destroy
   has_many :users, through: :group_members
 
+  has_many :expenses, dependent: :destroy
+
   validates :name, presence: true
 end

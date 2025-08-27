@@ -21,5 +21,26 @@
   <p>No members yet.</p>
 <% end %>
 
+<h2>Expenses</h2>
+<% if @user_group.expenses.any? %>
+  <ul>
+    <% @user_group.expenses.each do |expense| %>
+      <li>
+        <strong>Title:</strong> <%= expense.title %> |
+        <strong>Amount:</strong> $<%= expense.amount %> |
+        <strong>Created by:</strong> <%= expense.user.first_name %> <%= expense.user.last_name %> |
+        <strong>Category:</strong> <%= expense.category&.name || "Uncategorized" %>
+        <% if expense.users.any? %>
+          | <strong>Involved Users:</strong>
+          <%= expense.users.map { |u| "#{u.first_name} #{u.last_name}" }.join(", ") %>
+        <% end %>
+      </li>
+    <% end %>
+  </ul>
+<% else %>
+  <p>No expenses yet.</p>
+<% end %>
+
+
 <%= link_to "Edit Group", edit_user_group_path(@user_group) %> |
 <%= link_to "Back to Groups", user_groups_path %>
