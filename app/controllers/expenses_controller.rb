@@ -18,14 +18,15 @@ class ExpensesController < ApplicationController
 
   # POST /expenses
   def create
-    @expense = current_user.expenses.build(expense_params)
-    @expense.user_group ||= current_user.user_groups.first
-    if @expense.save
-      redirect_to expenses_path, notice: "Expense added successfully."
-    else
-      render :new, status: :unprocessable_entity
-    end
+  @expense = current_user.expenses.new(expense_params)
+  @expense.user_group = UserGroup.find(params[:expense][:user_group_id])
+
+  if @expense.save
+    redirect_to expenses_path, notice: "Expense created successfully"
+  else
+    render :new
   end
+end
 
   # GET /expenses/:id/edit
   def edit
@@ -59,8 +60,8 @@ class ExpensesController < ApplicationController
   end
 
   def expense_params
-    params.require(:expense).permit(:title, :amount, :category_id, :user_group_id)
-  end
+  params.require(:expense).permit(:title, :amount, :split_type, :category_id)
+end
 
   def require_login
     redirect_to login_path, alert: "Please log in." unless current_user

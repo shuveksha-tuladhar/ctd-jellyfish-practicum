@@ -1,8 +1,8 @@
 require "rails_helper"
 
 RSpec.describe UserGroupsHelper, type: :helper do
-  let(:creator) { create(:user) }                    
-  let(:group)   { create(:user_group, creator: creator) }  
+  let(:creator) { create(:user) }
+  let(:group)   { create(:user_group, creator: creator) }
 
   describe "#group_member_count" do
     it "returns the number of members in a group" do
