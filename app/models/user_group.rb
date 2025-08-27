@@ -7,4 +7,5 @@ class UserGroup < ApplicationRecord
   has_many :expenses, dependent: :destroy
 
   validates :name, presence: true
+  validates :creator, presence: true
 end
