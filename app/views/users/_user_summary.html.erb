@@ -24,9 +24,7 @@
                         <% else %>
                             <i class="bi bi-person-circle" style="font-size: 100px; color: gray;"></i>
                         <% end %>
-
-                        <p><%= user.first_name %> <%= user.last_name %></p>
-
+                        <p><%= "#{current_user.reload.first_name} #{current_user.reload.last_name}" %></p>
                         <%= form_with model: user, url: upload_photo_user_path(user), method: :patch, local: true, html: { multipart: true, id: "upload-photo-form" } do |f| %>
                             <div style="margin-top: 10px; text-align: center;">
                                 <label for="profile_upload" class="change-photo-btn">
@@ -284,15 +282,16 @@ body, html {
 </style>
 
 <script>
-  document.addEventListener("DOMContentLoaded", function () {
+  document.addEventListener("turbo:load", function () {
     const fileInput = document.getElementById("profile_upload");
     const uploadBtnWrapper = document.getElementById("upload-btn-wrapper");
     const form = document.getElementById("upload-photo-form");
 
-    // Force reset so same file can be selected again
+    if (!fileInput || !uploadBtnWrapper || !form) return;
+
     fileInput.addEventListener("click", function () {
-      this.value = null;
-    });
+        this.value = null;
+    })
 
     // Show Upload button when a file is selected
     fileInput.addEventListener("change", function () {
