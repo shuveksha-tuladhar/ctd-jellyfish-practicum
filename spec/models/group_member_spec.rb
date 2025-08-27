@@ -6,8 +6,7 @@ RSpec.describe "GroupMembers", type: :request do
       first_name: "John",
       last_name: "Doe",
       email: "john@example.com",
-      password: "password",
-      phone_number: "1231233214"
+      password: "password"
     )
   end
 
