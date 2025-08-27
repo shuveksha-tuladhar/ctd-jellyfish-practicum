@@ -3,7 +3,7 @@ class ApplicationController < ActionController::Base
   allow_browser versions: :modern
   include SessionsHelper
 
-  def current_user 
+  def current_user
     @current_user ||= User.find_by(id: session[:user_id])
-  end 
+  end
 end
