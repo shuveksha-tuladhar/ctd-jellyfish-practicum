@@ -19,6 +19,7 @@ class ExpensesController < ApplicationController
   # POST /expenses
   def create
     @expense = current_user.expenses.build(expense_params)
+    @expense.user_group ||= current_user.user_groups.first
     if @expense.save
       redirect_to expenses_path, notice: "Expense added successfully."
     else
@@ -58,7 +59,7 @@ class ExpensesController < ApplicationController
   end
 
   def expense_params
-    params.require(:expense).permit(:title, :amount, :category_id)
+    params.require(:expense).permit(:title, :amount, :category_id, :user_group_id)
   end
 
   def require_login

@@ -38,7 +38,7 @@ Rails.application.routes.draw do
   resources :expenses
 
   resources :user_groups do
-    resources :group_members, only: [ :create, :destroy ]
+    resources :group_members, only: [:index, :create, :destroy ]
   end
 
   root "sessions#new"
