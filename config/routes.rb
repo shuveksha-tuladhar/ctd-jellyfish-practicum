@@ -1,4 +1,8 @@
 Rails.application.routes.draw do
+  get "user_groups/index"
+  get "user_groups/show"
+  get "user_groups/new"
+  get "user_groups/edit"
   get "password_resets/new"
   get "password_resets/edit"
 
@@ -32,6 +36,10 @@ Rails.application.routes.draw do
   # root "posts#index"
 
   resources :expenses
+  
+  resources :user_groups do
+    resources :group_members, only: [:create, :destroy]
+  end
 
   root "sessions#new"
 end
