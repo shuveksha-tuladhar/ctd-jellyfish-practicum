@@ -1,0 +1,7 @@
+<h1>Friendships</h1>
+<ul>
+  <% @friendships.each do |friendship| %>
+    <li><%= friendship.friend.first_name %> (<%= friendship.friend.email %>)</li>
+  <% end %>
+</ul>
+
