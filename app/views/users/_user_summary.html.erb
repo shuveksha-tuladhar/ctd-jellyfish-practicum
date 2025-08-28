@@ -24,7 +24,7 @@
                         <% else %>
                             <i class="bi bi-person-circle" style="font-size: 100px; color: gray;"></i>
                         <% end %>
-                        <p><%= "#{current_user.reload.first_name} #{current_user.reload.last_name}" %></p>
+                        <p><%= "#{current_user.first_name} #{current_user.last_name}" %></p>
                         <%= form_with model: user, url: upload_photo_user_path(user), method: :patch, local: true, html: { multipart: true, id: "upload-photo-form" } do |f| %>
                             <div style="margin-top: 10px; text-align: center;">
                                 <label for="profile_upload" class="change-photo-btn">
