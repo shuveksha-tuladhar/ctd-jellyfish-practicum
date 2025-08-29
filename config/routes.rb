@@ -1,5 +1,4 @@
 Rails.application.routes.draw do
-
   get "password_resets/new"
   get "password_resets/edit"
 
@@ -40,7 +39,7 @@ Rails.application.routes.draw do
   resources :user_groups do
     resources :group_members, only: [ :index, :create, :destroy ]
   end
-  
+
   get "dashboard", to: "dashboard#index"
 
   root "sessions#new"
