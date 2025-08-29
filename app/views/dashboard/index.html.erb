@@ -1,0 +1,300 @@
+<div>
+  <%= render "shared/navbar" %>
+
+  <!-- Main layout -->
+  <div class="main-container">
+
+    <!-- Sidebar -->
+    <%= render "shared/sidebar" %>
+
+    <!-- Dashboard -->
+    <div class="dashboard-container">
+
+      <!-- Top row with 3 cards -->
+      <div>
+        <!-- card1 -->
+        <div class="card">
+          <div class="title-row">
+            <h3>Total Balance</h3>
+            <span><i class="bi bi-currency-dollar"></i></span>
+          </div>
+          <p>$245.50<span class="green-text">You are owed</span></p>
+          <button>View details</button>
+        </div>
+
+        <!-- card2 -->
+        <div class="card">
+          <div class="title-row">
+            <h3>Group Expenses</h3>
+            <span><i class="bi bi-people"></i></span>
+          </div>
+          <p>5<span class="gray-text">Active groups</span></p>
+          <button>Manage groups</button>
+        </div>
+
+        <!-- card3 -->
+        <div class="card">
+          <div class="title-row">
+            <h3>Monthly Spending</h3>
+            <span><i class="bi bi-bar-chart-line"></i></span>
+          </div>
+          <p>$1,240<span class="red-text">+12% from last month</span></p>
+          <button>View expenses</button>
+        </div>
+      </div>
+
+      <!-- Second row: Recent Activity & Right Side -->
+      <div>
+        <!-- left side card -->
+        <div class="card">
+          <div class="title-row">
+            <h3>Recent Activity</h3>
+            <button>View all</button>
+          </div>
+          <ul>
+            <li>example 1</li>
+            <li>example 2</li>
+            <li>example 3</li>
+          </ul>
+        </div>
+
+        <!-- right side card -->
+        <div class="right-cards">
+          <!-- Quick Actions -->
+          <div class="card">
+            <h3>Quick Actions</h3>
+            <div class="quick-actions-wrapper">
+              <div class="quick-actions-card">
+                <button>Add Expenses</button>
+              </div>
+              <div class="quick-actions-card">
+                <button>Create Group</button>
+              </div>
+              <div class="quick-actions-card">
+                <button>Settle Up</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Friend Balances -->
+          <div class="card">
+            <div class="title-row">
+              <h3>Friend Balances</h3>
+              <button>View all</button>
+            </div>
+            <ul>
+              <li>example 1</li>
+              <li>example 2</li>
+              <li>example 3</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+/* Reset and Base Styles */
+  body, html {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      font-family: Arial, sans-serif;
+      background-color: #f3f3f3;
+  }
+  /* Main container and layout */
+  .main-container {
+    display: flex;
+    gap: 20px;
+    padding: 20px;
+    padding-top: 80px; 
+    box-sizing: border-box;
+    background-color: #f0f0f0; 
+    min-height: 100vh; 
+}
+
+.sidebar ul li {
+  border-bottom: none;
+  padding: 10px 0; 
+}
+
+
+  /* Dashboard container */
+  .dashboard-container {
+    flex: 2;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  /* General card style */
+  .card {
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-sizing: border-box;
+    box-shadow: 0 1px 3px rgb(0 0 0 / 0.1);
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* Top row with 3 cards */
+  .dashboard-container > div:first-child {
+    display: flex;
+    gap: 20px;
+    justify-content: space-between;
+  }
+
+  .dashboard-container > div:first-child > .card {
+    flex: 1;
+  }
+
+  /* Top row cards buttons */
+  .dashboard-container > div:first-child > .card > button {
+    width: auto;         
+    align-self: flex-start; 
+    padding: 8px 16px;
+    margin-top: 15px;
+    background-color: #1d917a;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    display: inline-block; 
+  }
+
+  .dashboard-container > div:first-child > .card > button:hover {
+    background-color: #0ca694;
+  }
+
+  /* Title row */
+  .title-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  /* Text colors */
+  .green-text {
+    color: green;
+    font-size: 13px;
+    margin-left: 6px;
+  }
+
+  .title-row i {
+    font-size: 1.2em;
+    color: #1d917a; 
+    vertical-align: middle;
+    margin-left: 5px;
+  }
+
+  .red-text {
+    color: red;
+    font-size: 13px;
+    margin-left: 6px;
+  }
+
+  .gray-text {
+    color: #666;
+    font-size: 13px;
+    margin-left: 6px;
+  }
+
+  /* Second row with two sections */
+  .dashboard-container > div:last-child {
+    display: flex;
+    gap: 20px;
+  }
+
+  /* Left card (Recent Activity) */
+  .dashboard-container > div:last-child > div:first-child {
+    flex: 1;
+  }
+
+  /* Right side cards container */
+  .right-cards {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  /* Quick actions wrapper */
+  .quick-actions-wrapper {
+    display: flex;
+    gap: 15px;
+    margin-top: 10px;
+  }
+
+  /* Each quick action card */
+  .quick-actions-card {
+    flex: 1;
+    background-color: #f8f8f8;
+    border-radius: 8px;
+    padding: 20px;
+    text-align: center;
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100px;
+  }
+
+  /* Button inside quick action cards */
+  .quick-actions-card button {
+    background-color: rgba(29, 145, 122, 0.7);
+    color: white;
+    border: none;
+    padding: 22px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    width: 100%;
+  }
+
+  .quick-actions-card button:hover {
+    background-color: #0ca694;
+  }
+
+  /* List styling */
+  ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  ul li {
+    padding: 8px 0;
+    border-bottom: 1px solid #e0e0e0;
+    font-size: 14px;
+  }
+
+  /* Responsive layout */
+  @media (max-width: 768px) {
+    .sidebar {
+        position: static;  
+        height: auto;     
+        width: 100%;       
+        overflow-y: visible; 
+    }
+
+    .main-container {
+        flex-direction: column; 
+        padding-left: 0; 
+    }
+
+    .dashboard-container {
+        width: 100%; 
+    }
+    .dashboard-container > div:first-child,
+    .dashboard-container > div:last-child {
+      flex-direction: column;
+    }
+
+    .dashboard-container > div:first-child > .card,
+    .dashboard-container > div:last-child > div {
+      width: 100%;
+    }
+  }
+</style>

@@ -116,5 +116,5 @@ class UsersController < ApplicationController
     def self.search(query)
       return all if query.blank?
       where("first_name ILIKE :q OR last_name ILIKE :q OR email ILIKE :q", q: "%#{query}%")
-  end
+    end
 end

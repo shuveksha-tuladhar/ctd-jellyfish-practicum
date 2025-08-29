@@ -1,0 +1,5 @@
+<%= form_with(model: [@user, @friendship], local: true) do |f| %>
+  <%= f.label :friend_id, "Select Friend" %>
+  <%= f.select :friend_id, options_from_collection_for_select(@users, :id, :email) %>
+  <%= f.submit "Add Friend" %>
+<% end %>
