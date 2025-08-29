@@ -1,8 +1,5 @@
 Rails.application.routes.draw do
-  get "user_groups/index"
-  get "user_groups/show"
-  get "user_groups/new"
-  get "user_groups/edit"
+
   get "password_resets/new"
   get "password_resets/edit"
 

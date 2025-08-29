@@ -12,7 +12,7 @@
         <% end %>
         |
         <%= link_to "Edit", edit_user_group_path(group) %> |
-        <%= link_to "Delete", user_group_path(group), method: :delete, data: { confirm: "Are you sure?" } %>
+        <%= link_to "Delete", user_group_path(group), data: { turbo_method: :delete, turbo_confirm: "Are you sure?" } %>
       </li>
     <% end %>
   </ul>
