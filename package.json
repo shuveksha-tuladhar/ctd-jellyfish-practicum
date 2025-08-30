@@ -25,5 +25,9 @@
   "bugs": {
     "url": "https://github.com/DianaLiao/ctd-jellyfish-practicum/issues"
   },
-  "homepage": "https://github.com/DianaLiao/ctd-jellyfish-practicum#readme"
+  "homepage": "https://github.com/DianaLiao/ctd-jellyfish-practicum#readme",
+  "devDependencies": {
+    "prettier": "^2.2.1",
+    "prettier-plugin-erb": "^0.4.0"
+  }
 }

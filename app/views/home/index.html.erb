@@ -1,0 +1,405 @@
+<div>
+  <!-- Navbar -->
+  <nav class="navbar">
+    <div class="navbar-left">
+      <h4>
+        <span class="dollar-logo">
+          <%= image_tag "logo00.png", alt: "Logo" %>
+        </span>
+        CostShare
+      </h4>
+    </div>
+    <div class="navbar-center">
+      <%= link_to "Login", login_path, class: "nav-btn" %>
+      <%= link_to "Sign Up", signup_path, class: "nav-btn" %>
+    </div>
+    <div class="navbar-right">
+      <%= link_to "Home" %>
+    </div>
+  </nav>
+
+  <!-- main container -->
+  <div class="main-container">
+    <!-- row one -->
+    <div class="row">
+      <div style="padding-bottom: 10px;">
+        <h3 style="font-size: 20px;">Split Expenses Effortlessly with Friends</h3>
+        <p style="text-align: center;">CostShare makes it simple to track shared expenses, settle debts, and maintain financial harmony in your social circle.</p>
+      </div>
+      <!-- 3 cards -->
+      <div class="cards">
+        <div class="card">
+          <div class="icon">
+            <i class="fas fa-receipt"></i>
+          </div>
+          <div class="card-content">
+            <h4>Track Group Expense</h4>
+            <p>Easily record and categorize expenses shared with roomates, friends, or travel companies.</p>
+          </div>
+        </div>
+        <div class="card">
+          <div class="icon">
+            <i class="fas fa-calculator"></i>
+          </div>
+          <div class="card-content">
+            <h4>Smart Debt calculation</h4>
+            <p>Our algorithm optimizes who pays whom, minimizing the number of transactions needed to settle up.</p>
+          </div>
+        </div>
+        <div class="card">
+          <div class="icon">
+            <i class="fas fa-bell"></i>
+          </div>
+          <div class="card-content">
+            <h4>Payment Reminders</h4>
+            <p>Send gentle reminders to friends who owe you money without the awkward conversations.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- row two -->
+    <div class="row-with-image">
+      <div class="img-container">
+        <%= image_tag "image03.jpg", alt: "Home Page Image", class: "home-page-image" %>
+      </div>
+      <div class="image-content">
+        <h3>Simplify Group Finances</h3>
+        <p>Whether you're sharing an apartment, planing a vacation, or just going out for dinner, ShareCost helps you keep track of who paid for what and who owne whom.</p>
+        <ul>
+          <li>✅ Create multiple groups for different sharing scenarios</li>
+          <li>✅ Integrate with payment platforms for instant settlements</li>
+          <li>✅ Track individual and group expenses in one place</li>
+          <li>✅ Split bills evenly or by custom percentages</li>
+          <li>✅ Send automatic reminders to settle up</li>
+          <li>✅ View detailed balance summaries for each group</li>
+        </ul>
+      </div>
+    </div>
+    <!-- row three -->
+    <div class="row">
+      <h3>How It Works</h3>
+      <div class="cards-without_gap">
+        <div class="card">
+          <div class="icon">1</div>
+          <div class="card-content">
+            <h4>Create a Group</h4>
+            <p>Add friends to your expense-sharing group</p>
+          </div>
+        </div>
+        <div class="card">
+          <div class="icon">2</div>
+          <div class="card-content">
+            <h4>Log Expenses</h4>
+            <p>Record who paid and how to split the cost</p>
+          </div>
+        </div>
+        <div class="card">
+          <div class="icon">3</div>
+          <div class="card-content">
+            <h4>Track Balances</h4>
+            <p>See how ownes what at a glance</p>
+          </div>
+        </div>
+        <div class="card">
+          <div class="icon">4</div>
+          <div class="card-content">
+            <h4>Settle Up</h4>
+            <p>Pay or receive money to clear debts</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- row four -->
+    <div class="row">
+      <div>
+        <h3>Ready to simplify your shared expenses?</h3>
+        <div class="one-row-text">
+          <div></div>
+          <div class="cta-text">Get Start for Free   </div>
+          <div style="text-align: end; color: green;">Learn More</div>
+        </div>
+        <p style="text-align: end;">Add expenses in any currency with automatic conversion</p>
+        <h3>What Our Users Say</h3>
+      </div>
+      <div class="cards">
+        <div class="card feedback-card">
+          <div class="user-feedback">
+            <div class="icon-name">EC</div>
+            <div class="name-and-rate">
+              <p>Emily Chen</p>
+              <p>⭐⭐⭐⭐⭐</p>
+            </div>
+          </div>
+          <p>"ShareCost saved our friendship during our Europ trip! No more awkward money converstion or trying to remember who paid for what."</p>
+        </div>
+        <div class="card feedback-card">
+          <div class="user-feedback">
+            <div class="icon-name">MJ</div>
+            <div class="name-and-rate">
+              <p>Marcus Johnson</p>
+              <p>⭐⭐⭐⭐⭐</p>
+            </div>
+          </div>
+          <p>"As roomates, we use this app daily. The expense tracking is intuitive and the debt calculation is spot on. Highly recommend!"</p>
+        </div>
+        <div class="card feedback-card">
+          <div class="user-feedback">
+            <div class="icon-name">SR</div>
+            <div class="name-and-rate">
+              <p>Sofia Rodriguez</p>
+              <p>⭐⭐⭐⭐⭐</p>
+            </div>
+          </div>
+          <p>"I organize group dinners weekly, and this app has been a game-changer. The ability to split bills unevenly is exactly what we needed."</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  /* Navbar */
+  body, html {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    background-color: #f3f3f3;
+    font-family: Arial, sans-serif;
+  }
+
+  .navbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background-color: #1d917a;
+      padding: 10px 20px;
+      color: white;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      box-sizing: border-box;
+      z-index: 1000;
+  }
+  .navbar h4 {
+      display: flex;
+      align-items: center;
+      margin: 0;
+  }
+  .navbar .dollar-logo img {
+      width: 30px;
+      height: 30px;
+      margin-right: 8px;
+  }
+  .nav-btn {
+      background: white;
+      color: #1d917a;
+      border: none;
+      padding: 6px 12px;
+      border-radius: 4px;
+      cursor: pointer;
+      margin-left: 8px;
+      font-size: 14px;
+      text-decoration: none;
+  }
+  .nav-btn:hover {
+      background-color: #0ca694;
+      color: white;
+  }
+  .navbar-right {
+      display: flex;
+      align-items: center;
+  }
+  .navbar-right a {
+    text-decoration: none;
+    color: white;
+  }
+
+  .main-container {
+    padding-top: 100px;
+    padding-bottom: 90px;
+    padding-left: 60px;
+    padding-right: 60px;
+    gap: 20px;
+  }
+
+  .main-container h3, .main-container h4 {
+    text-align: center;
+  }
+
+  .cards, .cards-without_gap {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+    margin-top: 20px;
+  }
+  .card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-sizing: border-box;
+    flex: 1;
+    min-width: 250px;
+    box-shadow: 2px 2px 10px rgba(0,0,0,0.05);
+  }
+  .feedback-card {
+    align-items: start;
+  }
+  /* Icon styles */
+
+  .icon, .icon-name {
+  font-size: 20px;
+  color: #1d917a;
+  background-color: rgba(29, 145, 122, 0.1); /* light green transparent */
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  margin-bottom: 10px;
+}
+
+.icon-name {
+  font-size: 16px;
+  width: 38px;
+  height: 38px;
+}
+
+.user-feedback {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.name-and-rate {
+  display: flex;
+  flex-direction: column;
+}
+.name-and-rate p {
+  margin: 2px 0;
+  font-size: 14px;
+}
+
+  /* Card Content */
+  .card-content h4 {
+    margin: 0;
+    margin-bottom: 6px;
+  }
+
+  .card-content p {
+    font-size: 14px;
+    color: #555;
+  }
+
+  .image-content ul li {
+    list-style: none;
+    padding: 4px;
+  }
+
+
+  /* Headings */
+  h3 {
+    margin-top: 0;
+    color: #1d917a;
+  }
+  /* Rows */
+  .row {
+    margin-bottom: 40px;
+  }
+
+  .one-row-text {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+    padding-top: 10px;
+  }
+  .one-row-text {
+    flex: 1;
+  }
+
+  .cta-text {
+    background-color: #1d917a;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 6px;
+    font-weight: bold;
+    text-align: center;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+
+  .cta-text:hover {
+  background-color: #0c7f68;   
+}
+
+   /* image */
+  .row-with-image {
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+  }
+  .row-with-image img {
+    width: 460px;
+  }
+
+  /* Home image */
+  .home-page-image {
+    max-width: 100%;
+    border-radius: 8px;
+    box-shadow: 1px 1px 10px rgba(0,0,0,0.05);
+  }
+  /* Responsive Layout */
+  @media (max-width: 768px) {
+      .navbar {
+          padding: 10px;
+          flex-wrap: wrap;
+      }
+      .navbar-center, .navbar-right {
+          align-items: center;
+          display: flex;
+      }
+      h3 {
+          font-size: 16px;
+      }
+      .row-with-image {
+        flex-direction: column;
+      }
+  }
+
+  @media (max-width: 600px) {
+      .main-container {
+        padding-top: 80px;
+        padding-bottom: 60px;
+        padding-left: 40px;
+        padding-right: 40px;
+      }
+      .navbar {
+          padding: 8px 12px;
+      }
+      .navbar h4 {
+          font-size: 14px;
+      }
+      .navbar .dollar-logo img {
+          width: 22px;
+          height: 22px;
+          margin-right: 5px;
+      }
+      .nav-btn {
+          padding: 4px 8px;
+          font-size: 12px;
+          margin-left: 4px;
+      }
+      .navbar-right {
+          gap: 6px;
+      }
+
+  }
+</style>

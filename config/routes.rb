@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  get "home/index"
   get "password_resets/new"
   get "password_resets/edit"
 
@@ -35,5 +36,5 @@ Rails.application.routes.draw do
 
   get "dashboard", to: "dashboard#index"
 
-  root "sessions#new"
+  root "home#index"
 end
