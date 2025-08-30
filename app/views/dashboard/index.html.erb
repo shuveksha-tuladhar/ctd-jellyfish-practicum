@@ -19,6 +19,7 @@
             <span><i class="bi bi-currency-dollar"></i></span>
           </div>
           <p>$245.50<span class="green-text">You are owed</span></p>
+          <!-- will replace this button with link_to balances path -->
           <button>View details</button>
         </div>
 
@@ -29,7 +30,7 @@
             <span><i class="bi bi-people"></i></span>
           </div>
           <p>5<span class="gray-text">Active groups</span></p>
-          <button>Manage groups</button>
+          <%= link_to "Manage groups", user_groups_path, class:"btn" %>
         </div>
 
         <!-- card3 -->
@@ -39,7 +40,7 @@
             <span><i class="bi bi-bar-chart-line"></i></span>
           </div>
           <p>$1,240<span class="red-text">+12% from last month</span></p>
-          <button>View expenses</button>
+          <%= link_to "View expenses", expenses_path, class:"btn" %>
         </div>
       </div>
 
@@ -65,10 +66,10 @@
             <h3>Quick Actions</h3>
             <div class="quick-actions-wrapper">
               <div class="quick-actions-card">
-                <button>Add Expenses</button>
+                <%= link_to "View expenses", expenses_path %>
               </div>
               <div class="quick-actions-card">
-                <button>Create Group</button>
+                <%= link_to "Manage groups", user_groups_path %>
               </div>
               <div class="quick-actions-card">
                 <button>Settle Up</button>
@@ -151,7 +152,7 @@
   }
 
   /* Top row cards buttons */
-  .dashboard-container > div:first-child > .card > button {
+  .dashboard-container > div:first-child > .card > button, .btn {
     width: auto;         
     align-self: flex-start; 
     padding: 8px 16px;
@@ -164,8 +165,14 @@
     font-size: 14px;
     display: inline-block; 
   }
+  .btn {
+    text-decoration: none;
+  }
 
   .dashboard-container > div:first-child > .card > button:hover {
+    background-color: #0ca694;
+  }
+  .btn {
     background-color: #0ca694;
   }
 
@@ -254,6 +261,21 @@
   }
 
   .quick-actions-card button:hover {
+    background-color: #0ca694;
+  }
+
+  .quick-actions-card a {
+    background-color: rgba(29, 145, 122, 0.7);
+    color: white;
+    border: none;
+    padding: 22px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    width: 100%;
+    text-decoration: none;
+  }
+
+  .quick-actions-card a:hover {
     background-color: #0ca694;
   }
 
