@@ -6,6 +6,8 @@ class UserGroup < ApplicationRecord
 
   has_many :expenses, dependent: :nullify
 
+  has_many :payments, dependent: :destroy
+
   validates :name, presence: true
   validates :creator, presence: true
 end

@@ -7,6 +7,8 @@ class Expense < ApplicationRecord
   belongs_to :category, optional: true
   belongs_to :user_group, optional: true
 
+  has_many :payments, dependent: :destroy
+
   validates :title, presence: true, length: { maximum: 100 }
   validates :amount, presence: true, numericality: { greater_than: 0 }
 end
