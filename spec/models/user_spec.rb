@@ -27,4 +27,14 @@ RSpec.describe User, type: :model do
             expect(user).to be_valid
         end
     end
+    describe "associations" do
+        it "can have many expenses" do
+            user = FactoryBot.create(:user)
+            expense1 = FactoryBot.create(:expense, user: user)
+            expense2 = FactoryBot.create(:expense, user: user)
+
+            expect(user.expenses).to include(expense1, expense2)
+            expect(user.expenses.count).to eq(2)
+        end
+    end
 end

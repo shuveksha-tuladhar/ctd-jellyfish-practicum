@@ -19,6 +19,9 @@ Rails.application.routes.draw do
     end
   end
 
+  resources :users do
+    resources :friendships
+  end
 
   resources :users do
     member do
@@ -33,6 +36,10 @@ Rails.application.routes.draw do
   # root "posts#index"
 
   resources :expenses
+
+  resources :user_groups do
+    resources :group_members, only: [ :index, :create, :destroy ]
+  end
 
   get "dashboard", to: "dashboard#index"
 

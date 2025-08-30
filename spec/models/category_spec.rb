@@ -1,20 +1,28 @@
 require 'rails_helper'
 
 RSpec.describe Category, type: :model do
-  it "is valid with a name" do
-    category = Category.new(name: "Utilities")
-    expect(category).to be_valid
+  describe "validations" do
+    it "is valid with a name" do
+      category = build(:category)
+      expect(category).to be_valid
+    end
+
+    it "is invalid without a name" do
+      category = build(:category, name: nil)
+      expect(category).not_to be_valid
+    end
   end
 
-  it "is invalid without a name" do
-    category = Category.new(name: nil)
-    expect(category).not_to be_valid
-  end
+  describe "associations" do
+    it "has many expenses" do
+      category = create(:category)
+      user = create(:user)
+      user_group = create(:user_group, creator: user)
 
-  it "has many expenses" do
-    category = Category.create!(name: "Food")
-    user = User.create!(first_name: "John", last_name: "Doe", email: "john@example.com", password: "password", phone_number: "1231231234")
-    expense = Expense.create!(title: "Lunch", amount: 10, user: user, category: category)
-    expect(category.expenses).to include(expense)
+
+      expense = create(:expense, user: user, category: category, user_group: user_group)
+
+      expect(category.expenses).to include(expense)
+    end
   end
 end

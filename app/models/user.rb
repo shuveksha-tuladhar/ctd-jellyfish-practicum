@@ -9,9 +9,11 @@ class User < ApplicationRecord
     has_many :received_friendships, class_name: "Friendship", foreign_key: :friend_id, dependent: :destroy
     has_many :received_friends, through: :received_friendships, source: :user
 
+
     has_secure_password
     attr_accessor :reset_token
-    has_many :expenses, dependent: :destroy
+
+    has_many :expenses, dependent: :nullify
 
     validates :first_name, :last_name, :email, presence: true
     validates :email, uniqueness: true, format: { with: URI::MailTo::EMAIL_REGEXP }
@@ -19,6 +21,11 @@ class User < ApplicationRecord
         with: /\A\d{10}\z/,
         message: "must be a 10 digits (US format)"
     }
+
+    has_many :created_groups, class_name: "UserGroup", foreign_key: :created_by_user_id
+    has_many :group_members
+    has_many :user_groups, through: :group_members
+    has_many :expenses, dependent: :destroy
 
     def generate_password_reset_token!
         self.reset_token = SecureRandom.urlsafe_base64
@@ -38,5 +45,5 @@ class User < ApplicationRecord
         OR (LOWER(last_name) || ' ' || LOWER(first_name)) LIKE :q",
         q: "%#{query}%"
         )
-  end
+    end
 end
