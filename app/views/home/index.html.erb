@@ -23,7 +23,7 @@
     <!-- row one -->
     <div class="row">
       <div style="padding-bottom: 10px;">
-        <h3 style="font-size: 20px;">Split Expenses Effortlessly with Friends</h3>
+        <h3 style="font-size: 22px;">Split Expenses Effortlessly with Friends</h3>
         <p style="text-align: center;">CostShare makes it simple to track shared expenses, settle debts, and maintain financial harmony in your social circle.</p>
       </div>
       <!-- 3 cards -->
@@ -115,7 +115,9 @@
         <h3>Ready to simplify your shared expenses?</h3>
         <div class="one-row-text">
           <div></div>
-          <div class="cta-text">Get Start for Free   </div>
+          <div class="cta-text">
+            <%= link_to "Sign Up", signup_path %>
+          </div>
           <div style="text-align: end; color: green;">Learn More</div>
         </div>
         <p style="text-align: end;">Add expenses in any currency with automatic conversion</p>
@@ -338,6 +340,11 @@
 
   .cta-text:hover {
   background-color: #0c7f68;   
+}
+
+.cta-text a {
+  text-decoration: none;
+  color: white;
 }
 
    /* image */
