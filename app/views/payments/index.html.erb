@@ -1,0 +1,18 @@
+<h1>Payments</h1>
+
+ <table>
+  <tr>
+    <th>Name</th>
+    <th>Amount</th>
+    <th>-</th>
+    <th>Action</th>
+  </tr>
+  <%@payments.each do |payment|%>
+    <tr>
+      <td><%= payment.payer.first_name%></td>
+      <td><%= payment.owed_amount%></td>
+      <td><%=link_to "Show", "#"%></td>
+      <td><button>Pay</button></td>
+    </tr>
+  <%end%>
+</table> 

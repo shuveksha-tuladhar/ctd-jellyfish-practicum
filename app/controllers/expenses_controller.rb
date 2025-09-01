@@ -60,8 +60,8 @@ end
   end
 
   def expense_params
-  params.require(:expense).permit(:title, :amount, :split_type, :category_id)
-end
+    params.require(:expense).permit(:title, :amount, :split_type, :category_id)
+  end
 
   def require_login
     redirect_to login_path, alert: "Please log in." unless current_user
