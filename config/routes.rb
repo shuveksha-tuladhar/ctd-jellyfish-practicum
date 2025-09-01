@@ -1,8 +1,4 @@
 Rails.application.routes.draw do
-  get "home/index"
-  get "password_resets/new"
-  get "password_resets/edit"
-
   get "login", to: "sessions#new"
   post "login", to: "sessions#create"
   delete "logout", to: "sessions#destroy"
@@ -21,6 +17,10 @@ Rails.application.routes.draw do
 
   resources :users do
     resources :friendships
+  end
+
+  resources :users do
+      resources :payments
   end
 
   resources :users do

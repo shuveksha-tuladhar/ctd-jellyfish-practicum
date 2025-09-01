@@ -20,8 +20,8 @@ class User < ApplicationRecord
     has_many :expense_users, dependent: :destroy
     has_many :expenses, through: :expense_users
 
-    has_many :payments_made, class: "Payment", foreign_key: :payer_id, dependent: :destroy
-    has_many :payments_recieved, class: "Payment", foreign_key: :payee_id, dependent: :destroy
+    has_many :payments_made, class_name: "Payment", foreign_key: :payer_id, dependent: :destroy
+    has_many :payments_recieved, class_name: "Payment", foreign_key: :payee_id, dependent: :destroy
 
     validates :first_name, :last_name, :email, presence: true
     validates :email, uniqueness: true, format: { with: URI::MailTo::EMAIL_REGEXP }
