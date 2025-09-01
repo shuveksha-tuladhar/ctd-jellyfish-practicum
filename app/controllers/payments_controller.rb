@@ -6,15 +6,14 @@ class PaymentsController < ApplicationController
   end
 
   def show
+   @payment = @user.payments_made.find(params[:id])
   end
 
   def destroy
-  end
-
-  def new
-  end
-
-  def create
+   @payment = @user.payments_made.find(params[:id])
+   @payment.destroy
+   flash[:alert] = "Deletion Successful"
+   redirect_to user_payments_path(@user)
   end
 
 private
