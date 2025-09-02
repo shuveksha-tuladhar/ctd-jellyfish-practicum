@@ -1,131 +1,128 @@
 <!-- Navbar -->
-    <nav class="navbar">
-        <div class="navbar-left">
-            <h4>
-                <span class="dollar-logo">
-                    <%= image_tag "logo00.png", alt: "Logo" %>
-                </span>
-                CostShare
-            </h4>
-        </div>
-        <div class="navbar-center">
-            <%= link_to "Add Expense", new_expense_path, class: "nav-btn" %>
-            <button class="nav-btn">Settle Up</button>
-        </div>
-        <div class="navbar-right">
-            <% if current_user %>
-                <%= link_to user_path(current_user), class: "profile-info", style: "text-decoration: none; color: inherit;" do %>
-                    <div class="profile-info">
-                        <div class="navbar-profile-pic">
-                            <% if current_user.profile_picture.attached? %>
-                            <%= image_tag url_for(current_user.profile_picture), style: "border-radius: 50%; width: 40px; height: 40px; object-fit: cover;" %>
-                            <% else %>
-                            <i class="bi bi-person-circle" style="font-size: 40px; color: white;"></i>
-                            <% end %>
-                        </div>
-                        <p><%= current_user.first_name %> <%= current_user.last_name %></p>
-                    </div>
-                <% end %>
-
-                <%= link_to "Logout", logout_path, data: { turbo_method: :delete }, class: "nav-btn" %>
+<nav class="navbar">
+  <div class="navbar-left">
+    <h4>
+      <span class="dollar-logo">
+        <%= image_tag "logo00.png", alt: "Logo" %>
+      </span>
+      CostShare
+    </h4>
+  </div>
+  <div class="navbar-center">
+    <%= link_to "Add Expense", new_expense_path, class: "nav-btn" %>
+    <button class="nav-btn">Settle Up</button>
+  </div>
+  <div class="navbar-right">
+    <% if current_user %>
+      <%= link_to user_path(current_user), class: "profile-info", style: "text-decoration: none; color: inherit;" do %>
+        <div class="profile-info">
+          <div class="navbar-profile-pic">
+            <% if current_user.profile_picture.attached? %>
+              <%= image_tag url_for(current_user.profile_picture), style: "border-radius: 50%; width: 40px; height: 40px; object-fit: cover;" %>
             <% else %>
-                <%= link_to "Login", login_path, class: "nav-btn" %>
+              <i class="bi bi-person-circle" style="font-size: 40px; color: white;"></i>
             <% end %>
+          </div>
+          <p><%= current_user.first_name %> <%= current_user.last_name %></p>
         </div>
-    </nav>
-
-
+      <% end %>
+      <%= link_to "Logout", logout_path, data: { turbo_method: :delete }, class: "nav-btn" %>
+    <% else %>
+      <%= link_to "Login", login_path, class: "nav-btn" %>
+    <% end %>
+  </div>
+</nav>
 <style>
-/* Navbar */
-.navbar {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background-color: #1d917a;
-    padding: 10px 20px;
-    color: white;
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    box-sizing: border-box;
-    z-index: 1000;
-}
-.navbar h4 {
-    display: flex;
-    align-items: center;
-    margin: 0;
-}
-.navbar .dollar-logo img {
-    width: 30px;
-    height: 30px;
-    margin-right: 8px;
-}
-.nav-btn {
-    background: white;
-    color: #1d917a;
-    border: none;
-    padding: 6px 12px;
-    border-radius: 4px;
-    cursor: pointer;
-    margin-left: 8px;
-    font-size: 14px;
-    text-decoration: none; 
-}
-.nav-btn:hover {
-    background-color: #0ca694;
-    color: white;
-}
-.navbar-right,
-.profile-info {
-    display: flex;
-    align-items: center;
-}
-.profile-info {
-    gap: 8px;
-}
-.navbar-right {
-    gap: 12px;
-}
-/* Responsive Layout */
-@media (max-width: 768px) {
-    .navbar {
-        padding: 10px;
-    }
-    .navbar-center, .navbar-right {
-        margin-top: 10px;
-    }
-    .profile-info p {
-        font-size: 14px;
-    }
-    h3 {
-        font-size: 16px;
-    }
-}
+  /* Navbar */
+  .navbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background-color: #1d917a;
+      padding: 10px 20px;
+      color: white;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      box-sizing: border-box;
+      z-index: 1000;
+  }
+  .navbar h4 {
+      display: flex;
+      align-items: center;
+      margin: 0;
+  }
+  .navbar .dollar-logo img {
+      width: 30px;
+      height: 30px;
+      margin-right: 8px;
+  }
+  .nav-btn {
+      background: white;
+      color: #1d917a;
+      border: none;
+      padding: 6px 12px;
+      border-radius: 4px;
+      cursor: pointer;
+      margin-left: 8px;
+      font-size: 14px;
+      text-decoration: none;
+  }
+  .nav-btn:hover {
+      background-color: #0ca694;
+      color: white;
+  }
+  .navbar-right,
+  .profile-info {
+      display: flex;
+      align-items: center;
+  }
+  .profile-info {
+      gap: 8px;
+  }
+  .navbar-right {
+      gap: 12px;
+  }
+  /* Responsive Layout */
+  @media (max-width: 768px) {
+      .navbar {
+          padding: 10px;
+      }
+      .navbar-center, .navbar-right {
+          margin-top: 10px;
+      }
+      .profile-info p {
+          font-size: 14px;
+      }
+      h3 {
+          font-size: 16px;
+      }
+  }
 
-@media (max-width: 600px) {
-    .navbar {
-        padding: 6px 10px;
-    }
-    .navbar h4 {
-        font-size: 14px;
-    }
-    .navbar .dollar-logo img {
-        width: 22px;
-        height: 22px;
-        margin-right: 5px;
-    }
-    .nav-btn {
-        padding: 4px 8px;
-        font-size: 12px;
-        margin-left: 4px;
-    }
-    .navbar-right {
-        gap: 6px;
-    }
+  @media (max-width: 600px) {
+      .navbar {
+          padding: 6px 10px;
+      }
+      .navbar h4 {
+          font-size: 14px;
+      }
+      .navbar .dollar-logo img {
+          width: 22px;
+          height: 22px;
+          margin-right: 5px;
+      }
+      .nav-btn {
+          padding: 4px 8px;
+          font-size: 12px;
+          margin-left: 4px;
+      }
+      .navbar-right {
+          gap: 6px;
+      }
 
-    .profile-picture p {
-        font-size: 14px;
-    }
-}
+      .profile-picture p {
+          font-size: 14px;
+      }
+  }
 </style>
