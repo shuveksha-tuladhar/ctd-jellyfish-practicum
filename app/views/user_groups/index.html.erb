@@ -1,21 +1,357 @@
-<h1>All User Groups</h1>
+<div>
+  <!-- Navbar -->
+  <%= render "shared/navbar" %>
 
-<%= link_to "Create New Group", new_user_group_path %>
+  <!-- Main layout -->
+  <div class="main-container">
+    <!-- Sidebar -->
+    <%= render "shared/sidebar" %>
 
-<% if @user_groups.any? %>
-  <ul>
-    <% @user_groups.each do |group| %>
-      <li>
-        <%= link_to group.name, user_group_path(group) %>
-        <% if group.description.present? %>
-          - <%= truncate(group.description, length: 50) %>
+    <!-- User Groups section -->
+    <div class="groups-wrapper">
+      <!-- Groups Header -->
+      <div class="groups-header">
+        <h1>Your Groups</h1>
+
+        <!-- Search + Button container -->
+        <div class="groups-controls">
+          <form action="<%= user_groups_path %>" method="get" class="search-form">
+            <input type="text" name="q" placeholder="Search groups..." class="search-input" />
+          </form>
+          <%= link_to "Create New Group", new_user_group_path, class: "create-btn" %>
+        </div>
+      </div>
+
+      <% if @user_groups.any? %>
+        <% @user_groups.each do |group| %>
+          <div class="group-container">
+            <div class="group-header">
+              <h2 class="group-title"><%= group.name %></h2>
+              <%= link_to "View Details", user_group_path(group), class: "action-btn view-btn" %>
+            </div>
+
+            <p class="group-created">Created on <%= group.created_at.strftime("%B %d, %Y") %></p>
+
+            <!-- Balance -->
+            <p class="balance-label">Total Balance</p>
+            <p class="balance-amount">$<%= group.expenses.sum(:amount) %></p>
+
+            <!-- Recent Expenses -->
+            <h3 class="section-title">Recent Expenses</h3>
+            <% if group.expenses.any? %>
+              <ul class="expenses-list">
+                <% group.expenses.last(3).each do |expense| %>
+                  <li>
+                    <div>
+                      <strong><%= expense.title %></strong><br>
+                      <span class="expense-date"><%= expense.created_at.strftime("%B %d, %Y") %></span>
+                    </div>
+                    <span class="expense-amount">$<%= expense.amount %></span>
+                  </li>
+                <% end %>
+              </ul>
+            <% else %>
+              <p class="empty-message">No expenses yet.</p>
+            <% end %>
+
+            <!-- Members -->
+            <h3 class="section-title">Members (<%= group.users.count %>)</h3>
+            <div class="members-list">
+              <% group.users.each do |user| %>
+                <div class="member-circle">
+                  <%= user.first_name.first %><%= user.last_name.first %>
+                </div>
+              <% end %>
+            </div>
+
+            <!-- Actions -->
+            <div class="group-actions">
+              <%= link_to "Edit", edit_user_group_path(group), class: "action-btn edit-btn" %>
+              <%= link_to "Delete", user_group_path(group),
+                    data: { turbo_method: :delete, turbo_confirm: "Are you sure?" },
+                    class: "action-btn delete-btn" %>
+            </div>
+          </div>
         <% end %>
-        |
-        <%= link_to "Edit", edit_user_group_path(group) %> |
-        <%= link_to "Delete", user_group_path(group), data: { turbo_method: :delete, turbo_confirm: "Are you sure?" } %>
-      </li>
-    <% end %>
-  </ul>
-<% else %>
-  <p>No groups found.</p>
-<% end %>
+      <% else %>
+        <p class="empty-message">No groups found.</p>
+      <% end %>
+    </div>
+  </div>
+</div>
+
+<style>
+/* Reset and Base Styles */
+body, html {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  font-family: Arial, sans-serif;
+  background-color: #f3f3f3;
+}
+
+/* Main Layout */
+.main-container {
+  display: flex;
+  gap: 20px;
+  padding: 20px;
+  padding-top: 100px;
+  box-sizing: border-box;
+  min-height: calc(100vh - 120px);
+}
+
+/* Groups Wrapper */
+.groups-wrapper {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr); /* Two cards per row */
+  gap: 20px;
+  flex-grow: 1;
+  width: 100%;
+}
+
+/* Groups Header */
+.groups-header {
+  grid-column: 1 / -1; /* span both columns */
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+}
+
+.groups-header h1 {
+  margin: 0;
+  color: #1d917a;
+  font-size: 28px;
+}
+
+/* Search + Create Button */
+.groups-controls {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.search-form {
+  display: flex;
+}
+
+.search-input {
+  padding: 8px 12px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 14px;
+  outline: none;
+  transition: border 0.2s ease;
+}
+
+.search-input:focus {
+  border-color: #1d917a;
+}
+
+.create-btn {
+  display: inline-block;
+  padding: 10px 18px;
+  background-color: #1d917a;
+  color: #fff;
+  border-radius: 6px;
+  text-decoration: none;
+  font-size: 15px;
+  font-weight: bold;
+  transition: background 0.3s ease;
+}
+
+.create-btn:hover {
+  background-color: #0ca694;
+}
+
+/* Individual Group Container */
+.group-container {
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+
+/* Group Header inside card */
+.group-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.group-title {
+  margin: 0;
+  font-size: 20px;
+  color: #1d917a;
+}
+
+/* Buttons */
+.action-btn {
+  display: inline-block;
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 500;
+  text-decoration: none;
+  transition: background 0.2s ease;
+  cursor: pointer;
+}
+
+.view-btn, .edit-btn {
+  background-color: #1d917a;
+  color: #fff;
+}
+
+.view-btn:hover, .edit-btn:hover {
+  background-color: #0ca694;
+}
+
+.delete-btn {
+  background-color: #e08c79;
+  color: #fff;
+}
+
+.delete-btn:hover {
+  background-color: #c76b5c;
+}
+
+/* Created date & balance */
+.group-created {
+  font-size: 13px;
+  color: #777;
+  margin-bottom: 12px;
+}
+
+.balance-label {
+  font-size: 14px;
+  color: #555;
+  margin: 0;
+}
+
+.balance-amount {
+  font-size: 20px;
+  font-weight: bold;
+  margin-bottom: 15px;
+}
+
+/* Section Titles */
+.section-title {
+  font-size: 16px;
+  font-weight: bold;
+  margin: 15px 0 8px;
+  color: #333;
+}
+
+/* Expenses List */
+.expenses-list {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 15px 0;
+}
+
+.expenses-list li {
+  display: flex;
+  justify-content: space-between;
+  padding: 6px 0;
+  border-bottom: 1px solid #eee;
+  font-size: 14px;
+}
+
+.expense-date {
+  font-size: 12px;
+  color: #777;
+}
+
+.expense-amount {
+  font-weight: bold;
+  color: #333;
+}
+
+/* Members */
+.members-list {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 15px;
+}
+
+.member-circle {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background-color: #eaf6f3;
+  color: #1d917a;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  font-weight: bold;
+}
+
+/* Group Actions */
+.group-actions {
+  display: flex;
+  gap: 10px;
+}
+
+/* Empty message */
+.empty-message {
+  text-align: center;
+  font-size: 14px;
+  color: #555;
+  margin: 10px 0;
+}
+
+/* Sidebar */
+.sidebar {
+  width: 250px;
+  background-color: #fff;
+  padding: 15px;
+  border-radius: 10px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  flex-shrink: 0;
+}
+
+/* Logout button */
+    .logout-btn {
+      background: white;
+      color: #1d917a;
+      border: none;
+      padding: 6px 12px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 14px;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+    }
+
+    .logout-btn:hover {
+      background-color: #0ca694;
+      color: white;
+    }
+
+/* Responsive */
+@media (max-width: 768px) {
+  .groups-wrapper {
+    grid-template-columns: 1fr; /* single column on mobile */
+  }
+  .groups-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+  .groups-controls {
+    width: 100%;
+    justify-content: space-between;
+  }
+  .search-input {
+    flex: 1;
+  }
+}
+
+</style>
