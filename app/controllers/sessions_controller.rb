@@ -8,7 +8,7 @@ class SessionsController < ApplicationController
         if user&.authenticate(params[:session][:password])
           session[:user_id] = user.id
           # redirect_to user_path(user), notice: "Welcome back!"
-          redirect_to dashboard_path 
+          redirect_to dashboard_path
         else
           flash.now[:alert] = "Invalid email or password"
           render :new, status: :unprocessable_entity
