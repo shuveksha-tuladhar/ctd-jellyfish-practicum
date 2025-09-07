@@ -9,8 +9,6 @@
     <!-- Dashboard -->
     <div class="dashboard-container">
 
-      <h1>Welcome, <%= current_user.first_name %><% current_user.last_name %>!</h1>
-
       <!-- Top row with 3 cards -->
       <div class="first-row">
         <div>
@@ -345,6 +343,3 @@
     }
   }
 </style>
-
-
-<%= link_to "Payments", user_payments_path(@user.id), class:"btn btn-primary"%>
