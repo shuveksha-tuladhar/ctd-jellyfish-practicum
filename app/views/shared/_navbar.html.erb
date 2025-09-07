@@ -10,13 +10,13 @@
   </div>
   <div class="navbar-center">
     <%= link_to "Add Expense", new_expense_path, class: "nav-btn" %>
-<<<<<<< HEAD
+
     <% if current_user %>
       <%= link_to "Settle Up", user_payments_path(current_user.id), class:"nav-btn" %>
     <% end %>
-=======
+
     <%= link_to "Settle Up", user_payments_path(@user.id), class:"nav-btn" %>
->>>>>>> 66dbf9b (removed payment button in the left corner and link the payment to the settle up btn)
+
   </div>
   <div class="navbar-right">
     <% if current_user %>
