@@ -21,7 +21,7 @@ class PaymentsController < ApplicationController
       redirect_to user_payments_path(@user)
    else
       @expenses = @user.expenses
-      render :new, status: :unprocessable_content
+      render :new, status: :unprocessable_entity
    end
   end
 
@@ -38,7 +38,7 @@ class PaymentsController < ApplicationController
       else
         flash[:alert] = "Something went wrong"
         @expenses = @user.expenses
-        render :edit, status: :unprocessable_content
+        render :edit, status: :unprocessable_entity
       end
   end
 
