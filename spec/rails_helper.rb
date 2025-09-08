@@ -46,19 +46,20 @@ RSpec.configure do |config|
     Rails.root.join('spec/fixtures')
   ]
 
-<<<<<<< HEAD
-<<<<<<< HEAD
+
   config.include AuthHelpers, type: :request
 
   # config.include Devise::Test::IntegrationHelpers, type: :request
-=======
+
   config.include Devise::Test::IntegrationHelpers, type: :request
->>>>>>> 76bc9e2 (try to fix error)
-=======
-  config.include AuthHelpers, type: :request 
-  
+
+  config.include AuthHelpers, type: :request
+
+
+
+
   # config.include Devise::Test::IntegrationHelpers, type: :request
->>>>>>> cbdc3d5 (fix respc)
+
 
   # If you're not using ActiveRecord, or you'd prefer not to run each of your
   # examples within a transaction, remove the following line or assign false
