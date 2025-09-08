@@ -38,6 +38,10 @@ class PaymentsController < ApplicationController
         redirect_to user_payments_path(@user)
       else
         flash[:alert] = "Something went wrong"
+<<<<<<< HEAD
+=======
+        @expenses = @user.expenses
+>>>>>>> 76bc9e2 (try to fix error)
         render :edit, status: :unprocessable_entity
       end
   end
