@@ -5,5 +5,5 @@ class ExpenseUser < ApplicationRecord
 
   validates :user_id, uniqueness: { scope: :expense_id }
 =======
->>>>>>> 3bf7ab0 (Create Expense User join table)
+>>>>>>> 3bf7ab0 (Create E
 end
