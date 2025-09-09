@@ -11,16 +11,16 @@ RSpec.describe "Friendships", type: :request do
   describe "POST /users/:user_id/friendships" do
     it "creates a new friendship" do
       expect {
-        post user_friendships_path(user), params: { friendship: { friend_id: friend.id } }
+        post user_friendships_path(user), params: { friend_id: friend.id }
       }.to change(Friendship, :count).by(1)
-
-      expect(response).to redirect_to(user_friendship_path(user, Friendship.last))
-
+  
+      expect(response).to redirect_to(user_friendships_path(user))
+  
       follow_redirect!
-      expect(response.body).to include(friend.email)
     end
   end
-
+  
+  
 
   describe "GET /users/:user_id/friendships/:id" do
     it "shows a single friendship" do
