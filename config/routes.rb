@@ -12,6 +12,21 @@ Rails.application.routes.draw do
     member do
       get :edit_password
       patch :update_password
+    end
+  end
+
+  resources :users do
+    resources :friendships
+  end
+
+  resources :friendships, only: [ :index, :create, :destroy, :show, :new ]
+
+  resources :users do
+      resources :payments
+  end
+
+  resources :users do
+    member do
       get :upload_photo
       patch :upload_photo
     end
@@ -20,8 +35,6 @@ Rails.application.routes.draw do
     resources :payments
     resources :balances, only: [ :index ]
   end
-
-  resources :friendships, only: [ :index, :create, :destroy, :show, :new ]
 
   get "up" => "rails/health#show", as: :rails_health_check
 

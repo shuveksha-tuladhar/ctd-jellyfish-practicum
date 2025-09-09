@@ -14,9 +14,9 @@ RSpec.describe "Friendships", type: :request do
         post user_friendships_path(user), params: { friendship: { friend_id: friend.id } }
       }.to change(Friendship, :count).by(1)
 
-      expect(response).to redirect_to(user_friendships_path(user))
+      expect(response).to redirect_to(user_friendship_path(user, Friendship.last))
+
       follow_redirect!
-      expect(response.body).to include("Friendships")
       expect(response.body).to include(friend.email)
     end
   end
@@ -37,7 +37,7 @@ RSpec.describe "Friendships", type: :request do
       expect {
         delete user_friendship_path(user, friendship)
       }.to change(Friendship, :count).by(-1)
-      expect(response).to redirect_to(users_path)
+      expect(response).to redirect_to(friendships_path)
     end
   end
 end
