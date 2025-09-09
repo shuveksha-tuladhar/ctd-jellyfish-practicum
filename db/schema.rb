@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_08_27_204303) do
+ActiveRecord::Schema[8.0].define(version: 2025_09_09_155519) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -48,6 +48,15 @@ ActiveRecord::Schema[8.0].define(version: 2025_08_27_204303) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "expense_users", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.bigint "expense_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["expense_id"], name: "index_expense_users_on_expense_id"
+    t.index ["user_id"], name: "index_expense_users_on_user_id"
+  end
+
   create_table "expenses", force: :cascade do |t|
     t.string "title"
     t.decimal "amount", precision: 10, scale: 2
@@ -56,7 +65,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_08_27_204303) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.bigint "user_id"
-    t.bigint "user_group_id", null: false
+    t.bigint "user_group_id"
     t.index ["user_group_id"], name: "index_expenses_on_user_group_id"
     t.index ["user_id"], name: "index_expenses_on_user_id"
   end
@@ -81,6 +90,21 @@ ActiveRecord::Schema[8.0].define(version: 2025_08_27_204303) do
     t.index ["user_id"], name: "index_group_members_on_user_id"
   end
 
+  create_table "payments", force: :cascade do |t|
+    t.bigint "expense_id", null: false
+    t.bigint "payer_id", null: false
+    t.bigint "payee_id", null: false
+    t.bigint "user_group_id", null: false
+    t.decimal "owed_amount"
+    t.decimal "paid_amount"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["expense_id"], name: "index_payments_on_expense_id"
+    t.index ["payee_id"], name: "index_payments_on_payee_id"
+    t.index ["payer_id"], name: "index_payments_on_payer_id"
+    t.index ["user_group_id"], name: "index_payments_on_user_group_id"
+  end
+
   create_table "user_groups", force: :cascade do |t|
     t.string "name", null: false
     t.text "description"
@@ -102,11 +126,17 @@ ActiveRecord::Schema[8.0].define(version: 2025_08_27_204303) do
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "expense_users", "expenses"
+  add_foreign_key "expense_users", "users"
   add_foreign_key "expenses", "user_groups"
   add_foreign_key "expenses", "users"
   add_foreign_key "friendships", "users"
   add_foreign_key "friendships", "users", column: "friend_id"
   add_foreign_key "group_members", "user_groups"
   add_foreign_key "group_members", "users"
+  add_foreign_key "payments", "expenses"
+  add_foreign_key "payments", "user_groups"
+  add_foreign_key "payments", "users", column: "payee_id"
+  add_foreign_key "payments", "users", column: "payer_id"
   add_foreign_key "user_groups", "users", column: "created_by_user_id"
 end
