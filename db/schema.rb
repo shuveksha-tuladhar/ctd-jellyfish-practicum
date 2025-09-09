@@ -94,7 +94,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_09_09_004758) do
     t.bigint "expense_id", null: false
     t.bigint "payer_id", null: false
     t.bigint "payee_id", null: false
-    t.bigint "user_group_id", null: false
+    t.bigint "user_group_id"
     t.decimal "owed_amount"
     t.decimal "paid_amount"
     t.datetime "created_at", null: false
