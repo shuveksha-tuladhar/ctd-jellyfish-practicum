@@ -22,6 +22,8 @@ Rails.application.routes.draw do
   resources :users do
     resources :friendships
   end
+  
+  resources :friendships, only: [ :index, :create, :destroy, :show, :new ]
 
   resources :users do
       resources :payments
@@ -33,8 +35,6 @@ Rails.application.routes.draw do
       patch :upload_photo
     end
   end
-
-  resources :friendships, only: [ :index, :create, :destroy, :show, :new ]
 
   get "up" => "rails/health#show", as: :rails_health_check
 
