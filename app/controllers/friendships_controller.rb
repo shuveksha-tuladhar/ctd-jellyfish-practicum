@@ -10,16 +10,16 @@ class FriendshipsController < ApplicationController
   def create
     friend = User.find(params[:friend_id])
     friendship = current_user.friendships.build(friend_id: friend.id)
-  
+
     if friendship.save
-      #redirect_to user_friendship_path(current_user, friendship), notice: "Friend added successfully."
+      # redirect_to user_friendship_path(current_user, friendship), notice: "Friend added successfully."
       redirect_to user_friendships_path(current_user), notice: "Friend added successfully."
     else
-      #redirect_to friendships_path, alert: friendship.errors.full_messages.to_sentence
+      # redirect_to friendships_path, alert: friendship.errors.full_messages.to_sentence
       redirect_to user_friendships_path(current_user), alert: friendship.errors.full_messages.to_sentence
     end
   end
-  
+
 
   def show
     @friendship = current_user.friendships.find(params[:id])
