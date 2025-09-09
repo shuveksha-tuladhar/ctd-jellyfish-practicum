@@ -13,14 +13,14 @@ RSpec.describe "Friendships", type: :request do
       expect {
         post user_friendships_path(user), params: { friend_id: friend.id }
       }.to change(Friendship, :count).by(1)
-  
+
       expect(response).to redirect_to(user_friendships_path(user))
-  
+
       follow_redirect!
     end
   end
-  
-  
+
+
 
   describe "GET /users/:user_id/friendships/:id" do
     it "shows a single friendship" do
