@@ -3,20 +3,20 @@ class FriendshipsController < ApplicationController
 
   def index
     @friendships = current_user.friendships.includes(:friend)
-    friend_ids = current_user.friendships.pluck(:friend_id).uniq 
-    @other_users = User.where.not(id: friend_ids + [current_user.id])
+    friend_ids = current_user.friendships.pluck(:friend_id).uniq
+    @other_users = User.where.not(id: friend_ids + [ current_user.id ])
   end
 
-  def create 
+  def create
     friend = User.find(params[:friend_id])
     friendship = current_user.friendships.build(friend: friend)
 
-    if friendship.save 
+    if friendship.save
       redirect_to friendships_path, notice: "Friend added successfully."
-    else  
-      redirect_to friendships_path, alert: friendship.errors.full_messages.to_sentence 
-    end 
-  end 
+    else
+      redirect_to friendships_path, alert: friendship.errors.full_messages.to_sentence
+    end
+  end
 
   def show
     @friendship = current_user.friendships.find(params[:id])
