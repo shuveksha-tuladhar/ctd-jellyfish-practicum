@@ -13,7 +13,12 @@ class User < ApplicationRecord
     has_secure_password
     attr_accessor :reset_token
 
-    has_many :expenses, dependent: :nullify
+    # creator of Expense
+    has_many :created_expenses, class_name: "Expense", foreign_key: "user_id", dependent: :nullify
+
+    # join table associations
+    has_many :expense_users, dependent: :destroy
+    has_many :expenses, through: :expense_users
 
     validates :first_name, :last_name, :email, presence: true
     validates :email, uniqueness: true, format: { with: URI::MailTo::EMAIL_REGEXP }
@@ -25,7 +30,6 @@ class User < ApplicationRecord
     has_many :created_groups, class_name: "UserGroup", foreign_key: :created_by_user_id
     has_many :group_members
     has_many :user_groups, through: :group_members
-    has_many :expenses, dependent: :destroy
 
     def generate_password_reset_token!
         self.reset_token = SecureRandom.urlsafe_base64
