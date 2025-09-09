@@ -21,7 +21,7 @@ Rails.application.routes.draw do
     resources :balances, only: [ :index ]
   end
 
-  resources :friendships, only: [:index, :create, :destroy, :show, :new]
+  resources :friendships, only: [ :index, :create, :destroy, :show, :new ]
 
   get "up" => "rails/health#show", as: :rails_health_check
 
