@@ -5,7 +5,7 @@ class ExpensesController < ApplicationController
   # GET /expenses
   def index
     if current_user
-      @expenses = current_user.created_expenses
+      @expenses = current_user.expenses
     else
       redirect_to login_path, alert: "Please log in."
     end
@@ -19,7 +19,9 @@ class ExpensesController < ApplicationController
   # POST /expenses
 
   def create
-    @expense = current_user.created_expenses.new(expense_params.except(:user_ids))
+    @expense = current_user.created_expenses.new(expense_params)
+    # @expense.user_group = UserGroup.find(params[:expense][:user_group_id])
+
     if @expense.save
 
       ExpenseUser.create!(user_id: current_user.id, expense_id: @expense.id)
