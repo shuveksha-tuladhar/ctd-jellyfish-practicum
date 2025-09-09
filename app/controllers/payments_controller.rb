@@ -20,6 +20,7 @@ class PaymentsController < ApplicationController
       flash[:notice] = "Payment Created Sucessful"
       redirect_to user_payments_path(@user)
    else
+      flash.now[:alert] = @payment.errors.full_messages.to_sentence
       @expenses = @user.expenses
       render :new, status: :unprocessable_entity
    end
