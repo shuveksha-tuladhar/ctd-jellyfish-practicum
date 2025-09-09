@@ -34,6 +34,8 @@ Rails.application.routes.draw do
     end
   end
 
+  resources :friendships, only: [:index, :create, :destroy, :show, :new]
+
   get "up" => "rails/health#show", as: :rails_health_check
 
   # Defines the root path route ("/")
