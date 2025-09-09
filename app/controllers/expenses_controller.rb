@@ -5,7 +5,7 @@ class ExpensesController < ApplicationController
   # GET /expenses
   def index
     if current_user
-      @expenses = current_user.expenses
+      @expenses = current_user.created_expenses
     else
       redirect_to login_path, alert: "Please log in."
     end
@@ -18,15 +18,15 @@ class ExpensesController < ApplicationController
 
   # POST /expenses
   def create
-  @expense = current_user.expenses.new(expense_params)
-  @expense.user_group = UserGroup.find(params[:expense][:user_group_id])
+    @expense = current_user.created_expenses.new(expense_params)
+    # @expense.user_group = UserGroup.find(params[:expense][:user_group_id])
 
-  if @expense.save
-    redirect_to expenses_path, notice: "Expense created successfully"
-  else
-    render :new
+    if @expense.save
+      redirect_to expenses_path, notice: "Expense created successfully"
+    else
+      render :new, status: :unprocessable_content
+    end
   end
-end
 
   # GET /expenses/:id/edit
   def edit
@@ -34,7 +34,6 @@ end
   end
 
   def show
-    @expense = current_user.expenses.find(params[:id])
   end
 
   # PATCH/PUT /expenses/:id
@@ -55,13 +54,13 @@ end
   private
 
   def set_expense
-    @expense = current_user.expenses.find_by(id: params[:id])
+    @expense = current_user.created_expenses.find_by(id: params[:id])
     redirect_to expenses_path, alert: "Expense not found." unless @expense
   end
 
   def expense_params
-  params.require(:expense).permit(:title, :amount, :split_type, :category_id)
-end
+    params.require(:expense).permit(:title, :amount, :split_type, :category_id)
+  end
 
   def require_login
     redirect_to login_path, alert: "Please log in." unless current_user
