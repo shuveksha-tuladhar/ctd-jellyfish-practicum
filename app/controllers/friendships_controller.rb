@@ -14,8 +14,8 @@ class FriendshipsController < ApplicationController
     else
       redirect_to user_friendships_path(current_user), alert: @friendship.errors.full_messages.to_sentence
     end
-  end  
-  
+  end
+
   def show
     @friendship = current_user.friendships.find(params[:id])
   end
