@@ -1,67 +1,39 @@
 class FriendshipsController < ApplicationController
-  before_action :set_user
   before_action :require_login
 
-  # redirects route
-
   def index
-    # show user's friendships
-    @friendships = @user.friendships
-    @users = User.all
+    @friendships = current_user.friendships.includes(:friend)
+    friend_ids = current_user.friendships.pluck(:friend_id).uniq 
+    @other_users = User.where.not(id: friend_ids + [current_user.id])
   end
+
+  def create 
+    friend = User.find(params[:friend_id])
+    friendship = current_user.friendships.build(friend: friend)
+
+    if friendship.save 
+      redirect_to friendships_path, notice: "Friend added successfully."
+    else  
+      redirect_to friendships_path, alert: friendship.errors.full_messages.to_sentence 
+    end 
+  end 
 
   def show
-    @friendship = @user.friendships.find(params[:id])
+    @friendship = current_user.friendships.find(params[:id])
   end
-
-  # def edit
-  #   @friendship = @user.friendships.find(params[:id])
-  # end
-
-  # def update
-  #   @friendship = @user.friendships.find(params[:id])
-  #   if @friendship.update(friendship_params)
-  #     redirect_to user_friendship_path
-  #   else
-  #     render :edit, status: :unprocessable_entity
-  #   end
-  # end
 
   def new
     @friendship = Friendship.new
-    @users = User.where.not(id: @user.id)
+    @users = User.where.not(id: current_user.id)
   end
-
-def create
-  @friendship = @user.friendships.build(
-    friend_id: params[:friendship][:friend_id],
-    status: "pending"
-  )
-
-  if @friendship.save
-    redirect_to user_friendships_path(@user)
-  else
-    puts @friendship.errors.full_messages
-    render :new, status: :unprocessable_entity
-  end
-end
 
   def destroy
-    @friendship = @user.friendships.find(params[:id])
+    @friendship = current_user.friendships.find(params[:id])
     @friendship.destroy!
-    redirect_to users_path
+    redirect_to friendships_path, notice: "Unfriended successfully."
   end
 
   private
-  def set_user
-    @user = User.find(params[:user_id])
-    if @user == current_user
-      @user
-    else
-      flash[:alert] = "Unauthorized user"
-      redirect_to root_path
-    end
-  end
 
   def require_login
     redirect_to login_path, alert: "Please log in." unless current_user
