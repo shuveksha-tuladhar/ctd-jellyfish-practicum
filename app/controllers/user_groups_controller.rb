@@ -57,7 +57,7 @@ class UserGroupsController < ApplicationController
       params.require(:user_group).permit(:name, :description)
     end
 
-    def require_login
+   def require_login
       redirect_to login_path, alert: "Please log in." unless current_user
-    end
+   end
 end

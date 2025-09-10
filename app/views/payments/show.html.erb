@@ -1,0 +1,6 @@
+<h1><%= @payment.expense.title%></h1>
+
+
+<%= button_to "Delete", user_payment_path(@user.id, @payment.id), method: :delete%>
+<%= link_to "Edit", edit_user_payment_path(@user.id, @payment)%>
+

@@ -24,6 +24,10 @@ Rails.application.routes.draw do
   end
 
   resources :users do
+      resources :payments
+  end
+
+  resources :users do
     member do
       get :upload_photo
       patch :upload_photo

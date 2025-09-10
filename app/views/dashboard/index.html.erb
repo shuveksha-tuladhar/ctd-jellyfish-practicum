@@ -1,6 +1,5 @@
 <div>
   <%= render "shared/navbar" %>
-
   <!-- Main layout -->
   <div class="main-container">
 
@@ -11,36 +10,41 @@
     <div class="dashboard-container">
 
       <!-- Top row with 3 cards -->
-      <div>
+      <div class="first-row">
+        <div>
+          <h2>Welcome, <%= current_user.first_name %> <%= current_user.last_name %>!</h2>
+        </div>
         <!-- card1 -->
-        <div class="card">
-          <div class="title-row">
-            <h3>Total Balance</h3>
-            <span><i class="bi bi-currency-dollar"></i></span>
+        <div class="cards-container">
+          <div class="card">
+            <div class="title-row">
+              <h3>Total Balance</h3>
+              <span><i class="bi bi-currency-dollar"></i></span>
+            </div>
+            <p>$245.50<span class="green-text">You are owed</span></p>
+            <!-- will replace this button with link_to balances path -->
+            <button class="btn">View details</button>
           </div>
-          <p>$245.50<span class="green-text">You are owed</span></p>
-          <!-- will replace this button with link_to balances path -->
-          <button>View details</button>
-        </div>
 
-        <!-- card2 -->
-        <div class="card">
-          <div class="title-row">
-            <h3>Group Expenses</h3>
-            <span><i class="bi bi-people"></i></span>
+          <!-- card2 -->
+          <div class="card">
+            <div class="title-row">
+              <h3>Group Expenses</h3>
+              <span><i class="bi bi-people"></i></span>
+            </div>
+            <p>5<span class="gray-text">Active groups</span></p>
+            <%= link_to "Manage groups", user_groups_path, class:"btn" %>
           </div>
-          <p>5<span class="gray-text">Active groups</span></p>
-          <%= link_to "Manage groups", user_groups_path, class:"btn" %>
-        </div>
 
-        <!-- card3 -->
-        <div class="card">
-          <div class="title-row">
-            <h3>Monthly Spending</h3>
-            <span><i class="bi bi-bar-chart-line"></i></span>
+          <!-- card3 -->
+          <div class="card">
+            <div class="title-row">
+              <h3>Monthly Spending</h3>
+              <span><i class="bi bi-bar-chart-line"></i></span>
+            </div>
+            <p>$1,240<span class="red-text">+12% from last month</span></p>
+            <%= link_to "View expenses", expenses_path, class:"btn" %>
           </div>
-          <p>$1,240<span class="red-text">+12% from last month</span></p>
-          <%= link_to "View expenses", expenses_path, class:"btn" %>
         </div>
       </div>
 
@@ -72,7 +76,7 @@
                 <%= link_to "Manage groups", user_groups_path %>
               </div>
               <div class="quick-actions-card">
-                <button>Settle Up</button>
+                <%= link_to "Settle Up", user_payments_path(@user.id) %>
               </div>
             </div>
           </div>
@@ -129,6 +133,16 @@
     gap: 20px;
   }
 
+  .first-row {
+    display: flex;
+    flex-direction: column;
+  }
+  .cards-container {
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+  }
+
   /* General card style */
   .card {
     background: white;
@@ -138,6 +152,8 @@
     box-shadow: 0 1px 3px rgb(0 0 0 / 0.1);
     display: flex;
     flex-direction: column;
+    flex: 1;
+    min-width: 200px;
   }
 
   /* Top row with 3 cards */
@@ -233,6 +249,7 @@
     display: flex;
     gap: 15px;
     margin-top: 10px;
+    align-items: stretch;
   }
 
   /* Each quick action card */
@@ -247,6 +264,8 @@
     align-items: center;
     justify-content: center;
     min-height: 100px;
+    height: 100%;
+    flex-direction: column;
   }
 
   /* Button inside quick action cards */
@@ -317,6 +336,13 @@
     .dashboard-container > div:first-child > .card,
     .dashboard-container > div:last-child > div {
       width: 100%;
+    }
+    .cards-container {
+      flex-direction: column;
+    }
+    .card {
+      width: 100%;
+      min-width: unset;
     }
   }
 </style>

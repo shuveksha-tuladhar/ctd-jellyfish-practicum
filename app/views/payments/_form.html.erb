@@ -1,0 +1,23 @@
+<h1>New Payment</h1>
+<%= form_with(model: [@user, @payment], local: true) do |f| %>
+  <%=f.label :expense_id, "Expense"%>
+  <%=f.collection_select :expense_id, @expenses, :id, :title, prompt: "Select Expense"%>
+
+  <%=f.label :payee_id%>
+  <%=f.text_field :payee_id%>
+
+  <%=f.label :payer_id%>
+  <%= f.text_field :payer_id%>
+
+  <%# <% <%=f.label :user_group_id, "User Group"%>
+  <%# <% <%=f.collection_select :user_group_id, UserGroup.all.order(:name), :id, :name,prompt: "Select" %>  
+
+  <%=f.label :owed_amount%>
+  <%=f.text_field :owed_amount, required: true%>
+
+  <%=f.label :paid_amount%>
+  <%=f.text_field :paid_amount, required: true%>
+
+  <%=f.submit %>
+<%end%>
+
