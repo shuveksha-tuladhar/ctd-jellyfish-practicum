@@ -21,15 +21,7 @@ class User < ApplicationRecord
     has_many :expenses, through: :expense_users
 
     has_many :payments_made, class_name: "Payment", foreign_key: :payer_id, dependent: :destroy
-<<<<<<< HEAD
-<<<<<<< HEAD
     has_many :payments_received, class_name: "Payment", foreign_key: :payee_id, dependent: :destroy
-=======
-    has_many :payments_recieved, class_name: "Payment", foreign_key: :payee_id, dependent: :destroy
->>>>>>> 9a2ba73 (Index action & index table - Payments)
-=======
-    has_many :payments_received, class_name: "Payment", foreign_key: :payee_id, dependent: :destroy
->>>>>>> 134b042 (update typo, add flash to display the notice)
 
     validates :first_name, :last_name, :email, presence: true
     validates :email, uniqueness: true, format: { with: URI::MailTo::EMAIL_REGEXP }

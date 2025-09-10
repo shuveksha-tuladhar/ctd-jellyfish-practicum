@@ -5,8 +5,17 @@
     <div class="profile-container">
       <%= content_for :title, "Users" %>
       <h3 class="section-title">Users</h3>
-
       <!-- Search Form -->
+      <div class="search-container">
+        <%= form_with url: users_path, method: :get, local: true do %>
+          <%= text_field_tag :query, params[:query], placeholder: "Search by name or email", class: "search-input" %>
+          <%= submit_tag "Search", class: "btn search-btn" %>
+        <% end %>
+      </div>
+      <% if flash[:alert] %>
+        <p class="notice-message"><%= flash[:alert] %></p>
+      <% end %>
+
       <div class="search-container">
         <%= form_with url: users_path, method: :get, local: true do %>
           <%= text_field_tag :query, params[:query], placeholder: "Search by name or email", class: "search-input" %>
@@ -17,26 +26,23 @@
       <% if flash[:alert] %>
         <p class="notice-message"><%= flash[:alert] %></p>
       <% end %>
-
-  <% if @users.present? %>
-    <div id="users" class="users-list">
-      <% @users.each do |user| %>
-        <div class="user-card">
-          <div class="user-info">
-            <p class="user-name"><%= user.first_name %> <%= user.last_name %></p>
-            <p class="user-email"><%= user.email %></p>
-          </div>
-          <div class="user-actions">
-            <%= link_to "View", user, class: "btn view-btn" %>
-          </div>
+      <% if @users.present? %>
+        <div id="users" class="users-list">
+          <% @users.each do |user| %>
+            <div class="user-card">
+              <div class="user-info">
+                <p class="user-name"><%= user.first_name %> <%= user.last_name %></p>
+                <p class="user-email"><%= user.email %></p>
+              </div>
+              <div class="user-actions">
+                <%= link_to "View", user, class: "btn view-btn" %>
+              </div>
+            </div>
+          <% end %>
         </div>
       <% end %>
     </div>
-  <% else %>
-    <p class="empty-message">No users found.</p>
-  <% end %>
-
-  <%= link_to "New user", new_user_path, class: "btn add-user-btn" %>
+  </div>
 </div>
 
 

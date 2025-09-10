@@ -11,38 +11,23 @@ Rails.application.routes.draw do
   resources :users, only: [ :new, :create, :index, :show, :edit, :update, :destroy ] do
 =======
   resources :users, only: [:index, :show, :edit, :update] do
-
+>>>>>>> a6e6d02 (update user index/show pages, user can view and search other users)
     member do
       get :edit_password
       patch :update_password
-    end
-  end
-
-  resources :users do
-    resources :friendships
-  end
-
-  resources :friendships, only: [ :index, :create, :destroy, :show, :new ]
-
-  resources :users do
-      resources :payments
-  end
-
-  resources :users do
-    member do
       get :upload_photo
       patch :upload_photo
     end
-
+<<<<<<< HEAD
 
     resources :payments
     resources :balances, only: [ :index ]
   end
+=======
+>>>>>>> a6e6d02 (update user index/show pages, user can view and search other users)
 
-
-    resources :friendships
-    resources :payments 
-    resources :balances, only: [:index]
+  resources :users do
+    resources :balances, only: [ :index ]
   end
 
   get "up" => "rails/health#show", as: :rails_health_check
