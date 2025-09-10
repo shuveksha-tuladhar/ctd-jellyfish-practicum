@@ -5,6 +5,7 @@
     <div class="profile-container">
       <%= content_for :title, "Users" %>
       <h3 class="section-title">Users</h3>
+
       <!-- Search Form -->
       <div class="search-container">
         <%= form_with url: users_path, method: :get, local: true do %>
@@ -31,8 +32,6 @@
             </div>
           <% end %>
         </div>
-      <% else %>
-        <p class="empty-message">No users found.</p>
       <% end %>
     </div>
   </div>
