@@ -9,8 +9,8 @@
   <%=f.label :payer_id%>
   <%= f.text_field :payer_id%>
 
-  <%=f.label :user_group_id, "User Group"%>
-  <%=f.collection_select :user_group_id, UserGroup.all.order(:name), :id, :name,prompt: "Select" %>
+  <%# <% <%=f.label :user_group_id, "User Group"%>
+  <%# <% <%=f.collection_select :user_group_id, UserGroup.all.order(:name), :id, :name,prompt: "Select" %>  
 
   <%=f.label :owed_amount%>
   <%=f.text_field :owed_amount, required: true%>
