@@ -19,8 +19,7 @@ class ExpensesController < ApplicationController
   # POST /expenses
 
   def create
-    @expense = current_user.created_expenses.new(expense_params)
-    # @expense.user_group = UserGroup.find(params[:expense][:user_group_id])
+    @expense = current_user.created_expenses.new(expense_params.except(:user_ids))
 
     if @expense.save
 
@@ -33,9 +32,11 @@ class ExpensesController < ApplicationController
 
       redirect_to expenses_path, notice: "Expense created successfully"
     else
-      render :new, status: :unprocessable_content
+      render :new, status: :unprocessable_entity
     end
   end
+
+
 
   # GET /expenses/:id/edit
   def edit
@@ -47,15 +48,7 @@ class ExpensesController < ApplicationController
 
   # PATCH/PUT /expenses/:id
   def update
-    if @expense.update(expense_params.except(:user_ids))
-
-      @expense.expense_users.where.not(user_id: @expense.user_id).destroy_all
-      # remove old particpants in Expense User
-
-      expense_params[:user_ids]&.reject(&:blank?)&.each do |id|
-        ExpenseUser.find_or_create_by!(user_id: id, expense_id: @expense.id)
-      end
-
+    if @expense.update(expense_params)
       redirect_to expenses_path, notice: "Expense updated successfully."
     else
       render :edit, status: :unprocessable_content
