@@ -5,7 +5,7 @@
         <li><%= link_to "💰 Expense", expenses_path %></li>
         <li><%= link_to "👥 Groups", user_groups_path %></li>
         <li>📜 Activity</li>
-        <li>📊 Balances</li>
+        <li><%= link_to "📊 Balances", user_balances_path(current_user) %></li>
         <% if current_user %>
             <li><%= link_to "⚙ Settings", user_path(current_user) %></li>
         <% end %>
