@@ -6,14 +6,17 @@ class UsersController < ApplicationController
     # GET /users or /users.json
     def index
       if params[:query].present?
-        @users = User.search(params[:query])
+        @users = User.where("first_name ILIKE :query OR last_name ILIKE :query OR email ILIKE :query", query: "%#{params[:query]}%")
+                      .where.not(id: current_user.id)
+        flash.now[:alert] = "No users found for your search." if @users.empty?
       else
-        @users = User.all
+        @users = User.where.not(id: current_user.id)
       end
     end
 
     # GET /users/1 or /users/1.json
     def show
+      @user = User.find(params[:id])
     end
 
     # GET /users/new
