@@ -6,6 +6,9 @@
       <% if current_user %>
         <%= link_to "View All", user_payments_path(current_user&.id || @user&.id), class: "btn view-all-btn" %>
       <% end %>
+      
+      <%= render "shared/flash" %>
+
       <div class="payment-container">
         <h2 class="title">New Payment</h2>
         <%= form_with(model: [@user, @payment], local: true) do |f| %>
@@ -68,39 +71,12 @@
     border-bottom: none;
     padding: 10px 0;
   }
-
-    /* Text colors */
-    .green-text {
-      color: green;
-      font-size: 13px;
-      margin-left: 6px;
-    }
-
-    .red-text {
-      color: red;
-      font-size: 13px;
-      margin-left: 6px;
-    }
-
-    .gray-text {
-      color: #666;
-      font-size: 13px;
-      margin-left: 6px;
-    }
-
     .center-part {
       display: flex;
       flex-direction: column;
       min-height: calc(100vh - 100px);
       margin: 0 auto;
       width: 100%;
-    }
-
-    .view-all-btn {
-      width: auto;
-      display: inline-block;
-      align-self: flex-start;
-      margin-bottom: 20px;
     }
 
     .payment-container {
