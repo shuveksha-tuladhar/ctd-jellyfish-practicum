@@ -8,7 +8,7 @@ Rails.application.routes.draw do
 
   resources :password_resets, only: [ :new, :create, :edit, :update ]
 
-  resources :users, only: [:index, :show, :edit, :update] do
+  resources :users, only: [ :index, :show, :edit, :update ] do
     member do
       get :edit_password
       patch :update_password
@@ -17,8 +17,8 @@ Rails.application.routes.draw do
     end
 
     resources :friendships
-    resources :payments 
-    resources :balances, only: [:index]
+    resources :payments
+    resources :balances, only: [ :index ]
   end
 
   get "up" => "rails/health#show", as: :rails_health_check
