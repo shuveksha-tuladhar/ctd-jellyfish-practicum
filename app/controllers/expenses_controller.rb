@@ -17,16 +17,25 @@ class ExpensesController < ApplicationController
   end
 
   # POST /expenses
+
   def create
-    @expense = current_user.created_expenses.new(expense_params)
-    # @expense.user_group = UserGroup.find(params[:expense][:user_group_id])
+    @expense = current_user.created_expenses.new(expense_params.except(:user_ids))
 
     if @expense.save
+
+      ExpenseUser.create!(user_id: current_user.id, expense_id: @expense.id)
+
+      expense_params[:user_ids]&.reject(&:blank?)&.each do |id|
+        ExpenseUser.create!(user_id: id, expense_id: @expense.id)
+      end
+
       redirect_to expenses_path, notice: "Expense created successfully"
     else
-      render :new, status: :unprocessable_content
+      render :new, status: :unprocessable_entity
     end
   end
+
+
 
   # GET /expenses/:id/edit
   def edit
@@ -38,7 +47,15 @@ class ExpensesController < ApplicationController
 
   # PATCH/PUT /expenses/:id
   def update
-    if @expense.update(expense_params)
+    if @expense.update(expense_params.except(:user_ids))
+
+      @expense.expense_users.where.not(user_id: @expense.user_id).destroy_all
+      # remove old particpants in Expense User
+
+      expense_params[:user_ids]&.reject(&:blank?)&.each do |id|
+        ExpenseUser.find_or_create_by!(user_id: id, expense_id: @expense.id)
+      end
+
       redirect_to expenses_path, notice: "Expense updated successfully."
     else
       render :edit, status: :unprocessable_entity
@@ -59,7 +76,7 @@ class ExpensesController < ApplicationController
   end
 
   def expense_params
-    params.require(:expense).permit(:title, :amount, :split_type, :category_id)
+    params.require(:expense).permit(:title, :amount, :split_type, :category_id, user_ids: [])
   end
 
   def require_login
