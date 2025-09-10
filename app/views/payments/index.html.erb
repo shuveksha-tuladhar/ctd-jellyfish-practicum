@@ -1,19 +1,205 @@
-<h1>Payments</h1>
-<%=link_to "Create new Payment", new_user_payment_path(@user.id)%>
+<div>
+  <%= render "shared/navbar" %>
+  <div class="main-container" >
+    <%= render "shared/sidebar" %>
+    <div class="payment-container">
+      <h1 class="payments-title">Payments</h1>
+      <div class="table-wraper">
+        <table class="payments-table">
+          <tr>
+            <th>Name</th>
+            <th>Amount</th>
+            <th>Payment</th>
+            <th>Action</th>
+          </tr>
 
- <table>
-  <tr>
-    <th>Name</th>
-    <th>Amount</th>
-    <th>-</th>
-    <th>Action</th>
-  </tr>
-  <%@payments.each do |payment|%>
-    <tr>
-      <td><%= payment.payer.first_name%></td>
-      <td><%= payment.owed_amount%></td>
-      <td><%=link_to "Show", user_payment_path(@user.id, payment)%></td>
-      <td><button>Pay</button></td>
-    </tr>
-  <%end%>
-</table> 
+          <% if @payments.any? %>
+            <% @payments.each do |payment| %>
+              <tr>
+                <td><%= payment.payer.first_name %></td>
+                <td><%= payment.owed_amount %></td>
+                <td><%= link_to "Show", user_payment_path(@user.id, payment) %></td>
+                <td><button class="pay-btn">Pay</button></td>
+              </tr>
+            <% end %>
+          <% else %>
+            <tr>
+              <td colspan="4" class="no-records">No payment records yet</td>
+            </tr>
+          <% end %>
+        </table>
+      </div>
+
+      <%=link_to "+", new_user_payment_path(@user.id), class: "add-payment-btn btn"%>
+    </div>
+  </div>
+</div>
+
+<style>
+  /* Reset and Base Styles */
+  body, html {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      font-family: Arial, sans-serif;
+      background-color: #f3f3f3;
+  }
+
+  /* Main container and layout */
+  .main-container {
+    display: flex;
+    gap: 20px;
+    padding: 20px;
+    padding-top: 100px;
+    box-sizing: border-box;
+    background-color: #f0f0f0;
+    min-height: 100vh;
+    width: 100%;
+  }
+
+  .sidebar ul li {
+    border-bottom: none;
+    padding: 10px 0;
+  }
+
+  .payment-container {
+    width: 100%;
+    overflow-x: auto; 
+  }
+
+  /* Add Payment Button */
+  .add-payment-btn {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    width: 60px;
+    height: 60px;
+    background-color: #1d917a;
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 30px;
+    font-weight: bold;
+    text-decoration: none;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    transition: background 0.3s ease;
+    z-index: 1000;
+  }
+
+  .add-payment-btn:hover {
+    background-color: #0ca694;
+  }
+
+  /* Payments title */
+  .payments-title {
+    text-align: center;
+    margin-bottom: 20px;
+    font-size: 26px;
+    font-weight: 600;
+    color: #333;
+  }
+
+  .table-wrapper {
+    width: 100%;
+    overflow-x: auto; 
+    -webkit-overflow-scrolling: touch;
+  }
+
+  /* Table styling */
+  .payments-table {
+    width: 90%;
+    max-width: 100%;
+    margin: 0 auto 30px auto;
+    border-collapse: collapse;
+    background: #fff;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    overflow: hidden;
+    font-size: 15px;
+  }
+
+  /* Table header */
+  .payments-table th {
+    background-color: #d0d0d0;
+    color: #222;
+    text-align: left;
+    padding: 14px;
+    font-weight: 600;
+    border-bottom: 1px solid #bbb;
+  }
+
+  /* Table rows */
+  .payments-table td {
+    padding: 14px;
+    border-bottom: 1px solid #eee;
+    color: #444;
+  }
+
+  /* Row hover effect */
+  .payments-table tr:hover {
+    background-color: #f7f7f7;
+  }
+
+  /* No records row */
+  .no-records {
+    text-align: center;
+    padding: 20px;
+    font-style: italic;
+    color: #666;
+    background-color: #fafafa; 
+    border-radius: 6px;
+  }
+
+  /* Pay button */
+  .pay-btn {
+    background-color: #1d917a;
+    color: white;
+    border: none;
+    padding: 6px 14px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+  }
+
+  .pay-btn:hover {
+    background-color: #15806b;
+  }
+
+ /* Responsive layout for small screens */
+@media (max-width: 768px) {
+  .main-container {
+    flex-direction: column;
+    padding-top: 80px;
+  }
+
+  .sidebar {
+    position: static;
+    height: auto;
+    width: 100%;
+    overflow-y: visible;
+  }
+
+  .payment-container {
+    overflow-x: hidden; 
+    padding: 0 10px; 
+  }
+
+  .payments-table {
+    width: 100%;
+    max-width: 100%;
+    font-size: 14px;  
+  }
+
+  .payments-table th,
+  .payments-table td {
+    padding: 10px; 
+  }
+
+  .payments-title {
+    font-size: 22px; 
+  }
+}
+
+</style>
