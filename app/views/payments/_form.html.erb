@@ -26,7 +26,7 @@
           </div>
           <div class="form-row">
             <%=f.label :user_group_id, "User Group"%>
-            <%=f.collection_select :user_group_id, UserGroup.all.order(:name), :id, :name,prompt: "Select" %>
+            <%=f.collection_select :user_group_id, UserGroup.all.order(:name), :id, :name,prompt: false %>
           </div>
           <div class="form-row">
             <%=f.label :owed_amount%>
