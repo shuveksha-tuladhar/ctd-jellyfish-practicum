@@ -5,6 +5,7 @@
     <div class="profile-container">
       <%= content_for :title, "Users" %>
       <h3 class="section-title">Users</h3>
+<<<<<<< HEAD
 
       <!-- Search Form -->
       <div class="search-container">
@@ -18,6 +19,20 @@
         <p class="notice-message"><%= flash[:alert] %></p>
       <% end %>
 
+=======
+      <!-- Search Form -->
+      <div class="search-container">
+        <%= form_with url: users_path, method: :get, local: true do %>
+          <%= text_field_tag :query, params[:query], placeholder: "Search by name or email", class: "search-input" %>
+          <%= submit_tag "Search", class: "btn search-btn" %>
+        <% end %>
+      </div>
+
+      <% if flash[:alert] %>
+        <p class="notice-message"><%= flash[:alert] %></p>
+      <% end %>
+
+>>>>>>> a6e6d02 (update user index/show pages, user can view and search other users)
       <% if @users.present? %>
         <div id="users" class="users-list">
           <% @users.each do |user| %>
@@ -32,6 +47,8 @@
             </div>
           <% end %>
         </div>
+      <% else %>
+        <p class="empty-message">No users found.</p>
       <% end %>
     </div>
   </div>

@@ -9,12 +9,20 @@ class UsersController < ApplicationController
       base_scope = User.where.not(id: current_user.id)
 
       if params[:query].present?
+<<<<<<< HEAD
         query = "%#{params[:query]}%"
         @users = base_scope.where("first_name ILIKE :query OR last_name ILIKE :query OR email ILIKE :query OR "\
           "CONCAT(first_name, ' ', last_name) ILIKE :query OR CONCAT(last_name, ' ', first_name) ILIKE :query", query: query).order(:first_name)
         flash.now[:alert] = "No users found for your search." if @users.empty?
       else
         @users = base_scope
+=======
+        @users = User.where("first_name ILIKE :query OR last_name ILIKE :query OR email ILIKE :query", query: "%#{params[:query]}%")
+                      .where.not(id: current_user.id)
+        flash.now[:alert] = "No users found for your search." if @users.empty?
+      else
+        @users = User.where.not(id: current_user.id)
+>>>>>>> a6e6d02 (update user index/show pages, user can view and search other users)
       end
     end
 
