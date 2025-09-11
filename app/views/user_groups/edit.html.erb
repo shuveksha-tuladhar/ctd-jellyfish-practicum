@@ -11,6 +11,7 @@
     <div class="main-content">
       <h1>Edit User Group</h1>
 
+      <!-- Group Info Form -->
       <div class="form-container">
         <%= form_with(model: @user_group, local: true) do |f| %>
           <% if @user_group.errors.any? %>
@@ -36,21 +37,55 @@
             <%= f.text_area :description, rows: 4 %>
           </div>
 
-          <!-- Add Members -->
-          <div class="form-field">
-            <%= f.label :user_ids, "Add Members" %>
-            <%= f.collection_select :user_ids, current_user.friends, :id, 
-                    ->(u) { "#{u.first_name} #{u.last_name}" }, 
-                    { selected: @user_group.user_ids }, 
-                    { multiple: true, size: 5 } %>
-             </div>
-
-          <!-- Submit -->
+          <!-- Update Group Button -->
           <div>
             <%= f.submit "Update Group", class: "small-btn" %>
           </div>
         <% end %>
       </div>
+
+      <!-- Add Member Form -->
+      <div class="add-member-form">
+        <%= form_with(model: [@user_group, GroupMember.new], local: true) do |f| %>
+          <%= f.collection_select :user_id,
+                User.where.not(id: @user_group.user_ids),
+                :id,
+                ->(u) { "#{u.first_name} #{u.last_name}" },
+                { prompt: "Select a user to add" } %>
+
+          <%= f.submit "Add Member", class: "small-btn" %>
+        <% end %>
+      </div>
+
+     <!-- Current Members -->
+      <h2>Members (<%= @user_group.users.count %>)</h2>
+      <% if @user_group.users.any? %>
+        <div class="members-list">
+          <% @user_group.users.each do |user| %>
+            <% group_member = @user_group.group_members.find_by(user_id: user.id) %>
+            <div class="member-item" id="member-<%= group_member.id %>">
+              <div class="member-circle">
+                <%= user.first_name.first %><%= user.last_name.first %>
+              </div>
+              <span class="member-fullname"><%= user.first_name %> <%= user.last_name %></span>
+
+              <!-- Remove button with Turbo confirmation -->
+              <% if user != @user_group.creator %>
+                <%= button_to "Remove",
+                      user_group_group_member_path(@user_group, group_member),
+                      method: :delete,
+                      data: { turbo_confirm: "Are you sure you want to remove this member?" },
+                      class: "remove-btn" %>
+              <% else %>
+                <span class="creator-badge">Creator</span>
+              <% end %>
+            </div>
+          <% end %>
+        </div>
+      <% else %>
+        <p class="empty-message">No members yet.</p>
+      <% end %>
+
 
       <div class="back-link">
         <%= link_to "Back to Groups", user_groups_path, class: "small-btn secondary-btn" %>
@@ -60,7 +95,7 @@
 </div>
 
 <style>
-/* Main layout and content - similar to new.html.erb */
+/* Reset and Base */
 body, html {
   margin: 0;
   padding: 0;
@@ -69,13 +104,14 @@ body, html {
   background-color: #f3f3f3;
 }
 
+/* Main Layout */
 .main-container {
   display: flex;
   gap: 20px;
   padding: 20px;
   padding-top: 100px;
-  box-sizing: border-box;
   min-height: calc(100vh - 120px);
+  box-sizing: border-box;
 }
 
 .sidebar {
@@ -104,7 +140,13 @@ body, html {
   color: #1d917a;
 }
 
-/* Form field wrapper */
+.main-content h2 {
+  font-size: 22px;
+  margin: 20px 0 10px 0;
+  color: #1d917a;
+}
+
+/* Form Field */
 .form-field {
   background-color: #f0faf7;
   padding: 12px 15px;
@@ -150,16 +192,6 @@ body, html {
   color: #c33;
 }
 
-.form-errors h2 {
-  margin: 0 0 8px 0;
-  font-size: 15px;
-}
-
-.form-errors ul {
-  margin: 0;
-  padding-left: 20px;
-}
-
 /* Buttons */
 .small-btn {
   display: inline-block;
@@ -189,6 +221,114 @@ body, html {
   background-color: #aaa;
 }
 
+/* Add Member Form */
+.add-member-form {
+  margin-top: 15px;
+  padding: 12px;
+  background: #f0faf7;
+  border-radius: 8px;
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.add-member-form select {
+  flex: 1;
+  padding: 8px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  font-size: 14px;
+}
+
+/* Members List */
+.members-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 15px;
+}
+
+.member-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.member-circle {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background-color: #eaf6f3;
+  color: #1d917a;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  font-weight: bold;
+}
+
+.member-fullname {
+  font-size: 14px;
+  color: #333;
+}
+
+/* Remove Button */
+.remove-btn {
+  padding: 4px 8px;
+  background-color: #ff6b6b;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  font-size: 12px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.remove-btn:hover {
+  background-color: #e63946;
+}
+
+/* Creator Badge */
+.creator-badge {
+  padding: 4px 8px;
+  background-color: #1d917a;
+  color: #fff;
+  border-radius: 6px;
+  font-size: 12px;
+}
+
+/* Empty Message */
+.empty-message {
+  color: #555;
+  font-size: 14px;
+  margin: 10px 0;
+}
+
+/* Back Link */
+.back-link {
+  margin-top: 20px;
+}
+
+/* Logout button */
+.logout-btn {
+  background: white;
+  color: #1d917a;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+}
+
+.logout-btn:hover {
+  background-color: #0ca694;
+  color: white;
+}
+
+
 /* Responsive */
 @media (max-width: 768px) {
   .main-container {
@@ -198,6 +338,11 @@ body, html {
 
   .sidebar {
     width: 100%;
+  }
+
+  .add-member-form {
+    flex-direction: column;
+    align-items: stretch;
   }
 }
 </style>

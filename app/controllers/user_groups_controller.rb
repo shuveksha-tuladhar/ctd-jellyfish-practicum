@@ -4,8 +4,12 @@ class UserGroupsController < ApplicationController
   before_action :require_login
 
   # GET /user_groups
-  def index
-    @user_groups = UserGroup.all
+   def index
+    if params[:q].present?
+      @user_groups = UserGroup.where("name ILIKE ?", "%#{params[:q]}%")
+    else
+      @user_groups = UserGroup.all
+    end
   end
 
   # GET /user_groups/1
@@ -18,19 +22,21 @@ class UserGroupsController < ApplicationController
   end
 
   # POST /user_groups
-  def create
-    @user_group = UserGroup.new(user_group_params)
-    @user_group.creator = current_user   # assign current_user as creator
+ def create
+  @user_group = UserGroup.new(user_group_params)
+  @user_group.creator = current_user  
 
-    if @user_group.save
-      # Add creator as first member
+  if @user_group.save
+    unless @user_group.users.include?(current_user)
       @user_group.group_members.create(user: current_user)
-
-      redirect_to @user_group, notice: "Group was successfully created."
-    else
-      render :new, status: :unprocessable_entity
     end
+
+    redirect_to @user_group, notice: "Group was successfully created."
+  else
+    render :new, status: :unprocessable_entity
   end
+end
+
 
   # PATCH/PUT /user_groups/1
   def update
@@ -54,7 +60,7 @@ class UserGroupsController < ApplicationController
     end
 
     def user_group_params
-      params.require(:user_group).permit(:name, :description)
+       params.require(:user_group).permit(:name, :description, user_ids: [])
     end
 
     def require_login

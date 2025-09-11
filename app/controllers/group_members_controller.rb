@@ -2,23 +2,24 @@ class GroupMembersController < ApplicationController
   before_action :set_user_group
 
   def index
-     @members = @user_group.group_members.includes(:user)
-     render json: @members.as_json(include: :user)
+    @members = @user_group.group_members.includes(:user)
+    render json: @members.as_json(include: :user)
   end
 
   def create
     @member = @user_group.group_members.new(group_member_params)
     if @member.save
-      redirect_to user_group_group_members_path(@user_group), notice: "Member added successfully."
+      @user_group.reload  # reload to include the new member
+      redirect_to user_group_path(@user_group), notice: "Member added successfully."
     else
-      render :index, status: :unprocessable_entity
+      redirect_to user_group_path(@user_group), alert: "Failed to add member."
     end
   end
 
   def destroy
     @member = @user_group.group_members.find(params[:id])
     @member.destroy
-    redirect_to user_group_group_members_path(@user_group), notice: "Member removed successfully."
+    redirect_to user_group_path(@user_group), notice: "Member removed successfully."
   end
 
   private

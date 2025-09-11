@@ -8,73 +8,84 @@
     <%= render "shared/sidebar" %>
 
     <!-- User Groups section -->
-    <div class="groups-wrapper">
+    <div class="main-content">
       <!-- Groups Header -->
       <div class="groups-header">
         <h1>Your Groups</h1>
 
-        <!-- Search + Button container -->
+        <!-- Search + Create Button container -->
         <div class="groups-controls">
           <form action="<%= user_groups_path %>" method="get" class="search-form">
-            <input type="text" name="q" placeholder="Search groups..." class="search-input" />
+            <input type="text" name="q" placeholder="Search groups..." class="search-input" value="<%= params[:q] %>"/>
+            <button type="submit" class="btn-primary">Search</button>
           </form>
-          <%= link_to "Create New Group", new_user_group_path, class: "create-btn" %>
+
+          <%= link_to "Create New Group", new_user_group_path, class: "btn-primary" %>
         </div>
       </div>
 
       <% if @user_groups.any? %>
-        <% @user_groups.each do |group| %>
-          <div class="group-container">
-            <div class="group-header">
-              <h2 class="group-title"><%= group.name %></h2>
-              <%= link_to "View Details", user_group_path(group), class: "action-btn view-btn" %>
-            </div>
+        <!-- Groups Wrapper -->
+        <div class="groups-wrapper">
+          <% @user_groups.each do |group| %>
+            <div class="group-container">
+              <div class="group-header">
+                <h2 class="group-title"><%= group.name %></h2>
+                <%= link_to "View Details", user_group_path(group), class: "action-btn view-btn" %>
+              </div>
 
-            <p class="group-created">Created on <%= group.created_at.strftime("%B %d, %Y") %></p>
+              <p class="group-created">Created on <%= group.created_at.strftime("%B %d, %Y") %></p>
 
-            <!-- Balance -->
-            <p class="balance-label">Total Balance</p>
-            <p class="balance-amount">$<%= group.expenses.sum(:amount) %></p>
+              <!-- Balance -->
+              <p class="balance-label">Total Balance</p>
+              <p class="balance-amount">$<%= group.expenses.sum(:amount) %></p>
 
-            <!-- Recent Expenses -->
-            <h3 class="section-title">Recent Expenses</h3>
-            <% if group.expenses.any? %>
-              <ul class="expenses-list">
-                <% group.expenses.last(3).each do |expense| %>
-                  <li>
-                    <div>
-                      <strong><%= expense.title %></strong><br>
-                      <span class="expense-date"><%= expense.created_at.strftime("%B %d, %Y") %></span>
-                    </div>
-                    <span class="expense-amount">$<%= expense.amount %></span>
-                  </li>
-                <% end %>
-              </ul>
-            <% else %>
-              <p class="empty-message">No expenses yet.</p>
-            <% end %>
-
-            <!-- Members -->
-            <h3 class="section-title">Members (<%= group.users.count %>)</h3>
-            <div class="members-list">
-              <% group.users.each do |user| %>
-                <div class="member-circle">
-                  <%= user.first_name.first %><%= user.last_name.first %>
-                </div>
+              <!-- Recent Expenses -->
+              <h3 class="section-title">Recent Expenses</h3>
+              <% if group.expenses.any? %>
+                <ul class="expenses-list">
+                  <% group.expenses.last(3).each do |expense| %>
+                    <li>
+                      <div>
+                        <strong><%= expense.title %></strong><br>
+                        <span class="expense-date"><%= expense.created_at.strftime("%B %d, %Y") %></span>
+                      </div>
+                      <span class="expense-amount">$<%= expense.amount %></span>
+                    </li>
+                  <% end %>
+                </ul>
+              <% else %>
+                <p class="empty-message">No expenses yet.</p>
               <% end %>
-            </div>
 
-            <!-- Actions -->
-            <div class="group-actions">
-              <%= link_to "Edit", edit_user_group_path(group), class: "action-btn edit-btn" %>
-              <%= link_to "Delete", user_group_path(group),
-                    data: { turbo_method: :delete, turbo_confirm: "Are you sure?" },
-                    class: "action-btn delete-btn" %>
+              <!-- Members -->
+              <h3 class="section-title">Members (<%= group.users.count %>)</h3>
+              <div class="members-list">
+                <% group.users.each do |user| %>
+                  <div class="member-circle">
+                    <%= user.first_name.first %><%= user.last_name.first %>
+                  </div>
+                <% end %>
+              </div>
+
+              <!-- Actions -->
+              <div class="group-actions">
+                <%= link_to "Edit", edit_user_group_path(group), class: "action-btn edit-btn" %>
+                <%= link_to "Delete", user_group_path(group),
+                      data: { turbo_method: :delete, turbo_confirm: "Are you sure?" },
+                      class: "action-btn delete-btn" %>
+              </div>
             </div>
-          </div>
-        <% end %>
+          <% end %>
+        </div>
       <% else %>
-        <p class="empty-message">No groups found.</p>
+        <p class="empty-message">
+          <% if params[:q].present? %>
+            No groups found matching "<%= params[:q] %>".
+          <% else %>
+            No groups found.
+          <% end %>
+        </p>
       <% end %>
     </div>
   </div>
@@ -100,18 +111,25 @@ body, html {
   min-height: calc(100vh - 120px);
 }
 
-/* Groups Wrapper */
-.groups-wrapper {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr); /* Two cards per row */
-  gap: 20px;
+.main-content {
   flex-grow: 1;
-  width: 100%;
+  background-color: #fff;
+  padding: 25px 20px;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.main-content h1 {
+  margin: 0 0 15px 0;
+  font-size: 28px;
+  color: #1d917a;
 }
 
 /* Groups Header */
 .groups-header {
-  grid-column: 1 / -1; /* span both columns */
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -133,35 +151,51 @@ body, html {
 
 .search-form {
   display: flex;
+  gap: 10px; /* space between input and button */
+  align-items: center;
 }
 
 .search-input {
-  padding: 8px 12px;
-  border: 1px solid #ccc;
+  flex: 1;
+  padding: 10px 14px;
+  font-size: 15px;
   border-radius: 6px;
-  font-size: 14px;
+  border: 1px solid #ccc;
   outline: none;
-  transition: border 0.2s ease;
+  transition: border 0.2s ease, box-shadow 0.2s ease;
 }
 
 .search-input:focus {
   border-color: #1d917a;
+  box-shadow: 0 0 6px rgba(29,145,122,0.3);
 }
 
-.create-btn {
+/* Reusable Primary Button */
+.btn-primary {
   display: inline-block;
   padding: 10px 18px;
-  background-color: #1d917a;
-  color: #fff;
-  border-radius: 6px;
-  text-decoration: none;
   font-size: 15px;
   font-weight: bold;
-  transition: background 0.3s ease;
+  border-radius: 6px;
+  background-color: #1d917a;
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  text-decoration: none;
+  text-align: center;
+  transition: all 0.2s ease;
 }
 
-.create-btn:hover {
+.btn-primary:hover {
   background-color: #0ca694;
+  transform: translateY(-1px);
+}
+
+/* Groups Grid */
+.groups-wrapper {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+  gap: 20px;
 }
 
 /* Individual Group Container */
@@ -317,28 +351,28 @@ body, html {
 }
 
 /* Logout button */
-    .logout-btn {
-      background: white;
-      color: #1d917a;
-      border: none;
-      padding: 6px 12px;
-      border-radius: 4px;
-      cursor: pointer;
-      font-size: 14px;
-      text-decoration: none;
-      display: inline-flex;
-      align-items: center;
-    }
+.logout-btn {
+  background: white;
+  color: #1d917a;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+}
 
-    .logout-btn:hover {
-      background-color: #0ca694;
-      color: white;
-    }
+.logout-btn:hover {
+  background-color: #0ca694;
+  color: white;
+}
 
 /* Responsive */
 @media (max-width: 768px) {
   .groups-wrapper {
-    grid-template-columns: 1fr; /* single column on mobile */
+    grid-template-columns: 1fr;
   }
   .groups-header {
     flex-direction: column;
@@ -353,5 +387,4 @@ body, html {
     flex: 1;
   }
 }
-
 </style>
