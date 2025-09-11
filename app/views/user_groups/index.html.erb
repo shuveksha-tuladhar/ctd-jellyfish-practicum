@@ -34,11 +34,21 @@
                 <%= link_to "View Details", user_group_path(group), class: "action-btn view-btn" %>
               </div>
 
-              <p class="group-created">Created on <%= group.created_at.strftime("%B %d, %Y") %></p>
+              <!-- Group Info Card -->
+              <div class="group-info-card">
+                <p class="group-creator">
+                  Creator: <span class="creator-label"><%= group.creator.first_name %> <%= group.creator.last_name %></span>
+                </p>
+                <p class="group-created">
+                  Created on: <span class="created-date"><%= group.created_at.strftime("%B %d, %Y") %></span>
+                </p>
+              </div>
 
-              <!-- Balance -->
-              <p class="balance-label">Total Balance</p>
-              <p class="balance-amount">$<%= group.expenses.sum(:amount) %></p>
+              <!-- Total Balance -->
+              <div class="balance-card">
+                <p class="balance-label">Total Balance</p>
+                <p class="balance-amount">$<%= group.expenses.sum(:amount) %></p>
+              </div>
 
               <!-- Recent Expenses -->
               <h3 class="section-title">Recent Expenses</h3>
@@ -62,7 +72,7 @@
               <h3 class="section-title">Members (<%= group.users.count %>)</h3>
               <div class="members-list">
                 <% group.users.each do |user| %>
-                  <div class="member-circle">
+                  <div class="member-circle" title="<%= user.first_name %> <%= user.last_name %>">
                     <%= user.first_name.first %><%= user.last_name.first %>
                   </div>
                 <% end %>
@@ -71,8 +81,9 @@
               <!-- Actions -->
               <div class="group-actions">
                 <%= link_to "Edit", edit_user_group_path(group), class: "action-btn edit-btn" %>
-                <%= link_to "Delete", user_group_path(group),
-                      data: { turbo_method: :delete, turbo_confirm: "Are you sure?" },
+                <%= button_to "Delete", user_group_path(group),
+                      method: :delete,
+                      data: { confirm: "Are you sure?" },
                       class: "action-btn delete-btn" %>
               </div>
             </div>
@@ -136,13 +147,6 @@ body, html {
   gap: 12px;
 }
 
-.groups-header h1 {
-  margin: 0;
-  color: #1d917a;
-  font-size: 28px;
-}
-
-/* Search + Create Button */
 .groups-controls {
   display: flex;
   align-items: center;
@@ -151,8 +155,7 @@ body, html {
 
 .search-form {
   display: flex;
-  gap: 10px; /* space between input and button */
-  align-items: center;
+  gap: 10px;
 }
 
 .search-input {
@@ -170,7 +173,6 @@ body, html {
   box-shadow: 0 0 6px rgba(29,145,122,0.3);
 }
 
-/* Reusable Primary Button */
 .btn-primary {
   display: inline-block;
   padding: 10px 18px;
@@ -206,70 +208,73 @@ body, html {
   box-shadow: 0 2px 8px rgba(0,0,0,0.1);
   display: flex;
   flex-direction: column;
-  justify-content: flex-start;
+  gap: 12px;
 }
 
-/* Group Header inside card */
+/* Group Header */
 .group-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 12px;
 }
 
 .group-title {
-  margin: 0;
   font-size: 20px;
   color: #1d917a;
+  margin: 0;
 }
 
-/* Buttons */
-.action-btn {
-  display: inline-block;
-  padding: 6px 12px;
-  border-radius: 6px;
-  font-size: 13px;
+/* Group Info Card */
+.group-info-card {
+  display: flex;
+  flex-direction: column;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  padding: 10px 12px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+}
+
+.group-info-card p {
+  margin: 4px 0;
+  font-size: 14px;
+  color: #555;
+}
+
+.creator-label {
+  background-color: #e0e0e0;
+  color: #333;
   font-weight: 500;
-  text-decoration: none;
-  transition: background 0.2s ease;
-  cursor: pointer;
-}
-
-.view-btn, .edit-btn {
-  background-color: #1d917a;
-  color: #fff;
-}
-
-.view-btn:hover, .edit-btn:hover {
-  background-color: #0ca694;
-}
-
-.delete-btn {
-  background-color: #e08c79;
-  color: #fff;
-}
-
-.delete-btn:hover {
-  background-color: #c76b5c;
-}
-
-/* Created date & balance */
-.group-created {
   font-size: 13px;
+  padding: 2px 8px;
+  border-radius: 12px;
+}
+
+.created-date {
   color: #777;
-  margin-bottom: 12px;
+}
+
+/* Balance Card */
+.balance-card {
+  display: flex;
+  flex-direction: column;
+  background-color: #eaf6f3;
+  border-radius: 8px;
+  padding: 12px 15px;
+  box-shadow: 0 2px 6px rgba(29,145,122,0.3);
+  text-align: center;
 }
 
 .balance-label {
   font-size: 14px;
-  color: #555;
-  margin: 0;
+  color: #333;
+  margin: 0 0 4px 0;
 }
 
 .balance-amount {
   font-size: 20px;
   font-weight: bold;
-  margin-bottom: 15px;
+  color: #1d917a;
+  margin: 0;
 }
 
 /* Section Titles */
@@ -326,10 +331,38 @@ body, html {
   font-weight: bold;
 }
 
-/* Group Actions */
+/* Action Buttons */
 .group-actions {
   display: flex;
   gap: 10px;
+}
+
+.action-btn {
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 500;
+  text-decoration: none;
+  transition: background 0.2s ease;
+  cursor: pointer;
+}
+
+.view-btn, .edit-btn {
+  background-color: #1d917a;
+  color: #fff;
+}
+
+.view-btn:hover, .edit-btn:hover {
+  background-color: #0ca694;
+}
+
+.delete-btn {
+  background-color: #e08c79;
+  color: #fff;
+}
+
+.delete-btn:hover {
+  background-color: #c76b5c;
 }
 
 /* Empty message */

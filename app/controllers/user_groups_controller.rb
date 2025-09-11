@@ -4,13 +4,20 @@ class UserGroupsController < ApplicationController
   before_action :require_login
 
   # GET /user_groups
-   def index
-    if params[:q].present?
-      @user_groups = UserGroup.where("name ILIKE ?", "%#{params[:q]}%")
-    else
-      @user_groups = UserGroup.all
-    end
+  def index
+  if params[:q].present?
+    @user_groups = current_user.groups
+                          .where("name ILIKE ?", "%#{params[:q]}%")
+                          .order(created_at: :desc)
+  else
+    @user_groups = UserGroup
+               .joins("LEFT JOIN group_members ON group_members.user_group_id = user_groups.id")
+               .where("user_groups.created_by_user_id = ? OR group_members.user_id = ?", current_user.id, current_user.id)
+               .distinct
+               .order(created_at: :desc)
   end
+end
+
 
   # GET /user_groups/1
   def show
@@ -21,10 +28,10 @@ class UserGroupsController < ApplicationController
     @user_group = UserGroup.new
   end
 
-  # POST /user_groups
+ # POST /user_groups
  def create
   @user_group = UserGroup.new(user_group_params)
-  @user_group.creator = current_user  
+  @user_group.creator = current_user
 
   if @user_group.save
     unless @user_group.users.include?(current_user)
