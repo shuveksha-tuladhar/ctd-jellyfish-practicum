@@ -24,7 +24,6 @@
   <%# Load compiled application.css (includes Tailwind) %>
   <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
 
-  <%= javascript_include_tag "application", "data-turbo-track": "reload", defer: true %>
   <%= javascript_importmap_tags %>
 </head>
 
@@ -36,7 +35,7 @@
     <% if flash[:alert] %>
       <div class="alert"><%= flash[:alert] %></div>
     <% end %>
-    <main class="container mx-auto mt-28 px-5 flex">
+    <main class="container">
       <%= yield %>
     </main>
   </body>
