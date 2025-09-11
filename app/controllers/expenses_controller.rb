@@ -19,6 +19,7 @@ class ExpensesController < ApplicationController
   # POST /expenses
 
   def create
+
     @expense = current_user.created_expenses.new(expense_params.except(:user_ids))
 
     if @expense.save
@@ -29,12 +30,12 @@ class ExpensesController < ApplicationController
         ExpenseUser.create!(user_id: id, expense_id: @expense.id)
       end
 
+
       redirect_to expenses_path, notice: "Expense created successfully"
     else
       render :new, status: :unprocessable_entity
     end
   end
-
 
 
   # GET /expenses/:id/edit
@@ -76,7 +77,9 @@ class ExpensesController < ApplicationController
   end
 
   def expense_params
+
     params.require(:expense).permit(:title, :amount, :split_type, :category_id, user_ids: [])
+
   end
 
   def require_login

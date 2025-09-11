@@ -19,6 +19,7 @@
     <%= f.collection_select :category_id, Category.all.order(:name), :id, :name, prompt: "Select a category" %>
   </div>
 
+
   <div>
     <%= f.label :user_ids %>
     <%= f.collection_select :user_ids, User.all.order(:first_name), :id, :first_name,multiple: true %>
