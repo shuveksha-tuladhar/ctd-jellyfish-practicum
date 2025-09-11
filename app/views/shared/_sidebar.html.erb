@@ -6,7 +6,9 @@
         <li><%= link_to "👥 Groups", user_groups_path %></li>
         <li>📜 Activity</li>
         <li>📊 Balances</li>
-        <li><%= link_to "⚙ Settings", user_path(current_user) %></li>
+        <% if current_user.present? %>
+            <li><%= link_to "⚙ Settings", user_path(current_user) %></li>
+        <% end %>
     </ul>
     <div>
         <%= link_to logout_path, data: { turbo_method: :delete }, class: "logout-btn" do %>
