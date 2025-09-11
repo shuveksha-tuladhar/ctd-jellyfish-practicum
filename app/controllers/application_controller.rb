@@ -12,8 +12,8 @@ class ApplicationController < ActionController::Base
   end
 
   def after_sign_in_path_for(resource)
-    dashboard_path 
-  end 
+    dashboard_path
+  end
 
   def current_user
     @current_user ||= User.find_by(id: session[:user_id])
