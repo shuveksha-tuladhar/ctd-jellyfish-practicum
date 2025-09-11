@@ -31,7 +31,7 @@ class ExpensesController < ApplicationController
 
       redirect_to expenses_path, notice: "Expense created successfully"
     else
-      render :new, status: :unprocessable_entity
+      render :new, status: :unprocessable_content
     end
   end
 
@@ -56,7 +56,7 @@ class ExpensesController < ApplicationController
 
       redirect_to expenses_path, notice: "Expense updated successfully."
     else
-      render :edit, status: :unprocessable_entity
+      render :edit, status: :unprocessable_content
     end
   end
 
