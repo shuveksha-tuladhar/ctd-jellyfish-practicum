@@ -2,7 +2,6 @@ require "rails_helper"
 
 RSpec.describe UserGroup, type: :model do
   let(:creator) { create(:user) }
-
   subject { build(:user_group, creator: creator) }
 
   describe "validations" do
@@ -26,24 +25,24 @@ RSpec.describe UserGroup, type: :model do
       expect(subject.creator).to eq(creator)
     end
 
-    it "has many group_members" do
+    it "adds creator as a member after creation" do
       subject.save!
-      gm1 = create(:group_member, user_group: subject)
-      gm2 = create(:group_member, user_group: subject)
-      expect(subject.group_members).to include(gm1, gm2)
+      expect(subject.users).to include(creator)
     end
 
-    it "has many users through group_members" do
+    it "can have additional members" do
       subject.save!
       user2 = create(:user)
-      gm = create(:group_member, user_group: subject, user: user2)
+      create(:group_member, user_group: subject, user: user2)
       expect(subject.users).to include(user2)
     end
 
-    it "destroys dependent group_members when destroyed" do
+    it "destroys all dependent group_members when destroyed" do
       subject.save!
-      gm = create(:group_member, user_group: subject)
-      expect { subject.destroy }.to change { GroupMember.count }.by(-1)
+      user2 = create(:user)
+      create(:group_member, user_group: subject, user: user2)
+
+      expect { subject.destroy }.to change { GroupMember.count }.by(-2)
     end
   end
 end
