@@ -1,19 +1,26 @@
 class UsersController < ApplicationController
     before_action :set_user, only: [ :show, :edit, :update, :destroy, :upload_photo ]
+    before_action :require_login
 
     include Rails.application.routes.url_helpers
 
     # GET /users or /users.json
     def index
+      base_scope = User.where.not(id: current_user.id)
+
       if params[:query].present?
-        @users = User.search(params[:query])
+        query = "%#{params[:query]}%"
+        @users = base_scope.where("first_name ILIKE :query OR last_name ILIKE :query OR email ILIKE :query OR "\
+          "CONCAT(first_name, ' ', last_name) ILIKE :query OR CONCAT(last_name, ' ', first_name) ILIKE :query", query: query).order(:first_name)
+        flash.now[:alert] = "No users found for your search." if @users.empty?
       else
-        @users = User.all
+        @users = base_scope
       end
     end
 
     # GET /users/1 or /users/1.json
     def show
+      @user = User.find(params[:id])
     end
 
     # GET /users/new

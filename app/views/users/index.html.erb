@@ -1,41 +1,75 @@
-<div class="profile-container">
-  <% if notice %>
-    <p class="notice-message"><%= notice %></p>
-  <% end %>
+<div>
+  <%= render "shared/navbar" %>
+  <div class="main-container">
+    <%= render "shared/sidebar" %>
+    <div class="profile-container">
+      <%= content_for :title, "Users" %>
+      <h3 class="section-title">Users</h3>
 
-  <%= content_for :title, "Users" %>
-  <h3 class="section-title">Users</h3>
+      <!-- Search Form -->
+      <div class="search-container">
+        <%= form_with url: users_path, method: :get, local: true do %>
+          <%= text_field_tag :query, params[:query], placeholder: "Search by name or email", class: "search-input" %>
+          <%= submit_tag "Search", class: "btn search-btn" %>
+        <% end %>
+      </div>
 
-  <!-- Search Form -->
-  <div class="search-container">
-    <%= form_with url: users_path, method: :get, local: true do %>
-      <%= text_field_tag :query, params[:query], placeholder: "Search by name or email", class: "search-input" %>
-      <%= submit_tag "Search", class: "btn search-btn" %>
-    <% end %>
-  </div>
+      <% if flash[:alert] %>
+        <p class="notice-message"><%= flash[:alert] %></p>
+      <% end %>
 
-  <% if @users.present? %>
-    <div id="users" class="users-list">
-      <% @users.each do |user| %>
-        <div class="user-card">
-          <div class="user-info">
-            <p class="user-name"><%= user.first_name %> <%= user.last_name %></p>
-            <p class="user-email"><%= user.email %></p>
-          </div>
-          <div class="user-actions">
-            <%= link_to "View", user, class: "btn view-btn" %>
-          </div>
+      <% if @users.present? %>
+        <div id="users" class="users-list">
+          <% @users.each do |user| %>
+            <div class="user-card">
+              <div class="user-info">
+                <p class="user-name"><%= user.first_name %> <%= user.last_name %></p>
+                <p class="user-email"><%= user.email %></p>
+              </div>
+              <div class="user-actions">
+                <%= link_to "View", user, class: "btn view-btn" %>
+              </div>
+            </div>
+          <% end %>
         </div>
       <% end %>
     </div>
-  <% else %>
-    <p class="empty-message">No users found.</p>
-  <% end %>
-
-  <%= link_to "New user", new_user_path, class: "btn add-user-btn" %>
+  </div>
 </div>
 
+
 <style>
+  /* Reset and Base Styles */
+    body, html {
+        margin: 0;
+        padding: 0;
+        height: 100%;
+        font-family: Arial, sans-serif;
+        background-color: #f3f3f3;
+    }
+    /* Main container and layout */
+    .main-container {
+      display: flex;
+      gap: 20px;
+      padding: 20px;
+      padding-top: 100px;
+      box-sizing: border-box;
+      background-color: #f0f0f0;
+      min-height: 100vh;
+  }
+
+  .sidebar ul li {
+    border-bottom: none;
+    padding: 10px 0;
+  }
+
+.profile-container {
+  display: flex;
+  flex-direction: column;
+  min-height: calc(100vh - 100px);
+  margin: 0 auto;
+  width: 100%;
+}
 /* Section title */
 .section-title {
   text-align: center;
@@ -159,5 +193,16 @@
   .search-input {
     width: 80%;
   }
+  .sidebar {
+          position: static;
+          height: auto;
+          width: 100%;
+          overflow-y: visible;
+      }
+  .main-container {
+    flex-direction: column;
+    padding-top: 80px;
+  }
 }
+
 </style>

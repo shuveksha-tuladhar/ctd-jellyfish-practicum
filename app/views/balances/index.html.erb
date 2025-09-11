@@ -1,0 +1,94 @@
+<div>
+    <%= render "shared/navbar" %>
+    <div class="main-container">
+        <%= render "shared/sidebar"%>
+        <div class="balance-container">
+            <h2>📊 Balance</h2>
+            <% if @balances.any? %>
+                <ul>
+                    <% @balances.each do |other_user, amount| %>
+                        <% if amount > 0 %>
+                            <li><strong><%= other_user.name %></strong> owes you $<%= '%.2f' % amount %></li>
+                        <% elsif amount < 0 %>
+                            <li>You owe <strong><%= other_user.name %></strong> $ <%= '%.2f' % amount.abs %></li>
+                        <% else %>
+                            <li> You are settled up with <strong><%= other_user.name %></strong>.</li>
+                        <% end %>
+                    <% end %>
+                </ul>
+            <% else %>
+                <p> No balances to show.</p>
+            <% end %>
+        </div>
+    </div>
+</div>
+
+<style>
+  /* Reset and Base Styles */
+  body, html {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      font-family: Arial, sans-serif;
+      background-color: #f3f3f3;
+  }
+
+  /* Main container and layout */
+  .main-container {
+    display: flex;
+    gap: 20px;
+    padding: 20px;
+    padding-top: 100px;
+    box-sizing: border-box;
+    background-color: #f0f0f0;
+    min-height: 100vh;
+    width: 100%;
+  }
+
+  .sidebar ul li {
+    border-bottom: none;
+    padding: 10px 0;
+  }
+
+  .balance-container {
+    width: 100%;
+    overflow-x: auto; 
+  }
+
+  /* Add Payment Button */
+
+  /*  button */
+  .btn {
+    background-color: #1d917a;
+    color: white;
+    border: none;
+    padding: 6px 14px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+  }
+
+  .btn:hover {
+    background-color: #15806b;
+  }
+
+ /* Responsive layout for small screens */
+@media (max-width: 768px) {
+  .main-container {
+    flex-direction: column;
+    padding-top: 80px;
+  }
+
+  .sidebar {
+    position: static;
+    height: auto;
+    width: 100%;
+    overflow-y: visible;
+  }
+
+  .balance-container {
+    overflow-x: hidden; 
+    padding: 0 10px; 
+  }
+}
+</style>

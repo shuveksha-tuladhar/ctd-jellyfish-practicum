@@ -12,26 +12,17 @@ Rails.application.routes.draw do
 
   resources :password_resets, only: [ :new, :create, :edit, :update ]
 
-  resources :users, only: [ :edit, :update ] do
+  resources :users, only: [ :index, :show, :edit, :update ] do
     member do
       get :edit_password
       patch :update_password
-    end
-  end
-
-  resources :users do
-    resources :friendships
-  end
-
-  resources :users do
-      resources :payments
-  end
-
-  resources :users do
-    member do
       get :upload_photo
       patch :upload_photo
     end
+
+    resources :friendships
+    resources :payments
+    resources :balances, only: [ :index ]
   end
 
   get "up" => "rails/health#show", as: :rails_health_check
