@@ -6,9 +6,12 @@ class UserGroupsController < ApplicationController
   # GET /user_groups
   def index
   if params[:q].present?
-    @user_groups = current_user.groups
-                          .where("name ILIKE ?", "%#{params[:q]}%")
-                          .order(created_at: :desc)
+    @user_groups = UserGroup
+                   .joins("LEFT JOIN group_members ON group_members.user_group_id = user_groups.id")
+                   .where("user_groups.created_by_user_id = :user_id OR group_members.user_id = :user_id", user_id: current_user.id)
+                   .where("user_groups.name ILIKE ?", "%#{params[:q]}%")
+                   .distinct
+                   .order(created_at: :desc)
   else
     @user_groups = UserGroup
                .joins("LEFT JOIN group_members ON group_members.user_group_id = user_groups.id")
