@@ -33,7 +33,7 @@ class FriendshipsController < ApplicationController
   def destroy
     @friendship = current_user.friendships.find(params[:id])
     @friendship.destroy!
-    redirect_to friendships_path, notice: "Unfriended successfully."
+    redirect_to user_friendships_path(current_user), notice: "Unfriended successfully."
   end
 
   private

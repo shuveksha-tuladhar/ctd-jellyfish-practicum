@@ -37,7 +37,7 @@ RSpec.describe "Friendships", type: :request do
       expect {
         delete user_friendship_path(user, friendship)
       }.to change(Friendship, :count).by(-1)
-      expect(response).to redirect_to(friendships_path)
+      expect(response).to redirect_to(user_friendships_path(user))
     end
   end
 end
