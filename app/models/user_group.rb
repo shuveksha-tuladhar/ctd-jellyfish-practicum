@@ -10,4 +10,11 @@ class UserGroup < ApplicationRecord
 
   validates :name, presence: true
   validates :creator, presence: true
+
+  after_create :add_creator_to_members
+
+  private
+  def add_creator_to_members
+    group_members.find_or_create_by(user: creator)
+  end
 end
