@@ -1,6 +1,203 @@
-<h1>Edit User Group</h1>
+<div>
+  <!-- Navbar -->
+  <%= render "shared/navbar" %>
 
-<%= render "form", user_group: @user_group %>
+  <!-- Main layout -->
+  <div class="main-container">
+    <!-- Sidebar -->
+    <%= render "shared/sidebar" %>
 
-<%= link_to "Back to Groups", user_groups_path %>
+    <!-- Main content -->
+    <div class="main-content">
+      <h1>Edit User Group</h1>
 
+      <div class="form-container">
+        <%= form_with(model: @user_group, local: true) do |f| %>
+          <% if @user_group.errors.any? %>
+            <div class="form-errors">
+              <h2><%= pluralize(@user_group.errors.count, "error") %> prohibited this group from being saved:</h2>
+              <ul>
+                <% @user_group.errors.full_messages.each do |msg| %>
+                  <li><%= msg %></li>
+                <% end %>
+              </ul>
+            </div>
+          <% end %>
+
+          <!-- Group Name -->
+          <div class="form-field">
+            <%= f.label :name %>
+            <%= f.text_field :name %>
+          </div>
+
+          <!-- Group Description -->
+          <div class="form-field">
+            <%= f.label :description %>
+            <%= f.text_area :description, rows: 4 %>
+          </div>
+
+          <!-- Add Members -->
+          <div class="form-field">
+            <%= f.label :user_ids, "Add Members" %>
+            <%= f.collection_select :user_ids, current_user.friends, :id, 
+                    ->(u) { "#{u.first_name} #{u.last_name}" }, 
+                    { selected: @user_group.user_ids }, 
+                    { multiple: true, size: 5 } %>
+             </div>
+
+          <!-- Submit -->
+          <div>
+            <%= f.submit "Update Group", class: "small-btn" %>
+          </div>
+        <% end %>
+      </div>
+
+      <div class="back-link">
+        <%= link_to "Back to Groups", user_groups_path, class: "small-btn secondary-btn" %>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+/* Main layout and content - similar to new.html.erb */
+body, html {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  font-family: Arial, sans-serif;
+  background-color: #f3f3f3;
+}
+
+.main-container {
+  display: flex;
+  gap: 20px;
+  padding: 20px;
+  padding-top: 100px;
+  box-sizing: border-box;
+  min-height: calc(100vh - 120px);
+}
+
+.sidebar {
+  width: 250px;
+  background-color: #fff;
+  padding: 15px;
+  border-radius: 10px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  flex-shrink: 0;
+}
+
+.main-content {
+  flex-grow: 1;
+  background-color: #fff;
+  padding: 25px 20px;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.main-content h1 {
+  margin: 0 0 15px 0;
+  font-size: 28px;
+  color: #1d917a;
+}
+
+/* Form field wrapper */
+.form-field {
+  background-color: #f0faf7;
+  padding: 12px 15px;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.form-field label {
+  font-weight: bold;
+  color: #1d917a;
+  font-size: 14px;
+}
+
+.form-field input,
+.form-field textarea,
+.form-field select {
+  padding: 8px 10px;
+  font-size: 14px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  width: 100%;
+  box-sizing: border-box;
+  transition: all 0.2s ease;
+}
+
+.form-field input:focus,
+.form-field textarea:focus,
+.form-field select:focus {
+  border-color: #1d917a;
+  box-shadow: 0 0 6px rgba(29,145,122,0.3);
+  outline: none;
+}
+
+/* Errors */
+.form-errors {
+  background-color: #ffe6e6;
+  border: 1px solid #ff9999;
+  padding: 10px 15px;
+  border-radius: 8px;
+  margin-bottom: 15px;
+  color: #c33;
+}
+
+.form-errors h2 {
+  margin: 0 0 8px 0;
+  font-size: 15px;
+}
+
+.form-errors ul {
+  margin: 0;
+  padding-left: 20px;
+}
+
+/* Buttons */
+.small-btn {
+  display: inline-block;
+  padding: 8px 14px;
+  font-size: 14px;
+  font-weight: bold;
+  border-radius: 6px;
+  background-color: #1d917a;
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  text-decoration: none;
+  transition: all 0.2s ease;
+}
+
+.small-btn:hover {
+  background-color: #0ca694;
+  transform: translateY(-1px);
+}
+
+.secondary-btn {
+  background-color: #ccc;
+  color: #333;
+}
+
+.secondary-btn:hover {
+  background-color: #aaa;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .main-container {
+    flex-direction: column;
+    padding-top: 80px;
+  }
+
+  .sidebar {
+    width: 100%;
+  }
+}
+</style>
