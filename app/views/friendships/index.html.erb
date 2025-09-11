@@ -49,7 +49,7 @@
                 <% end %>
               </div>
               <div class="user-name"><%= user.first_name %></div>
-              <%= button_to 'Add Friend', friendships_path(friend_id: user.id), method: :post, class: "add-friend-button" %>
+              <%= button_to 'Add Friend', user_friendships_path(friend_id: user.id), method: :post, class: "add-friend-button" %>
             </div>
           <% end %>
         </div>
