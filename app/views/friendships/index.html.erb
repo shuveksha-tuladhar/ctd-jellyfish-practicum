@@ -29,7 +29,7 @@
               <div class="user-name"><%= user.first_name %> <%= user.last_name %></div>
 
               <!-- Unfriend button -->
-              <%= button_to 'Unfriend', friendship_path(friendship), method: :delete, data: { confirm: 'Are you sure?' }, class: "unfriend-button" %>
+              <%= button_to 'Unfriend', user_friendship_path(current_user, friendship), method: :delete, data: { confirm: 'Are you sure?' }, class: "unfriend-button" %>
             </div>
           <% end %>
         </div>
