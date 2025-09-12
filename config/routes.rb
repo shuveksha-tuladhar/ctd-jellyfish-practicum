@@ -8,7 +8,7 @@ Rails.application.routes.draw do
 
   resources :password_resets, only: [ :new, :create, :edit, :update ]
 
-  resources :users, only: [ :index, :show, :edit, :update ] do
+  resources :users, only: [ :new, :create, :index, :show, :edit, :update, :destroy ] do
     member do
       get :edit_password
       patch :update_password
