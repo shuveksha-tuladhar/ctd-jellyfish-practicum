@@ -12,7 +12,7 @@ Rails.application.routes.draw do
 
   resources :password_resets, only: [ :new, :create, :edit, :update ]
 
-  resources :users, only: [ :index, :show, :edit, :update ] do
+  resources :users, only: [ :new, :create, :index, :show, :edit, :update, :destroy ] do
     member do
       get :edit_password
       patch :update_password
@@ -36,7 +36,7 @@ Rails.application.routes.draw do
     resources :group_members, only: [ :index, :create, :destroy ]
   end
 
-  get "dashboard", to: "dashboard#index"
+  get "dashboard", to: "dashboard#index", as: :dashboard
 
   root "home#index"
 end

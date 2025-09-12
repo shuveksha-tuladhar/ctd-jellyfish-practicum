@@ -1,6 +1,6 @@
 class UsersController < ApplicationController
     before_action :set_user, only: [ :show, :edit, :update, :destroy, :upload_photo ]
-    before_action :require_login
+    before_action :require_login, except: [ :new, :create ]
 
     include Rails.application.routes.url_helpers
 
@@ -36,9 +36,10 @@ class UsersController < ApplicationController
     def create
       @user = User.new(user_params)
       if @user.save
-        redirect_to @user
+        session[:user_id] = @user.id
+        redirect_to dashboard_path, notice: "Welcome, #{@user.first_name} #{@user.last_name}!"
       else
-        render :new
+        render :new, status: :unprocessable_entity
       end
     end
 
