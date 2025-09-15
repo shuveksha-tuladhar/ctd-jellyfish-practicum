@@ -63,6 +63,11 @@ group :development do
   gem "web-console"
   gem "devise"
 end
+
+group :test do
+  gem "shoulda-matchers", "~> 5.0"
+end
+
 # Postgres
 gem "pg"
 
