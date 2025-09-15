@@ -23,7 +23,7 @@ RSpec.describe "Sessions", type: :request do
         context "with valid credentials" do
             it "logs the user in and redirects" do
                 post login_path, params: { session: { email: user.email, password: "password" } }
-                expect(response).to redirect_to(user_path(user))
+                expect(response).to redirect_to(dashboard_path)
                 follow_redirect!
                 expect(response.body).to include("Welcome")
             end

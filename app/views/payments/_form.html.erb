@@ -1,0 +1,162 @@
+<div>
+  <%= render "shared/navbar" %>
+  <div class="main-container" >
+    <%= render "shared/sidebar" %>
+    <div class="center-part">
+      <% if current_user %>
+        <%= link_to "View All", user_payments_path(current_user&.id || @user&.id), class: "btn view-all-btn" %>
+      <% end %>
+      
+      <%= render "shared/flash" %>
+
+      <div class="payment-container">
+        <h2 class="title">New Payment</h2>
+        <%= form_with(model: [@user, @payment], local: true) do |f| %>
+          <div class="form-row">
+            <%=f.label :expense_id, "Expense"%>
+            <%=f.collection_select :expense_id, @expenses, :id, :title, prompt: "Select Expense"%>
+          </div>
+          <div class="form-row">
+            <%=f.label :payee_id%>
+            <%=f.text_field :payee_id%>
+          </div>
+          <div class="form-row">
+            <%=f.label :payer_id%>
+            <%= f.text_field :payer_id%>
+          </div>
+          <div class="form-row">
+            <%=f.label :user_group_id, "User Group"%>
+            <%=f.collection_select :user_group_id, UserGroup.all.order(:name), :id, :name,prompt: false %>
+          </div>
+          <div class="form-row">
+            <%=f.label :owed_amount%>
+            <%=f.text_field :owed_amount, required: true%>
+          </div>
+          <div class="form-row">
+            <%=f.label :paid_amount%>
+            <%=f.text_field :paid_amount, required: true%>
+          </div>
+          <div class="form-actions">
+            <%= f.submit "Submit", class: "btn" %>
+            <% if current_user %>
+              <%= link_to "Cancel", user_payments_path(current_user.id), class: "btn" %>
+            <% end %>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>
+<style>
+  /* Reset and Base Styles */
+    body, html {
+        margin: 0;
+        padding: 0;
+        height: 100%;
+        font-family: Arial, sans-serif;
+        background-color: #f3f3f3;
+    }
+    /* Main container and layout */
+    .main-container {
+      display: flex;
+      gap: 20px;
+      padding: 20px;
+      padding-top: 100px;
+      box-sizing: border-box;
+      background-color: #f0f0f0;
+      min-height: 100vh;
+  }
+
+  .sidebar ul li {
+    border-bottom: none;
+    padding: 10px 0;
+  }
+
+    .center-part {
+      display: flex;
+      flex-direction: column;
+      min-height: calc(100vh - 100px);
+      margin: 0 auto;
+      width: 100%;
+    }
+
+    .payment-container {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      margin: 0 auto;
+      width: 100%;
+    }
+    .payment-container form {
+      width: 100%;
+      max-width: 500px;
+      background: white;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+    }
+
+    .form-row {
+      display: flex;
+      flex-direction: column; /* label above input */
+      margin-bottom: 15px;    /* space between rows */
+      }
+
+      .form-row label {
+      margin-bottom: 5px;
+      font-weight: bold;
+      }
+
+      .form-row input,
+      .form-row select {
+      padding: 8px 12px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+      font-size: 14px;
+      }
+
+      .form-actions {
+        display: flex;
+        justify-content: center;
+        margin-top: 20px;
+        gap: 20px;
+      }
+
+      .btn {
+        text-decoration: none;
+        width: auto;
+        padding: 8px 16px;
+        margin-top: 15px;
+        background-color: #1d917a;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 14px;
+      }
+
+      .btn:hover {
+        background-color: #0ca694;
+      }
+
+    /* Responsive layout */
+    @media (max-width: 768px) {
+      .sidebar {
+          position: static;
+          height: auto;
+          width: 100%;
+          overflow-y: visible;
+      }
+      .main-container {
+        flex-direction: column;
+        padding-top: 80px;
+      }
+      .center-part {
+        width: 90%;
+      }
+      .payment-container form {
+        max-width: 100%;
+      }
+    }
+</style>

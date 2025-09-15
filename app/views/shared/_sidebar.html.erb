@@ -1,4 +1,5 @@
 <!-- Sidebar -->
+<<<<<<< HEAD
 <div class="sidebar">
     <ul>
         <li><%= link_to "🏠 Home", dashboard_path %></li>
@@ -16,6 +17,26 @@
         <% end %>
     </div>
 </div>     
+=======
+<% if current_user %>
+    <div class="sidebar">
+        <ul>
+            <li><%= link_to "🏠 Home", dashboard_path %></li>
+            <li><%= link_to "💰 Expense", expenses_path %></li>
+            <li><%= link_to "🤝 Friends", user_friendships_path(current_user) %></li>
+            <li><%= link_to "👥 Groups", user_groups_path %></li>
+            <li>📜 Activity</li>
+            <li><%= link_to "📊 Balances", user_balances_path(current_user) %></li>
+            <li><%= link_to "⚙ Settings", user_path(current_user) %></li>
+        </ul>
+        <div>
+            <%= link_to logout_path, data: { turbo_method: :delete }, class: "logout-btn" do %>
+                <i class="fas fa-sign-out-alt" style="margin-right: 6px;"></i>Logout
+            <% end %>
+        </div>
+    </div> 
+<% end %>    
+>>>>>>> origin/main
 
 <style>
 /* Sidebar */

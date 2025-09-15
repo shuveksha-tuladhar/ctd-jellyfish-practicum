@@ -1,7 +1,179 @@
-<h1>Friendships</h1>
-<ul>
-  <% @friendships.each do |friendship| %>
-    <li><%= friendship.friend.first_name %> (<%= friendship.friend.email %>)</li>
-  <% end %>
-</ul>
+<div>
+  <%= render "shared/navbar" %>
+  <div class="main-container">
+    <%= render "shared/sidebar" %>
+
+    <div class="friendship-container">
+      <% if flash[:notice] %>
+        <div class="notice"><%= flash[:notice] %></div>
+      <% end %>
+
+      <% if flash[:alert] %>
+        <div class="alert"><%= flash[:alert] %></div>
+      <% end %>
+
+      <!-- Friendships Section -->
+      <div class="friends-container">
+        <h2>Friends</h2>
+        <div class="user-grid">
+          <% @friendships.each do |friendship| %>
+            <% user = friendship.friend %>
+            <div class="user-card">
+              <div class="user-profile-pic">
+                <% if user.profile_picture.attached? %>
+                  <%= image_tag url_for(user.profile_picture), class: "profile-pic" %>
+                <% else %>
+                  <i class="bi bi-person-circle fallback-icon"></i>
+                <% end %>
+              </div>
+              <div class="user-name"><%= user.first_name %> <%= user.last_name %></div>
+
+              <!-- Unfriend button -->
+              <%= button_to 'Unfriend', user_friendship_path(current_user, friendship), method: :delete, data: { confirm: 'Are you sure?' }, class: "unfriend-button" %>
+            </div>
+          <% end %>
+        </div>
+      </div>
+
+      <!-- Other Users Section -->
+      <div class="users-container">
+        <h2>Other Users</h2>
+        <div class="user-grid">
+          <% @other_users.each do |user| %>
+            <div class="user-card">
+              <div class="user-profile-pic">
+                <% if user.profile_picture.attached? %>
+                  <%= image_tag url_for(user.profile_picture), class: "profile-pic" %>
+                <% else %>
+                  <i class="bi bi-person-circle fallback-icon"></i>
+                <% end %>
+              </div>
+              <div class="user-name"><%= user.first_name %></div>
+              <%= button_to 'Add Friend', user_friendships_path(friend_id: user.id), method: :post, class: "add-friend-button" %>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<style>
+  /* Reset and Base Styles */
+  body, html {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      font-family: Arial, sans-serif;
+      background-color: #f3f3f3;
+  }
+
+  /* Main container and layout */
+  .main-container {
+    display: flex;
+    gap: 20px;
+    padding: 20px;
+    padding-top: 100px;
+    box-sizing: border-box;
+    background-color: #f0f0f0;
+    min-height: 100vh;
+    width: 100%;
+  }
+
+  .sidebar ul li {
+    border-bottom: none;
+    padding: 10px 0;
+  }
+
+  .friendship-container {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+}
+
+  .users-container {
+    margin-top: 30px;
+  }
+  .user-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.user-card {
+  background-color: white;
+  border-radius: 10px;
+  padding: 15px;
+  width: 120px;
+  text-align: center;
+  box-shadow: 0 0 5px rgba(0,0,0,0.1);
+}
+
+.profile-pic {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-bottom: 10px;
+}
+
+.fallback-icon {
+  font-size: 80px;
+  color: #bbb;
+  margin-bottom: 10px;
+}
+
+.user-name {
+  font-weight: bold;
+  font-size: 14px;
+  margin-bottom: 10px;
+}
+
+.unfriend-button {
+  margin-top: 5px;
+  padding: 5px 10px;
+  background-color: #d9534f;
+  color: white;
+  border: none;
+  border-radius: 3px;
+  cursor: pointer;
+  font-size: 13px;
+}
+
+.unfriend-button:hover {
+  background-color: #c9302c;
+}
+
+.add-friend-button {
+    margin-left: 10px;
+    padding: 5px 10px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+  }
+
+.add-friend-button:hover {
+    background-color: #45a049;
+  }
+
+ /* Responsive layout for small screens */
+@media (max-width: 768px) {
+  .main-container {
+    flex-direction: column;
+    padding-top: 80px;
+  }
+
+  .sidebar {
+    position: static;
+    height: auto;
+    width: 100%;
+    overflow-y: visible;
+  }
+}
+
+</style>
 

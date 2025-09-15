@@ -18,6 +18,9 @@
     <%= f.label :category_id, "Category" %>
     <%= f.collection_select :category_id, Category.all.order(:name), :id, :name, prompt: "Select a category" %>
   </div>
-
+  <div>
+    <%= f.label :user_group_id, "Group" %>
+    <%= f.collection_select :user_group_id, UserGroup.all.order(:name), :id, :name, prompt: "Select a group" %>
+  </div>
   <%= f.submit %>
 <% end %>
