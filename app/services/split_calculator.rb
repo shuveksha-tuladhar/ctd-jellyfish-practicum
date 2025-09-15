@@ -15,7 +15,7 @@ class SplitCalculator
       elsif expense.user_group.present?
         expense.user_group.users
       else
-        [@payer]
+        [ @payer ]
       end
 
     @split_type = split_type

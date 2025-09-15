@@ -17,7 +17,7 @@ RSpec.describe SplitCalculator, type: :service do
     context "equal split between individuals" do
       it "splits the amount evenly and adjusts payer for rounding" do
         expense = create(:expense, title: "Dinner", amount: 100.01, user: alice)
-        participants = [alice, bob, carol]
+        participants = [ alice, bob, carol ]
 
         result = SplitCalculator.new(expense, split_type: :equal, participants: participants).call
 
@@ -40,9 +40,9 @@ RSpec.describe SplitCalculator, type: :service do
     context "percentage split between individuals" do
       it "calculates shares based on percentages and adjusts payer for rounding" do
         expense = create(:expense, :percentage_split, amount: 50.99, user: bob)
-        splits_data = build_splits_data([bob, carol], [60, 40])
+        splits_data = build_splits_data([ bob, carol ], [ 60, 40 ])
 
-        result = SplitCalculator.new(expense, split_type: :percentage, splits_data: splits_data, participants: [bob, carol]).call
+        result = SplitCalculator.new(expense, split_type: :percentage, splits_data: splits_data, participants: [ bob, carol ]).call
 
         expect(result[:expense_id]).to eq(expense.id)
 
@@ -60,7 +60,7 @@ RSpec.describe SplitCalculator, type: :service do
         expense = create(:expense, :percentage_split, amount: 50.0, user: bob)
 
         expect {
-          SplitCalculator.new(expense, split_type: :percentage, participants: [bob, carol]).call
+          SplitCalculator.new(expense, split_type: :percentage, participants: [ bob, carol ]).call
         }.to raise_error("splits_data required for percentage split")
       end
     end
@@ -100,7 +100,7 @@ RSpec.describe SplitCalculator, type: :service do
 
         expense = create(:expense, :percentage_split, amount: 120.0, user: alice, user_group: group)
 
-        splits_data = build_splits_data([alice, bob, carol], [50, 30, 20])
+        splits_data = build_splits_data([ alice, bob, carol ], [ 50, 30, 20 ])
 
         result = SplitCalculator.new(expense, split_type: :percentage, splits_data: splits_data).call
 
