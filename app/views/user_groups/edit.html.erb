@@ -1,6 +1,348 @@
-<h1>Edit User Group</h1>
+<div>
+  <!-- Navbar -->
+  <%= render "shared/navbar" %>
 
-<%= render "form", user_group: @user_group %>
+  <!-- Main layout -->
+  <div class="main-container">
+    <!-- Sidebar -->
+    <%= render "shared/sidebar" %>
 
-<%= link_to "Back to Groups", user_groups_path %>
+    <!-- Main content -->
+    <div class="main-content">
+      <h1>Edit User Group</h1>
 
+      <!-- Group Info Form -->
+      <div class="form-container">
+        <%= form_with(model: @user_group, local: true) do |f| %>
+          <% if @user_group.errors.any? %>
+            <div class="form-errors">
+              <h2><%= pluralize(@user_group.errors.count, "error") %> prohibited this group from being saved:</h2>
+              <ul>
+                <% @user_group.errors.full_messages.each do |msg| %>
+                  <li><%= msg %></li>
+                <% end %>
+              </ul>
+            </div>
+          <% end %>
+
+          <!-- Group Name -->
+          <div class="form-field">
+            <%= f.label :name %>
+            <%= f.text_field :name %>
+          </div>
+
+          <!-- Group Description -->
+          <div class="form-field">
+            <%= f.label :description %>
+            <%= f.text_area :description, rows: 4 %>
+          </div>
+
+          <!-- Update Group Button -->
+          <div>
+            <%= f.submit "Update Group", class: "small-btn" %>
+          </div>
+        <% end %>
+      </div>
+
+      <!-- Add Member Form -->
+      <div class="add-member-form">
+        <%= form_with(model: [@user_group, GroupMember.new], local: true) do |f| %>
+          <%= f.collection_select :user_id,
+                User.where.not(id: @user_group.user_ids),
+                :id,
+                ->(u) { "#{u.first_name} #{u.last_name}" },
+                { prompt: "Select a user to add" } %>
+
+          <%= f.submit "Add Member", class: "small-btn" %>
+        <% end %>
+      </div>
+
+     <!-- Current Members -->
+      <h2>Members (<%= @user_group.users.count %>)</h2>
+      <% if @user_group.users.any? %>
+        <div class="members-list">
+          <% @user_group.users.each do |user| %>
+            <% group_member = @user_group.group_members.find_by(user_id: user.id) %>
+            <div class="member-item" id="member-<%= group_member.id %>">
+              <div class="member-circle">
+                <%= user.first_name.first %><%= user.last_name.first %>
+              </div>
+              <span class="member-fullname"><%= user.first_name %> <%= user.last_name %></span>
+
+              <!-- Remove button with Turbo confirmation -->
+              <% if user != @user_group.creator %>
+                <%= button_to "Remove",
+                      user_group_group_member_path(@user_group, group_member),
+                      method: :delete,
+                      data: { turbo_confirm: "Are you sure you want to remove this member?" },
+                      class: "remove-btn" %>
+              <% else %>
+                <span class="creator-badge">Creator</span>
+              <% end %>
+            </div>
+          <% end %>
+        </div>
+      <% else %>
+        <p class="empty-message">No members yet.</p>
+      <% end %>
+
+
+      <div class="back-link">
+        <%= link_to "Back to Groups", user_groups_path, class: "small-btn secondary-btn" %>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+/* Reset and Base */
+body, html {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  font-family: Arial, sans-serif;
+  background-color: #f3f3f3;
+}
+
+/* Main Layout */
+.main-container {
+  display: flex;
+  gap: 20px;
+  padding: 20px;
+  padding-top: 100px;
+  min-height: calc(100vh - 120px);
+  box-sizing: border-box;
+}
+
+.sidebar {
+  width: 250px;
+  background-color: #fff;
+  padding: 15px;
+  border-radius: 10px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  flex-shrink: 0;
+}
+
+.main-content {
+  flex-grow: 1;
+  background-color: #fff;
+  padding: 25px 20px;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.main-content h1 {
+  margin: 0 0 15px 0;
+  font-size: 28px;
+  color: #1d917a;
+}
+
+.main-content h2 {
+  font-size: 22px;
+  margin: 20px 0 10px 0;
+  color: #1d917a;
+}
+
+/* Form Field */
+.form-field {
+  background-color: #f0faf7;
+  padding: 12px 15px;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.form-field label {
+  font-weight: bold;
+  color: #1d917a;
+  font-size: 14px;
+}
+
+.form-field input,
+.form-field textarea,
+.form-field select {
+  padding: 8px 10px;
+  font-size: 14px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  width: 100%;
+  box-sizing: border-box;
+  transition: all 0.2s ease;
+}
+
+.form-field input:focus,
+.form-field textarea:focus,
+.form-field select:focus {
+  border-color: #1d917a;
+  box-shadow: 0 0 6px rgba(29,145,122,0.3);
+  outline: none;
+}
+
+/* Errors */
+.form-errors {
+  background-color: #ffe6e6;
+  border: 1px solid #ff9999;
+  padding: 10px 15px;
+  border-radius: 8px;
+  margin-bottom: 15px;
+  color: #c33;
+}
+
+/* Buttons */
+.small-btn {
+  display: inline-block;
+  padding: 8px 14px;
+  font-size: 14px;
+  font-weight: bold;
+  border-radius: 6px;
+  background-color: #1d917a;
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  text-decoration: none;
+  transition: all 0.2s ease;
+}
+
+.small-btn:hover {
+  background-color: #0ca694;
+  transform: translateY(-1px);
+}
+
+.secondary-btn {
+  background-color: #ccc;
+  color: #333;
+}
+
+.secondary-btn:hover {
+  background-color: #aaa;
+}
+
+/* Add Member Form */
+.add-member-form {
+  margin-top: 15px;
+  padding: 12px;
+  background: #f0faf7;
+  border-radius: 8px;
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.add-member-form select {
+  flex: 1;
+  padding: 8px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  font-size: 14px;
+}
+
+/* Members List */
+.members-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 15px;
+}
+
+.member-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.member-circle {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background-color: #eaf6f3;
+  color: #1d917a;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  font-weight: bold;
+}
+
+.member-fullname {
+  font-size: 14px;
+  color: #333;
+}
+
+/* Remove Button */
+.remove-btn {
+  padding: 4px 8px;
+  background-color: #ff6b6b;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  font-size: 12px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.remove-btn:hover {
+  background-color: #e63946;
+}
+
+/* Creator Badge */
+.creator-badge {
+  padding: 4px 8px;
+  background-color: #1d917a;
+  color: #fff;
+  border-radius: 6px;
+  font-size: 12px;
+}
+
+/* Empty Message */
+.empty-message {
+  color: #555;
+  font-size: 14px;
+  margin: 10px 0;
+}
+
+/* Back Link */
+.back-link {
+  margin-top: 20px;
+}
+
+/* Logout button */
+.logout-btn {
+  background: white;
+  color: #1d917a;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+}
+
+.logout-btn:hover {
+  background-color: #0ca694;
+  color: white;
+}
+
+
+/* Responsive */
+@media (max-width: 768px) {
+  .main-container {
+    flex-direction: column;
+    padding-top: 80px;
+  }
+
+  .sidebar {
+    width: 100%;
+  }
+
+  .add-member-form {
+    flex-direction: column;
+    align-items: stretch;
+  }
+}
+</style>

@@ -1,25 +1,339 @@
-<h1><%= @user_group.name %></h1>
+<div>
+  <!-- Navbar -->
+  <%= render "shared/navbar" %>
 
-<p>
-  <strong>Description:</strong>
-  <%= @user_group.description %>
-</p>
+  <!-- Main layout -->
+  <div class="main-container">
+    <!-- Sidebar -->
+    <%= render "shared/sidebar" %>
 
-<p>
-  <strong>Created by:</strong>
-  <%= @user_group.creator.first_name %> <%= @user_group.creator.last_name %>
-</p>
+    <!-- Main content -->
+    <div class="main-content">
+      <h1><%= @user_group.name %></h1>
 
-<h2>Members</h2>
-<% if @user_group.users.any? %>
-  <ul>
-    <% @user_group.users.each do |user| %>
-      <li><%= user.first_name %> <%= user.last_name %></li>
-    <% end %>
-  </ul>
-<% else %>
-  <p>No members yet.</p>
-<% end %>
+      <div class="group-info">
+        <p>
+          <strong>Description:</strong>
+          <%= @user_group.description.presence || "No description provided." %>
+        </p>
 
-<%= link_to "Edit Group", edit_user_group_path(@user_group) %> |
-<%= link_to "Back to Groups", user_groups_path %>
+        <p>
+          <strong>Created by:</strong>
+          <%= @user_group.creator.first_name %> <%= @user_group.creator.last_name %>
+        </p>
+      </div>
+
+      <h2>Members (<%= @user_group.users.count %>)</h2>
+      
+      <!-- Add Member Form -->
+      <div class="add-member-form">
+        <%= form_with(model: [@user_group, GroupMember.new], local: true) do |f| %>
+          <%= f.collection_select :user_id,
+                User.where.not(id: @user_group.user_ids),
+                :id,
+                ->(u) { "#{u.first_name} #{u.last_name}" },
+                { prompt: "Select a user to add" } %>
+          <%= f.submit "Add Member", class: "small-btn" %>
+        <% end %>
+      </div>
+
+      <% if @user_group.users.any? %>
+        <div class="members-list">
+          <% @user_group.users.each do |user| %>
+            <div class="member-item">
+              <div class="member-circle">
+                <%= user.first_name.first %><%= user.last_name.first %>
+              </div>
+              <span class="member-fullname"><%= user.first_name %> <%= user.last_name %></span>
+            </div>
+          <% end %>
+        </div>
+      <% else %>
+        <p class="empty-message">No members yet.</p>
+      <% end %>
+
+      <h2>Total Balance</h2>
+      <div class="balance-card">
+        <span class="balance-label">Total Balance</span>
+        <span class="balance-amount">$<%= @user_group.expenses.sum(:amount) %></span>
+      </div>
+
+
+      <h2>All Expenses</h2>
+      <% if @user_group.expenses.any? %>
+        <div class="expenses-grid">
+          <% @user_group.expenses.order(created_at: :desc).each do |expense| %>
+            <div class="expense-card">
+              <strong><%= expense.title %></strong>
+              <p class="expense-date"><%= expense.created_at.strftime("%B %d, %Y") %></p>
+              <p class="expense-amount">$<%= expense.amount %></p>
+            </div>
+          <% end %>
+        </div>
+      <% else %>
+        <p class="empty-message">No expenses yet.</p>
+      <% end %>
+
+      <div class="action-links">
+        <%= link_to "Edit Group", edit_user_group_path(@user_group), class: "small-btn" %>
+        <%= link_to "Back to Groups", user_groups_path, class: "small-btn secondary-btn" %>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+/* Reset and Base Styles */
+body, html {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  font-family: Arial, sans-serif;
+  background-color: #f3f3f3;
+}
+
+/* Main Layout */
+.main-container {
+  display: flex;
+  gap: 20px;
+  padding: 20px;
+  padding-top: 100px;
+  box-sizing: border-box;
+  min-height: calc(100vh - 120px);
+}
+
+/* Sidebar */
+.sidebar {
+  width: 250px;
+  background-color: #fff;
+  padding: 15px;
+  border-radius: 10px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  flex-shrink: 0;
+}
+
+/* Main Content Area */
+.main-content {
+  flex-grow: 1;
+  background-color: #fff;
+  padding: 25px 20px;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* Headings */
+.main-content h1 {
+  margin: 0 0 15px 0;
+  font-size: 28px;
+  color: #1d917a;
+}
+
+.main-content h2 {
+  font-size: 22px;
+  margin: 20px 0 10px 0;
+  color: #1d917a;
+}
+
+/* Group Info */
+.group-info p {
+  margin: 6px 0;
+  font-size: 15px;
+  color: #333;
+}
+
+/* Members display */
+.members-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 15px;
+}
+
+.member-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.member-circle {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background-color: #eaf6f3;
+  color: #1d917a;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  font-weight: bold;
+}
+
+.member-fullname {
+  font-size: 14px;
+  color: #333;
+}
+
+/* Add Member Form */
+.add-member-form {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.add-member-form select {
+  padding: 6px 10px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  font-size: 14px;
+}
+
+.add-member-form select:focus {
+  border-color: #1d917a;
+  outline: none;
+}
+
+/* Total Balance Card */
+.balance-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-color: #eaf6f3; /* light greenish matching theme */
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  max-width: 250px;
+  margin-bottom: 15px;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.balance-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+.balance-card .balance-label {
+  font-size: 14px;
+  color: #555;
+  margin-bottom: 6px;
+  font-weight: 500;
+}
+
+.balance-card .balance-amount {
+  font-size: 28px;
+  font-weight: bold;
+  color: #1d917a;
+}
+
+
+/* Expenses grid */
+.expenses-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 15px;
+  margin-bottom: 20px;
+}
+
+.expense-card {
+  background-color: #f0faf7;
+  border-radius: 8px;
+  padding: 12px 15px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.expense-card strong {
+  font-size: 15px;
+  color: #1d917a;
+}
+
+.expense-date {
+  font-size: 12px;
+  color: #777;
+}
+
+.expense-amount {
+  font-weight: bold;
+  color: #333;
+}
+
+/* Empty message */
+.empty-message {
+  color: #555;
+  font-size: 14px;
+  margin: 10px 0;
+}
+
+/* Action links/buttons */
+.action-links {
+  display: flex;
+  gap: 12px;
+  margin-top: 20px;
+}
+
+.small-btn {
+  display: inline-block;
+  padding: 8px 14px;
+  font-size: 14px;
+  font-weight: bold;
+  border-radius: 6px;
+  background-color: #1d917a;
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  text-decoration: none;
+  transition: all 0.2s ease;
+}
+
+.small-btn:hover {
+  background-color: #0ca694;
+  transform: translateY(-1px);
+}
+
+.secondary-btn {
+  background-color: #ccc;
+  color: #333;
+}
+
+.secondary-btn:hover {
+  background-color: #aaa;
+}
+
+/* Logout button */
+    .logout-btn {
+      background: white;
+      color: #1d917a;
+      border: none;
+      padding: 6px 12px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 14px;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+    }
+
+    .logout-btn:hover {
+      background-color: #0ca694;
+      color: white;
+    }
+
+
+/* Responsive */
+@media (max-width: 768px) {
+  .main-container {
+    flex-direction: column;
+    padding-top: 80px;
+  }
+
+  .sidebar {
+    width: 100%;
+  }
+}
+</style>
