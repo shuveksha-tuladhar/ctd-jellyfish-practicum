@@ -1,21 +1,423 @@
-<h1>All User Groups</h1>
+<div>
+  <!-- Navbar -->
+  <%= render "shared/navbar" %>
 
-<%= link_to "Create New Group", new_user_group_path %>
+  <!-- Main layout -->
+  <div class="main-container">
+    <!-- Sidebar -->
+    <%= render "shared/sidebar" %>
 
-<% if @user_groups.any? %>
-  <ul>
-    <% @user_groups.each do |group| %>
-      <li>
-        <%= link_to group.name, user_group_path(group) %>
-        <% if group.description.present? %>
-          - <%= truncate(group.description, length: 50) %>
-        <% end %>
-        |
-        <%= link_to "Edit", edit_user_group_path(group) %> |
-        <%= link_to "Delete", user_group_path(group), data: { turbo_method: :delete, turbo_confirm: "Are you sure?" } %>
-      </li>
-    <% end %>
-  </ul>
-<% else %>
-  <p>No groups found.</p>
-<% end %>
+    <!-- User Groups section -->
+    <div class="main-content">
+      <!-- Groups Header -->
+      <div class="groups-header">
+        <h1>Your Groups</h1>
+
+        <!-- Search + Create Button container -->
+        <div class="groups-controls">
+          <form action="<%= user_groups_path %>" method="get" class="search-form">
+            <input type="text" name="q" placeholder="Search groups..." class="search-input" value="<%= params[:q] %>"/>
+            <button type="submit" class="btn-primary">Search</button>
+          </form>
+
+          <%= link_to "Create New Group", new_user_group_path, class: "btn-primary" %>
+        </div>
+      </div>
+
+      <% if @user_groups.any? %>
+        <!-- Groups Wrapper -->
+        <div class="groups-wrapper">
+          <% @user_groups.each do |group| %>
+            <div class="group-container">
+              <div class="group-header">
+                <h2 class="group-title"><%= group.name %></h2>
+                <%= link_to "View Details", user_group_path(group), class: "action-btn view-btn" %>
+              </div>
+
+              <!-- Group Info Card -->
+              <div class="group-info-card">
+                <p class="group-creator">
+                  Creator: <span class="creator-label"><%= group.creator.first_name %> <%= group.creator.last_name %></span>
+                </p>
+                <p class="group-created">
+                  Created on: <span class="created-date"><%= group.created_at.strftime("%B %d, %Y") %></span>
+                </p>
+              </div>
+
+              <!-- Total Balance -->
+              <div class="balance-card">
+                <p class="balance-label">Total Balance</p>
+                <p class="balance-amount">$<%= group.expenses.sum(:amount) %></p>
+              </div>
+
+              <!-- Recent Expenses -->
+              <h3 class="section-title">Recent Expenses</h3>
+              <% if group.expenses.any? %>
+                <ul class="expenses-list">
+                  <% group.expenses.last(3).each do |expense| %>
+                    <li>
+                      <div>
+                        <strong><%= expense.title %></strong><br>
+                        <span class="expense-date"><%= expense.created_at.strftime("%B %d, %Y") %></span>
+                      </div>
+                      <span class="expense-amount">$<%= expense.amount %></span>
+                    </li>
+                  <% end %>
+                </ul>
+              <% else %>
+                <p class="empty-message">No expenses yet.</p>
+              <% end %>
+
+              <!-- Members -->
+              <h3 class="section-title">Members (<%= group.users.count %>)</h3>
+              <div class="members-list">
+                <% group.users.each do |user| %>
+                  <div class="member-circle" title="<%= user.first_name %> <%= user.last_name %>">
+                    <%= user.first_name.first %><%= user.last_name.first %>
+                  </div>
+                <% end %>
+              </div>
+
+              <!-- Actions -->
+              <div class="group-actions">
+                <%= link_to "Edit", edit_user_group_path(group), class: "action-btn edit-btn" %>
+                <%= button_to "Delete", user_group_path(group),
+                      method: :delete,
+                      data: { confirm: "Are you sure?" },
+                      class: "action-btn delete-btn" %>
+              </div>
+            </div>
+          <% end %>
+        </div>
+      <% else %>
+        <p class="empty-message">
+          <% if params[:q].present? %>
+            No groups found matching "<%= params[:q] %>".
+          <% else %>
+            No groups found.
+          <% end %>
+        </p>
+      <% end %>
+    </div>
+  </div>
+</div>
+
+<style>
+/* Reset and Base Styles */
+body, html {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  font-family: Arial, sans-serif;
+  background-color: #f3f3f3;
+}
+
+/* Main Layout */
+.main-container {
+  display: flex;
+  gap: 20px;
+  padding: 20px;
+  padding-top: 100px;
+  box-sizing: border-box;
+  min-height: calc(100vh - 120px);
+}
+
+.main-content {
+  flex-grow: 1;
+  background-color: #fff;
+  padding: 25px 20px;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.main-content h1 {
+  margin: 0 0 15px 0;
+  font-size: 28px;
+  color: #1d917a;
+}
+
+/* Groups Header */
+.groups-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+}
+
+.groups-controls {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.search-form {
+  display: flex;
+  gap: 10px;
+}
+
+.search-input {
+  flex: 1;
+  padding: 10px 14px;
+  font-size: 15px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  outline: none;
+  transition: border 0.2s ease, box-shadow 0.2s ease;
+}
+
+.search-input:focus {
+  border-color: #1d917a;
+  box-shadow: 0 0 6px rgba(29,145,122,0.3);
+}
+
+.btn-primary {
+  display: inline-block;
+  padding: 10px 18px;
+  font-size: 15px;
+  font-weight: bold;
+  border-radius: 6px;
+  background-color: #1d917a;
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  text-decoration: none;
+  text-align: center;
+  transition: all 0.2s ease;
+}
+
+.btn-primary:hover {
+  background-color: #0ca694;
+  transform: translateY(-1px);
+}
+
+/* Groups Grid */
+.groups-wrapper {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+  gap: 20px;
+}
+
+/* Individual Group Container */
+.group-container {
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* Group Header */
+.group-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.group-title {
+  font-size: 20px;
+  color: #1d917a;
+  margin: 0;
+}
+
+/* Group Info Card */
+.group-info-card {
+  display: flex;
+  flex-direction: column;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  padding: 10px 12px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+}
+
+.group-info-card p {
+  margin: 4px 0;
+  font-size: 14px;
+  color: #555;
+}
+
+.creator-label {
+  background-color: #e0e0e0;
+  color: #333;
+  font-weight: 500;
+  font-size: 13px;
+  padding: 2px 8px;
+  border-radius: 12px;
+}
+
+.created-date {
+  color: #777;
+}
+
+/* Balance Card */
+.balance-card {
+  display: flex;
+  flex-direction: column;
+  background-color: #eaf6f3;
+  border-radius: 8px;
+  padding: 12px 15px;
+  box-shadow: 0 2px 6px rgba(29,145,122,0.3);
+  text-align: center;
+}
+
+.balance-label {
+  font-size: 14px;
+  color: #333;
+  margin: 0 0 4px 0;
+}
+
+.balance-amount {
+  font-size: 20px;
+  font-weight: bold;
+  color: #1d917a;
+  margin: 0;
+}
+
+/* Section Titles */
+.section-title {
+  font-size: 16px;
+  font-weight: bold;
+  margin: 15px 0 8px;
+  color: #333;
+}
+
+/* Expenses List */
+.expenses-list {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 15px 0;
+}
+
+.expenses-list li {
+  display: flex;
+  justify-content: space-between;
+  padding: 6px 0;
+  border-bottom: 1px solid #eee;
+  font-size: 14px;
+}
+
+.expense-date {
+  font-size: 12px;
+  color: #777;
+}
+
+.expense-amount {
+  font-weight: bold;
+  color: #333;
+}
+
+/* Members */
+.members-list {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 15px;
+}
+
+.member-circle {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background-color: #eaf6f3;
+  color: #1d917a;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  font-weight: bold;
+}
+
+/* Action Buttons */
+.group-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.action-btn {
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 500;
+  text-decoration: none;
+  transition: background 0.2s ease;
+  cursor: pointer;
+}
+
+.view-btn, .edit-btn {
+  background-color: #1d917a;
+  color: #fff;
+}
+
+.view-btn:hover, .edit-btn:hover {
+  background-color: #0ca694;
+}
+
+.delete-btn {
+  background-color: #e08c79;
+  color: #fff;
+}
+
+.delete-btn:hover {
+  background-color: #c76b5c;
+}
+
+/* Empty message */
+.empty-message {
+  text-align: center;
+  font-size: 14px;
+  color: #555;
+  margin: 10px 0;
+}
+
+/* Sidebar */
+.sidebar {
+  width: 250px;
+  background-color: #fff;
+  padding: 15px;
+  border-radius: 10px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  flex-shrink: 0;
+}
+
+/* Logout button */
+.logout-btn {
+  background: white;
+  color: #1d917a;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+}
+
+.logout-btn:hover {
+  background-color: #0ca694;
+  color: white;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .groups-wrapper {
+    grid-template-columns: 1fr;
+  }
+  .groups-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+  .groups-controls {
+    width: 100%;
+    justify-content: space-between;
+  }
+  .search-input {
+    flex: 1;
+  }
+}
+</style>

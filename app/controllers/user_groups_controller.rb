@@ -5,8 +5,22 @@ class UserGroupsController < ApplicationController
 
   # GET /user_groups
   def index
-    @user_groups = UserGroup.all
+  if params[:q].present?
+    @user_groups = UserGroup
+                   .joins("LEFT JOIN group_members ON group_members.user_group_id = user_groups.id")
+                   .where("user_groups.created_by_user_id = :user_id OR group_members.user_id = :user_id", user_id: current_user.id)
+                   .where("user_groups.name ILIKE ?", "%#{params[:q]}%")
+                   .distinct
+                   .order(created_at: :desc)
+  else
+    @user_groups = UserGroup
+               .joins("LEFT JOIN group_members ON group_members.user_group_id = user_groups.id")
+               .where("user_groups.created_by_user_id = ? OR group_members.user_id = ?", current_user.id, current_user.id)
+               .distinct
+               .order(created_at: :desc)
   end
+end
+
 
   # GET /user_groups/1
   def show
@@ -17,20 +31,22 @@ class UserGroupsController < ApplicationController
     @user_group = UserGroup.new
   end
 
-  # POST /user_groups
-  def create
-    @user_group = UserGroup.new(user_group_params)
-    @user_group.creator = current_user   # assign current_user as creator
+ # POST /user_groups
+ def create
+  @user_group = UserGroup.new(user_group_params)
+  @user_group.creator = current_user
 
-    if @user_group.save
-      # Add creator as first member
+  if @user_group.save
+    unless @user_group.users.include?(current_user)
       @user_group.group_members.create(user: current_user)
-
-      redirect_to @user_group, notice: "Group was successfully created."
-    else
-      render :new, status: :unprocessable_entity
     end
+
+    redirect_to @user_group, notice: "Group was successfully created."
+  else
+    render :new, status: :unprocessable_entity
   end
+end
+
 
   # PATCH/PUT /user_groups/1
   def update
@@ -54,7 +70,7 @@ class UserGroupsController < ApplicationController
     end
 
     def user_group_params
-      params.require(:user_group).permit(:name, :description)
+       params.require(:user_group).permit(:name, :description, user_ids: [])
     end
 
    def require_login

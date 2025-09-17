@@ -1,6 +1,6 @@
 <%= form_with(model: @user_group, local: true) do |f| %>
   <% if @user_group.errors.any? %>
-    <div>
+    <div class="form-errors">
       <h2><%= pluralize(@user_group.errors.count, "error") %> prohibited this group from being saved:</h2>
       <ul>
         <% @user_group.errors.full_messages.each do |msg| %>
@@ -10,17 +10,102 @@
     </div>
   <% end %>
 
-  <div>
+  <div class="form-field">
     <%= f.label :name %>
     <%= f.text_field :name %>
   </div>
 
-  <div>
+  <div class="form-field">
     <%= f.label :description %>
-    <%= f.text_area :description %>
+    <%= f.text_area :description, rows: 4 %>
   </div>
 
-  <div>
-    <%= f.submit %>
+  <div class="small-btn-wrapper">
+    <%= f.submit "Create Group", class: "small-btn" %>
   </div>
 <% end %>
+
+
+<style>
+/* Form field wrapper */
+.form-field {
+  background-color: #f0faf7;
+  padding: 12px 15px;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+/* Labels */
+.form-field label {
+  font-weight: bold;
+  color: #1d917a;
+  font-size: 14px;
+}
+
+/* Inputs, Textareas, and Multi-select */
+.form-field input,
+.form-field textarea,
+.form-field select {
+  padding: 8px 10px;
+  font-size: 14px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  width: 100%;
+  box-sizing: border-box;
+  transition: all 0.2s ease;
+}
+
+.form-field input:focus,
+.form-field textarea:focus,
+.form-field select:focus {
+  border-color: #1d917a;
+  box-shadow: 0 0 6px rgba(29,145,122,0.3);
+  outline: none;
+}
+
+/* Errors */
+.form-errors {
+  background-color: #ffe6e6;
+  border: 1px solid #ff9999;
+  padding: 10px 15px;
+  border-radius: 8px;
+  margin-bottom: 15px;
+  color: #c33;
+}
+
+.form-errors h2 {
+  margin: 0 0 8px 0;
+  font-size: 15px;
+}
+
+.form-errors ul {
+  margin: 0;
+  padding-left: 20px;
+}
+
+/* Submit button */
+.small-btn-wrapper {
+  width: fit-content; 
+}
+
+.small-btn {
+  display: inline-block;
+  padding: 8px 14px;
+  font-size: 14px;
+  font-weight: bold;
+  border-radius: 6px;
+  background-color: #1d917a;
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  text-decoration: none;
+  transition: all 0.2s ease;
+}
+
+.small-btn:hover {
+  background-color: #0ca694;
+  transform: translateY(-1px);
+}
+</style>

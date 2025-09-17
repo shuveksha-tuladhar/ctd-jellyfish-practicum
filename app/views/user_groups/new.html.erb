@@ -1,5 +1,171 @@
-<h1>New User Group</h1>
+<div>
+  <!-- Navbar -->
+  <%= render "shared/navbar" %>
 
-<%= render "form", user_group: @user_group %>
+  <!-- Main layout -->
+  <div class="main-container">
+    <!-- Sidebar -->
+    <%= render "shared/sidebar" %>
 
-<%= link_to "Back to Groups", user_groups_path %>
+    <!-- Main content -->
+    <div class="main-content">
+      <h1>Add New Group</h1>
+
+      <div class="form-container">
+        <%= render "form", user_group: @user_group %>
+      </div>
+
+      <div class="back-link">
+        <%= link_to "Back to Groups", user_groups_path, class: "create-btn" %>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+/* Reset and Base Styles */
+body, html {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  font-family: Arial, sans-serif;
+  background-color: #f3f3f3;
+}
+
+/* Main Layout */
+.main-container {
+  display: flex;
+  gap: 20px;
+  padding: 20px;
+  padding-top: 100px;
+  box-sizing: border-box;
+  min-height: calc(100vh - 120px);
+}
+
+/* Sidebar */
+.sidebar {
+  width: 250px;
+  background-color: #fff;
+  padding: 20px 15px;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+  flex-shrink: 0;
+}
+
+/* Main Content Area */
+.main-content {
+  flex-grow: 1;
+  background-color: #fff;
+  padding: 30px 25px;
+  border-radius: 12px;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.main-content:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0,0,0,0.12);
+}
+
+/* Headings */
+.main-content h1 {
+  margin: 0 0 25px 0;
+  font-size: 30px;
+  color: #1d917a;
+  border-bottom: 2px solid #e0f2ef;
+  padding-bottom: 10px;
+}
+
+/* Form container */
+.form-container {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* Input and labels */
+input, select, textarea {
+  padding: 10px 14px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 15px;
+  width: 100%;
+  box-sizing: border-box;
+  transition: all 0.2s ease;
+}
+
+input:focus, select:focus, textarea:focus {
+  border-color: #1d917a;
+  box-shadow: 0 0 6px rgba(29,145,122,0.3);
+  outline: none;
+}
+
+label {
+  font-weight: bold;
+  margin-bottom: 6px;
+  display: block;
+  color: #333;
+}
+
+/* Buttons */
+.create-btn, .form-container input[type="submit"] {
+  display: inline-block;
+  padding: 12px 20px;
+  background-color: #1d917a;
+  color: #fff;
+  border-radius: 8px;
+  text-decoration: none;
+  font-size: 15px;
+  font-weight: bold;
+  transition: background 0.3s ease, transform 0.2s ease;
+  border: none;
+  cursor: pointer;
+}
+
+.create-btn:hover, .form-container input[type="submit"]:hover {
+  background-color: #0ca694;
+  transform: translateY(-2px);
+}
+
+/* Back link */
+.back-link {
+  margin-top: 10px;
+}
+
+/* Logout button */
+    .logout-btn {
+      background: white;
+      color: #1d917a;
+      border: none;
+      padding: 6px 12px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 14px;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+    }
+
+    .logout-btn:hover {
+      background-color: #0ca694;
+      color: white;
+    }
+
+
+/* Responsive */
+@media (max-width: 768px) {
+  .main-container {
+    flex-direction: column;
+    padding-top: 80px;
+  }
+  .sidebar {
+    width: 100%;
+  }
+  .main-content {
+    padding: 25px 15px;
+  }
+}
+</style>
