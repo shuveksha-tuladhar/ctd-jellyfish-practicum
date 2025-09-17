@@ -46,7 +46,18 @@ class ExpensesController < ApplicationController
 
   # PATCH/PUT /expenses/:id
   def update
-    if @expense.update(expense_params)
+    if @expense.update(expense_params.except(:user_ids))
+
+      # Replace participants except the owner
+      @expense.expense_users.where.not(user_id: @expense.user_id).destroy_all
+
+      # Ensure owner is included
+      participant_ids = (expense_params[:user_ids]&.reject(&:blank?) || []) + [ @expense.user_id ]
+
+      participant_ids.each do |id|
+        ExpenseUser.find_or_create_by!(user_id: id, expense_id: @expense.id)
+      end
+
       redirect_to expenses_path, notice: "Expense updated successfully."
     else
       render :edit, status: :unprocessable_content
