@@ -1,12 +1,12 @@
 
 <div class="form-container">
-  <%= form_with(model: user, local: true) do |form| %>
+  <%= form_with(model: @user, local: true, html: { multipart: true }) do |form| %>
 
-    <% if user.errors.any? %>
+    <% if @user.errors.any? %>
       <div class="form-error-messages">
-        <h3><%= pluralize(user.errors.count, "error") %> prohibited this user from being saved:</h3>
+        <h3><%= pluralize(@user.errors.count, "error") %> prohibited this user from being saved:</h3>
         <ul>
-          <% user.errors.full_messages.each do |msg| %>
+          <% @user.errors.full_messages.each do |msg| %>
             <li><%= msg %></li>
           <% end %>
         </ul>
@@ -127,11 +127,13 @@
 
         togglePassword.addEventListener("click", function () {
             if (passwordField.type === "password") {
-              password_field.type = "text";
+
+              passwordField.type = "text";
               this.classList.remove("fa-eye-slash");
               this.classList.add("fa-eye");
             } else {
-              passwordField.type = "text";
+              passwordField.type = "password";
+
               this.classList.remove("fa-eye");
               this.classList.add("fa-eye-slash");
             }
