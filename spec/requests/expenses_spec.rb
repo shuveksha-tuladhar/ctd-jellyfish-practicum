@@ -25,7 +25,7 @@ RSpec.describe "Expenses", type: :request do
           split_type: "equal",
           category_id: category.id,
           user_group_id: user_group.id,
-          payor_ids: [user.id] 
+          payor_ids: []
         }
       }
 

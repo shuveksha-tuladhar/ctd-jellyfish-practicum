@@ -36,7 +36,7 @@ RSpec.describe PaymentsController, type: :request do
   end
 
   let!(:expense) do
-    Expense.create!(title: "Dinner", amount: 100, split_type: "equal", user_id: creator.id, user_group_id: group.id)
+    Expense.create!(title: "Dinner", amount: 100, split_type: "equal", creator: creator, user_group_id: group.id)
   end
 
   let!(:payment) do

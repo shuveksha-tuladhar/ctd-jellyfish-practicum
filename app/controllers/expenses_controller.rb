@@ -32,7 +32,7 @@ class ExpensesController < ApplicationController
     end
 
     if @expense.save
-      redirect_to expenses_path(@expense), notice: "Expense created successfully"
+      redirect_to expenses_path, notice: "Expense created successfully"
     else
       render :new, status: :unprocessable_entity
     end
