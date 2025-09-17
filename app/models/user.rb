@@ -30,7 +30,6 @@ class User < ApplicationRecord
     has_many :created_groups, class_name: "UserGroup", foreign_key: :created_by_user_id
     has_many :group_members
     has_many :user_groups, through: :group_members
-    has_many :expenses, dependent: :destroy
 
     def generate_password_reset_token!
         self.reset_token = SecureRandom.urlsafe_base64

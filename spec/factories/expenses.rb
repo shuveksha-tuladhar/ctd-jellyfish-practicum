@@ -3,7 +3,7 @@ FactoryBot.define do
     title { "Lunch" }
     amount { 25.99 }
     split_type { "equal" }
-    association :creator, factory: :user  # updated to match your model
+    association :creator, factory: :user 
     association :category
     association :user_group
 

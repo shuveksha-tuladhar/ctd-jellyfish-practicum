@@ -44,7 +44,7 @@ RSpec.describe Payment, type: :model do
       title: "Dinner",
       amount: 100,
       split_type: "equal",
-      user_id: creator.id,
+      creator: creator,
       user_group_id: group.id
     )
   end

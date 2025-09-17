@@ -19,7 +19,7 @@ RSpec.describe 'User Factory' do
   context 'with_expenses trait' do
     it 'creates a user with 3 expenses' do
       user = create(:user, :with_expenses)
-      expect(user.expenses.count).to eq(3)
+      expect(user.created_expenses.count).to eq(3)
     end
   end
 end

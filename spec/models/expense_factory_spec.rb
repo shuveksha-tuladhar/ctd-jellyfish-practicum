@@ -23,8 +23,8 @@ RSpec.describe 'Expense Factory' do
         expect(expense.errors[:amount]).to include("must be greater than 0")
     end
 
-    it 'is associated with a user' do
-        expense = build(:expense)
-        expect(expense.user).to be_present
+    it "is associated with a creator" do
+        expense = create(:expense)
+        expect(expense.creator).to be_present
     end
 end
