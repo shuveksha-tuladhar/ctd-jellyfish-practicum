@@ -16,7 +16,7 @@ RSpec.describe SplitCalculator, type: :service do
   describe "#call" do
     context "equal split between individuals" do
       it "splits the amount evenly and adjusts payer for rounding" do
-        expense = create(:expense, title: "Dinner", amount: 100.01, user: alice)
+        expense = create(:expense, title: "Dinner", amount: 100.01, creator: alice)
         participants = [ alice, bob, carol ]
 
         result = SplitCalculator.new(expense, split_type: :equal, participants: participants).call
@@ -39,7 +39,7 @@ RSpec.describe SplitCalculator, type: :service do
 
     context "percentage split between individuals" do
       it "calculates shares based on percentages and adjusts payer for rounding" do
-        expense = create(:expense, :percentage_split, amount: 50.99, user: bob)
+        expense = create(:expense, :percentage_split, amount: 50.99, creator: bob)
         splits_data = build_splits_data([ bob, carol ], [ 60, 40 ])
 
         result = SplitCalculator.new(expense, split_type: :percentage, splits_data: splits_data, participants: [ bob, carol ]).call
@@ -57,7 +57,7 @@ RSpec.describe SplitCalculator, type: :service do
       end
 
       it "raises error if splits_data is missing" do
-        expense = create(:expense, :percentage_split, amount: 50.0, user: bob)
+        expense = create(:expense, :percentage_split, amount: 50.0, creator: bob)
 
         expect {
           SplitCalculator.new(expense, split_type: :percentage, participants: [ bob, carol ]).call
@@ -71,7 +71,7 @@ RSpec.describe SplitCalculator, type: :service do
         create(:group_member, user: bob,   user_group: group)
         create(:group_member, user: carol, user_group: group)
 
-        expense = create(:expense, title: "Team Lunch", amount: 99.99, user: alice, user_group: group)
+        expense = create(:expense, title: "Team Lunch", amount: 99.99, creator: alice, user_group: group)
 
         result = SplitCalculator.new(expense, split_type: :equal).call
 
@@ -96,7 +96,7 @@ RSpec.describe SplitCalculator, type: :service do
         create(:group_member, user: bob,   user_group: group)
         create(:group_member, user: carol, user_group: group)
 
-        expense = create(:expense, :percentage_split, amount: 120.0, user: alice, user_group: group)
+        expense = create(:expense, :percentage_split, amount: 120.0, creator: alice, user_group: group)
 
         splits_data = build_splits_data([ alice, bob, carol ], [ 50, 30, 20 ])
 
@@ -120,7 +120,7 @@ RSpec.describe SplitCalculator, type: :service do
         group = create(:user_group, creator: alice)
         create(:group_member, user: bob,   user_group: group)
 
-        expense = create(:expense, :percentage_split, amount: 80.0, user: alice, user_group: group)
+        expense = create(:expense, :percentage_split, amount: 80.0, creator: alice, user_group: group)
 
         expect {
           SplitCalculator.new(expense, split_type: :percentage).call
