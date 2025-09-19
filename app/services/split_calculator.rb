@@ -13,7 +13,7 @@ class SplitCalculator
       if participants.present?
         participants
       elsif expense.user_group.present?
-        expense.user_group.users.distinct
+        expense.user_group.users
       else
         [ @payer ]
       end

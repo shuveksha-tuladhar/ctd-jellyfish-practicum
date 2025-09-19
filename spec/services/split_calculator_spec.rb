@@ -68,7 +68,6 @@ RSpec.describe SplitCalculator, type: :service do
     context "equal split using group members" do
       it "splits amount among all group members automatically" do
         group = create(:user_group, creator: alice)
-        create(:group_member, user: alice, user_group: group)
         create(:group_member, user: bob,   user_group: group)
         create(:group_member, user: carol, user_group: group)
 
@@ -94,7 +93,6 @@ RSpec.describe SplitCalculator, type: :service do
     context "percentage split using group members" do
       it "calculates shares based on percentages for all group members" do
         group = create(:user_group, creator: alice)
-        create(:group_member, user: alice, user_group: group)
         create(:group_member, user: bob,   user_group: group)
         create(:group_member, user: carol, user_group: group)
 
@@ -120,7 +118,6 @@ RSpec.describe SplitCalculator, type: :service do
 
       it "raises error if splits_data is missing for group" do
         group = create(:user_group, creator: alice)
-        create(:group_member, user: alice, user_group: group)
         create(:group_member, user: bob,   user_group: group)
 
         expense = create(:expense, :percentage_split, amount: 80.0, user: alice, user_group: group)
