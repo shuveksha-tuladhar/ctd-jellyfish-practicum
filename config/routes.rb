@@ -1,4 +1,8 @@
 Rails.application.routes.draw do
+  get "home/index"
+  get "password_resets/new"
+  get "password_resets/edit"
+
   get "login", to: "sessions#new"
   post "login", to: "sessions#create"
   delete "logout", to: "sessions#destroy"
@@ -8,7 +12,7 @@ Rails.application.routes.draw do
 
   resources :password_resets, only: [ :new, :create, :edit, :update ]
 
-  resources :users, only: [ :index, :show, :edit, :update ] do
+  resources :users, only: [ :new, :create, :index, :show, :edit, :update, :destroy ] do
     member do
       get :edit_password
       patch :update_password
@@ -16,6 +20,7 @@ Rails.application.routes.draw do
       patch :upload_photo
     end
 
+    resources :friendships
     resources :payments
     resources :balances, only: [ :index ]
   end
