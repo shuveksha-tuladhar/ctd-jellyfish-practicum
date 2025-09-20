@@ -4,15 +4,10 @@
     <%= render "shared/sidebar" %>
     <div class="center-part">
       <% if current_user %>
-
         <%= link_to "View All", user_payments_path(current_user&.id || @user&.id), class: "btn view-all-btn" %>
       <% end %>
       
       <%= render "shared/flash" %>
-
-
-        <%= link_to "View All", user_payments_path(current_user.id), class: "btn view-all-btn" %>
-      <% end %>
 
       <div class="payment-container">
         <h2 class="title">New Payment</h2>
