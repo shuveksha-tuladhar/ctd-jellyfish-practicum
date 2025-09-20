@@ -28,13 +28,15 @@ RSpec.describe User, type: :model do
         end
     end
     describe "associations" do
-        it "can have many expenses" do
-            user = FactoryBot.create(:user)
-            expense1 = FactoryBot.create(:expense, user: user)
-            expense2 = FactoryBot.create(:expense, user: user)
+        it "can have many expenses through participation" do
+        expense1 = FactoryBot.create(:expense)
+        expense2 = FactoryBot.create(:expense)
 
-            expect(user.expenses).to include(expense1, expense2)
-            expect(user.expenses.count).to eq(2)
+        ExpenseUser.create!(user: user, expense: expense1)
+        ExpenseUser.create!(user: user, expense: expense2)
+
+        expect(user.expenses).to include(expense1, expense2)
+        expect(user.expenses.count).to eq(2)
         end
     end
 end
