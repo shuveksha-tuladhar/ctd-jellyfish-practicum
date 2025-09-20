@@ -14,6 +14,11 @@
 
       <!-- Friendships Section -->
       <div class="friends-container">
+        <div class="link-container">
+          <%= link_to users_path, class: "search-link" do %>
+            <i class="fa fa-search"></i>Search friends
+          <% end %>
+        </div>
         <h2>Friends</h2>
         <div class="user-grid">
           <% @friendships.each do |friendship| %>
@@ -159,6 +164,25 @@
 .add-friend-button:hover {
     background-color: #45a049;
   }
+
+.link-container {
+  text-align: right;
+  margin-top: 1rem;
+}
+.search-link {
+  display: inline-flex;
+  text-align: right;
+  align-items: center;
+  gap: 6px; 
+  text-decoration: none;
+  color: #0ca694;
+  font-weight: 600;
+}
+
+.search-link:hover {
+  color: #0a807a;
+}
+
 
  /* Responsive layout for small screens */
 @media (max-width: 768px) {
