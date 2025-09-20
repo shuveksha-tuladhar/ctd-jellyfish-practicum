@@ -8,23 +8,17 @@ Rails.application.routes.draw do
 
   resources :password_resets, only: [ :new, :create, :edit, :update ]
 
-  resources :users, only: [ :new, :create, :index, :show, :edit, :update, :destroy ] do
-=======
-  resources :users, only: [:index, :show, :edit, :update] do
->>>>>>> a6e6d02 (update user index/show pages, user can view and search other users)
+  resources :users, only: [ :index, :show, :edit, :update ] do
     member do
       get :edit_password
       patch :update_password
       get :upload_photo
       patch :upload_photo
     end
-<<<<<<< HEAD
 
     resources :payments
     resources :balances, only: [ :index ]
   end
-=======
->>>>>>> a6e6d02 (update user index/show pages, user can view and search other users)
 
   resources :users do
     resources :balances, only: [ :index ]
@@ -41,7 +35,7 @@ Rails.application.routes.draw do
     resources :group_members, only: [ :index, :create, :destroy ]
   end
 
-  get "dashboard", to: "dashboard#index"
+  get "dashboard", to: "dashboard#index", as: :dashboard
 
   root "home#index"
 end
