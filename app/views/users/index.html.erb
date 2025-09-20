@@ -4,6 +4,9 @@
     <%= render "shared/sidebar" %>
     <div class="profile-container">
       <%= content_for :title, "Users" %>
+      <div>
+        <%= link_to "View friends", user_friendships_path(current_user), class: "view-all-friends" %>
+      </div>
       <h3 class="section-title">Users</h3>
 
       <!-- Search Form -->
@@ -26,8 +29,23 @@
                 <p class="user-name"><%= user.first_name %> <%= user.last_name %></p>
                 <p class="user-email"><%= user.email %></p>
               </div>
+
               <div class="user-actions">
                 <%= link_to "View", user, class: "btn view-btn" %>
+
+                <% if current_user.friendships.exists?(friend_id: user.id) %>
+                  <% friendship = current_user.friendships.find_by(friend_id: user.id) %>
+                  <%= button_to 'Unfriend',
+                        user_friendship_path(current_user, friendship),
+                        method: :delete,
+                        data: { confirm: 'Are you sure?' },
+                        class: "unfriend-button" %>
+                <% else %>
+                  <%= button_to 'Add Friend',
+                        user_friendships_path(current_user, friend_id: user.id),
+                        method: :post,
+                        class: "add-friend-button" %>
+                <% end %>
               </div>
             </div>
           <% end %>
@@ -58,10 +76,10 @@
       min-height: 100vh;
   }
 
-  .sidebar ul li {
-    border-bottom: none;
-    padding: 10px 0;
-  }
+.sidebar ul li {
+  border-bottom: none;
+  padding: 10px 0;
+}
 
 .profile-container {
   display: flex;
@@ -98,7 +116,12 @@
   margin-right: 8px;
 }
 
-.search-btn {
+.view-all-friends {
+  text-decoration: none;
+  font-size: 14px;
+}
+.search-btn,
+.view-all-friends {
   background-color: #1d917a;
   color: white;
   border-radius: 6px;
@@ -106,7 +129,8 @@
   border: none;
 }
 
-.search-btn:hover {
+.search-btn:hover,
+.view-all-friends:hover {
   background-color: #145d4d;
 }
 
@@ -149,33 +173,69 @@
   gap: 5px;
 }
 
+.user-actions a, .user-actions form {
+  display: inline-block;
+}
+
+.user-actions .btn,
+.user-actions input[type="submit"] {
+  background-color: #0ca694;
+  color: white;
+  padding: 0.5rem 0.8rem;
+  border: none;
+  border-radius: 0.375rem;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.user-actions .btn:hover,
+.user-actions input[type="submit"]:hover {
+  background-color: #0a807a;
+}
+
+.user-actions {
+  display: flex;
+  gap: 8px; 
+}
+
+.view-btn,
+.add-friend-button,
+.unfriend-button {
+  padding: 6px 12px;     
+  font-size: 13px;    
+  border-radius: 6px;     
+  color: white;
+  border: none;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+/* Individual colors */
 .view-btn {
   background-color: #1d917a;
-  color: white;
-  padding: 6px 10px;
-  border-radius: 6px;
-  text-decoration: none;
-  font-size: 13px;
+}
+.view-btn:hover {
+  background-color: #145d4d;
+}
+
+.add-friend-button {
+  background-color: #4CAF50;
+}
+.add-friend-button:hover {
+  background-color: #45a049;
+}
+
+.unfriend-button {
+  background-color: #d9534f;
+}
+.unfriend-button:hover {
+  background-color: #c9302c;
 }
 
 .view-btn:hover {
   background-color: #145d4d;
 }
 
-/* New user button */
-.add-user-btn {
-  display: inline-block;
-  margin-top: 20px;
-  background-color: #1d917a;
-  color: white;
-  padding: 8px 12px;
-  border-radius: 6px;
-  text-decoration: none;
-}
-
-.add-user-btn:hover {
-  background-color: #145d4d;
-}
 
 /* Empty message */
 .empty-message {
@@ -187,6 +247,7 @@
   background-color: #f9f9f9;
   border-radius: 6px;
 }
+
 
 /* Responsive */
 @media (max-width: 768px) {
