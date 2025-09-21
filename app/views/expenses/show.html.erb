@@ -28,12 +28,6 @@
         <% else %>
           <p><strong>Category:</strong> Not assigned</p>
         <% end %>
-
-        <% if @expense.payors.any? %>
-          <p><strong>Payors:</strong> <%= @expense.payors.map(&:full_name).join(", ") %></p>
-        <% else %>
-          <p><strong>Payors:</strong> None assigned</p>
-        <% end %>
       </div>
 
       <div class="button-group">

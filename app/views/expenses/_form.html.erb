@@ -20,6 +20,11 @@
   </div>
 
   <div>
+    <%= f.label :user_ids, "Split with users" %>
+    <%= f.collection_select :user_ids, User.all.order(:email), :id, ->(u) { "#{u.first_name} #{u.last_name} (#{u.email})" }, {}, multiple: true %>
+  </div>
+
+  <div>
     <%= f.label :user_group_id, "Group" %>
     <%= f.collection_select :user_group_id, UserGroup.all.order(:name), :id, :name, prompt: "Select a group" %>
   </div>

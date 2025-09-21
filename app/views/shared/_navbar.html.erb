@@ -10,9 +10,12 @@
   </div>
   <div class="navbar-center">
     <%= link_to "Add Expense", new_expense_path, class: "nav-btn" %>
+
     <% if current_user %>
       <%= link_to "Settle Up", user_payments_path(current_user.id), class:"nav-btn" %>
     <% end %>
+
+
   </div>
   <div class="navbar-right">
     <% if current_user %>

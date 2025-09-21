@@ -72,15 +72,6 @@ ActiveRecord::Schema[8.0].define(version: 2025_09_15_015724) do
     t.index ["user_id"], name: "index_expenses_on_user_id"
   end
 
-  create_table "expenses_users", force: :cascade do |t|
-    t.bigint "expense_id", null: false
-    t.bigint "user_id", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["expense_id"], name: "index_expenses_users_on_expense_id"
-    t.index ["user_id"], name: "index_expenses_users_on_user_id"
-  end
-
   create_table "friendships", force: :cascade do |t|
     t.bigint "user_id", null: false
     t.bigint "friend_id", null: false
@@ -141,8 +132,6 @@ ActiveRecord::Schema[8.0].define(version: 2025_09_15_015724) do
   add_foreign_key "expense_users", "users"
   add_foreign_key "expenses", "user_groups"
   add_foreign_key "expenses", "users"
-  add_foreign_key "expenses_users", "expenses"
-  add_foreign_key "expenses_users", "users"
   add_foreign_key "friendships", "users"
   add_foreign_key "friendships", "users", column: "friend_id"
   add_foreign_key "group_members", "user_groups"

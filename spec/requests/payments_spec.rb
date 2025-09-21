@@ -1,6 +1,8 @@
 require 'rails_helper'
 
 RSpec.describe PaymentsController, type: :request do
+  include Devise::Test::IntegrationHelpers
+
   let!(:payer) do
     User.create!(
       first_name: "Alice",
@@ -40,14 +42,12 @@ RSpec.describe PaymentsController, type: :request do
   end
 
   let!(:payment) do
-    Payment.create!(expense: expense, payer: payer, payee: payee,
-                    user_group: group, owed_amount: 50, paid_amount: 50)
+    Payment.create!(expense: expense, payer: payer, payee: payee, user_group: group, owed_amount: 50, paid_amount: 50)
   end
 
   before do
-    # Fake login by overriding current_user
-    # allow_any_instance_of(ApplicationController).to receive(:current_user).and_return(payer)
-    log_in_as(payer)
+    # Stub current_user so views and controllers know who is logged in
+    allow_any_instance_of(ApplicationController).to receive(:current_user).and_return(payer)
   end
 
   describe "GET #index" do
@@ -59,18 +59,37 @@ RSpec.describe PaymentsController, type: :request do
   end
 
   describe "POST #create" do
+    it "creates a new payment with valid params" do
+      post user_payments_path(payer), params: { payment: {
+        expense_id: expense.id,
+        payer_id: payer.id,
+        payee_id: payee.id,
+        user_group_id: group.id,
+        owed_amount: 25,
+        paid_amount: 25
+      } }
+
+      expect(response).to redirect_to(user_payments_path(payer))
+      expect(flash[:notice]).to eq("Payment Created Sucessful")
+      expect(Payment.last.owed_amount).to eq(25)
+    end
+
     it "renders new when params are invalid" do
       post user_payments_path(payer), params: { payment: { owed_amount: -10 } }
-
       expect(response).to have_http_status(:unprocessable_entity)
       expect(response.body).to include("New Payment")
     end
   end
 
   describe "PATCH #update" do
+    it "updates the payment with valid params" do
+      patch user_payment_path(payer, payment), params: { payment: { owed_amount: 60 } }
+      expect(response).to redirect_to(user_payments_path(payer))
+      expect(payment.reload.owed_amount).to eq(60)
+    end
+
     it "renders edit when params are invalid" do
       patch user_payment_path(payer, payment), params: { payment: { owed_amount: -1 } }
-
       expect(response).to have_http_status(:unprocessable_entity)
       expect(response.body).to include("Edit Payment")
     end
