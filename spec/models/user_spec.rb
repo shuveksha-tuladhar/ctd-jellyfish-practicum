@@ -27,6 +27,7 @@ RSpec.describe User, type: :model do
             expect(user).to be_valid
         end
     end
+    
     describe "associations" do
         it "can have many expenses through participation" do
         expense1 = FactoryBot.create(:expense)

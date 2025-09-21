@@ -11,7 +11,7 @@
 
   <div>
     <%= f.label :split_type %>
-    <%= f.select :split_type, ["Equal", "Percentage"], prompt: "Select split type" %>
+    <%= f.select :split_type, options_for_select([["Equal", "equal"], ["Percentage", "percentage"]], expense.split_type || "equal"), prompt: "Select split type" %>
   </div>
 
   <div>
@@ -28,5 +28,6 @@
     <%= f.label :user_group_id, "Group" %>
     <%= f.collection_select :user_group_id, UserGroup.all.order(:name), :id, :name, prompt: "Select a group" %>
   </div>
-  <%= f.submit %>
+
+  <%= f.submit "Create Expense" %>
 <% end %>

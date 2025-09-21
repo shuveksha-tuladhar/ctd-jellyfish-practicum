@@ -6,7 +6,7 @@ RSpec.describe Expense, type: :model do
   let(:participant2) { User.create!(first_name: "Bob", last_name: "Johnson", email: "bob@example.com", password: "password", phone_number: "2222222222") }
   let(:non_participant) { User.create!(first_name: "Eve", last_name: "Adams", email: "eve@example.com", password: "password", phone_number: "3333333333") }
 
-
+  let(:category) { create(:category) }
   let(:expense) { user.created_expenses.create!(title: "Lunch", amount: 50.0, split_type: "Equal", category_id: 1) }
 
   before do
@@ -30,7 +30,9 @@ RSpec.describe Expense, type: :model do
     described_class.new(
       title: "Sample Expense",
       amount: 50.0,
-      user: user
+      creator: user,
+      category: category,
+      split_type: "equal"
     )
   end
 
@@ -59,14 +61,21 @@ RSpec.describe Expense, type: :model do
   end
 
   describe "associations" do
-    it "belongs to a user" do
-      assoc = described_class.reflect_on_association(:user)
+    it "belongs to a creator (User)" do
+      assoc = described_class.reflect_on_association(:creator)
       expect(assoc.macro).to eq :belongs_to
+      expect(assoc.class_name).to eq "User"
     end
 
     it "belongs to a category" do
       assoc = described_class.reflect_on_association(:category)
       expect(assoc.macro).to eq :belongs_to
     end
+
+    # it "has many payors through ExpensesUser" do
+    #   assoc = described_class.reflect_on_association(:payors)
+    #   expect(assoc.macro).to eq :has_many
+    #   expect(assoc.options[:through]).to eq :expenses_users
+    # end
   end
 end

@@ -9,10 +9,10 @@ FactoryBot.define do
     trait :with_expenses do
       after(:create) do |user|
         group = create(:user_group, creator: user)
-        create_list(:expense, 3) do |expense|
-          expense.user = user
-          expense.user_group = group
-          expense.save!
+        category = create(:category)
+
+        create_list(:expense, 3, creator: user, user_group: group, category: category) do |expense|
+          # add user as a participant in the join table
           create(:expense_user, user: user, expense: expense)
         end
       end

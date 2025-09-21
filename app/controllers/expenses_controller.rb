@@ -5,7 +5,10 @@ class ExpensesController < ApplicationController
   # GET /expenses
   def index
     if current_user
-      @expenses = current_user.expenses
+      @expenses = Expense
+                    .joins(:payors)
+                    .where("expenses.creator_id = ? OR users.id = ?", current_user.id, current_user.id)
+                    .distinct
     else
       redirect_to login_path, alert: "Please log in."
     end
@@ -17,7 +20,6 @@ class ExpensesController < ApplicationController
   end
 
   # POST /expenses
-
   def create
     @expense = current_user.created_expenses.new(expense_params.except(:user_ids))
     if @expense.save
@@ -42,6 +44,10 @@ class ExpensesController < ApplicationController
   end
 
   def show
+    @expense = Expense.find_by(id: params[:id], creator_id: current_user.id) ||
+              current_user.expenses.find_by(id: params[:id])
+
+    redirect_to expenses_path, alert: "Expense not found." unless @expense
   end
 
   # PATCH/PUT /expenses/:id
@@ -52,7 +58,7 @@ class ExpensesController < ApplicationController
       @expense.expense_users.where.not(user_id: @expense.user_id).destroy_all
 
       # Ensure owner is included
-      participant_ids = (expense_params[:user_ids]&.reject(&:blank?) || []) + [ @expense.user_id ]
+      participant_ids = (expense_params[:user_ids]&.reject(&:blank?) || []) + [ @expense.creator_id ]
 
       participant_ids.each do |id|
         ExpenseUser.find_or_create_by!(user_id: id, expense_id: @expense.id)
@@ -78,8 +84,15 @@ class ExpensesController < ApplicationController
   end
 
   def expense_params
-    params.require(:expense).permit(:title, :amount, :split_type, :category_id, user_ids: [])
-  end
+  params.require(:expense).permit(
+    :title,
+    :amount,
+    :split_type,
+    :category_id,
+    :user_group_id,
+    user_ids: []
+  )
+end
 
   def require_login
     redirect_to login_path, alert: "Please log in." unless current_user

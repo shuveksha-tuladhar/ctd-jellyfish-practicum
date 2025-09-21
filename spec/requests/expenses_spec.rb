@@ -4,6 +4,7 @@ RSpec.describe "Expenses", type: :request do
   let(:user) { create(:user) }
   let(:category) { create(:category) }
   let(:friend) { create(:user) } # for participants
+  let(:user_group) { create(:user_group, creator: user) }
 
   before do
     # Log in the user
@@ -26,7 +27,8 @@ RSpec.describe "Expenses", type: :request do
             amount: 50.0,
             split_type: "Equal",
             category_id: category.id,
-            user_ids: [ friend.id ]
+            user_ids: [ friend.id ],
+            user_group_id: user_group.id,
           }
         }
 
@@ -38,7 +40,7 @@ RSpec.describe "Expenses", type: :request do
         expense = Expense.last
         expect(expense.title).to eq("Internet Bill")
         expect(expense.amount).to eq(50.0)
-        expect(expense.user).to eq(user)
+        expect(expense.creator).to eq(user)
         expect(expense.participants.pluck(:id)).to match_array([ user.id, friend.id ])
         expect(response).to redirect_to(expenses_path)
       end
@@ -65,7 +67,7 @@ RSpec.describe "Expenses", type: :request do
 
   describe "PATCH /expenses/:id" do
     let!(:expense) do
-      exp = create(:expense, user: user, title: "Old Title", amount: 20.0, category: category)
+      exp = create(:expense, creator: user, title: "Old Title", amount: 20.0, category: category)
       ExpenseUser.create!(user_id: user.id, expense_id: exp.id) # owner is participant
       exp
     end
