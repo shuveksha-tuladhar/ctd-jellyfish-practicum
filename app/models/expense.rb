@@ -1,5 +1,4 @@
 class Expense < ApplicationRecord
-
   has_many :expense_users, dependent: :destroy
   has_many :participants, through: :expense_users, source: :user
   belongs_to :creator, class_name: "User", foreign_key: "creator_id"

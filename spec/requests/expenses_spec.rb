@@ -28,7 +28,7 @@ RSpec.describe "Expenses", type: :request do
             split_type: "Equal",
             category_id: category.id,
             user_ids: [ friend.id ],
-            user_group_id: user_group.id,
+            user_group_id: user_group.id
           }
         }
 
