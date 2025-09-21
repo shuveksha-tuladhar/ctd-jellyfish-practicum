@@ -15,14 +15,24 @@
         <p><strong>Title:</strong> <%= @expense.title %></p>
         <p><strong>Amount:</strong> <%= number_to_currency(@expense.amount) %></p>
 
+        <% if @expense.creator.present? %>
+          <p><strong>Creator:</strong> <%= @expense.creator.full_name %></p>
+        <% end %>
+
         <% if @expense.respond_to?(:split_type) && @expense.split_type.present? %>
-          <p><strong>Split Type:</strong> <%= @expense.split_type %></p>
+          <p><strong>Split Type:</strong> <%= @expense.split_type.capitalize %></p>
         <% end %>
 
         <% if @expense.category.present? %>
           <p><strong>Category:</strong> <%= @expense.category.name %></p>
         <% else %>
           <p><strong>Category:</strong> Not assigned</p>
+        <% end %>
+
+        <% if @expense.payors.any? %>
+          <p><strong>Payors:</strong> <%= @expense.payors.map(&:full_name).join(", ") %></p>
+        <% else %>
+          <p><strong>Payors:</strong> None assigned</p>
         <% end %>
       </div>
 

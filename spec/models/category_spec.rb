@@ -20,7 +20,7 @@ RSpec.describe Category, type: :model do
       user_group = create(:user_group, creator: user)
 
 
-      expense = create(:expense, user: user, category: category, user_group: user_group)
+      expense = create(:expense, creator: user, category: category, user_group: user_group)
 
       expect(category.expenses).to include(expense)
     end

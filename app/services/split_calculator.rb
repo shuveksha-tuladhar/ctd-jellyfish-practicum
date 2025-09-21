@@ -6,7 +6,7 @@ class SplitCalculator
   # splits_data: required only for :percentage, array of hashes [{participant_id:, percentage:}]
   def initialize(expense, split_type: :equal, splits_data: nil, participants: nil)
     @expense = expense
-    @payer = expense.user
+    @payer = expense.creator
     @amount = expense.amount.to_d
 
     @participants =

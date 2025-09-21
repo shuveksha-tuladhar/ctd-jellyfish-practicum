@@ -9,11 +9,13 @@ class User < ApplicationRecord
     has_many :received_friendships, class_name: "Friendship", foreign_key: :friend_id, dependent: :destroy
     has_many :received_friends, through: :received_friendships, source: :user
 
-
     has_secure_password
     attr_accessor :reset_token
 
-    has_many :expenses, dependent: :nullify
+    has_many :created_expenses, class_name: "Expense", foreign_key: :creator_id, dependent: :destroy
+
+    has_many :expenses_users, dependent: :destroy
+    has_many :expenses, through: :expenses_users
 
     has_many :payments_made, class_name: "Payment", foreign_key: :payer_id, dependent: :destroy
     has_many :payments_received, class_name: "Payment", foreign_key: :payee_id, dependent: :destroy
@@ -28,7 +30,6 @@ class User < ApplicationRecord
     has_many :created_groups, class_name: "UserGroup", foreign_key: :created_by_user_id
     has_many :group_members
     has_many :user_groups, through: :group_members
-    has_many :expenses, dependent: :destroy
 
     def generate_password_reset_token!
         self.reset_token = SecureRandom.urlsafe_base64
@@ -48,5 +49,9 @@ class User < ApplicationRecord
         OR (LOWER(last_name) || ' ' || LOWER(first_name)) LIKE :q",
         q: "%#{query}%"
         )
+    end
+
+     def full_name
+        "#{first_name} #{last_name}"
     end
 end

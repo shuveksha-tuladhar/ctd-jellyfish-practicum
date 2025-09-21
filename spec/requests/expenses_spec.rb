@@ -17,20 +17,22 @@ RSpec.describe "Expenses", type: :request do
   end
 
   describe "POST /expenses" do
-    it "creates a new expense" do
+    it "creates a new expense with creator and payors" do
       expense_params = {
         expense: {
           title: "Internet Bill",
           amount: 50.0,
           split_type: "equal",
           category_id: category.id,
-          user_group_id: user_group.id
+          user_group_id: user_group.id,
+          payor_ids: []
         }
       }
 
       expect {
         post expenses_path, params: expense_params
       }.to change(Expense, :count).by(1)
+         .and change(ExpensesUser, :count).by(1)
 
       expect(response).to redirect_to(expenses_path)
 
@@ -38,7 +40,8 @@ RSpec.describe "Expenses", type: :request do
       expect(expense.title).to eq("Internet Bill")
       expect(expense.amount).to eq(50.0)
       expect(expense.user_group).to eq(user_group)
-      expect(expense.user).to eq(user)
+      expect(expense.creator).to eq(user)
+      expect(expense.payors).to include(user)
     end
   end
 end

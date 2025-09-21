@@ -5,7 +5,10 @@ class ExpensesController < ApplicationController
   # GET /expenses
   def index
     if current_user
-      @expenses = current_user.expenses
+      @expenses = Expense
+                    .joins(:payors)
+                    .where("expenses.creator_id = ? OR users.id = ?", current_user.id, current_user.id)
+                    .distinct
     else
       redirect_to login_path, alert: "Please log in."
     end
@@ -18,7 +21,15 @@ class ExpensesController < ApplicationController
 
   # POST /expenses
   def create
-    @expense = current_user.expenses.new(expense_params)
+    @expense = current_user.created_expenses.new(expense_params)
+
+    # Add current_user as a payor by default
+    @expense.payors << current_user
+
+    if params[:expense][:payor_ids].present?
+      other_payor_ids = params[:expense][:payor_ids].map(&:to_i) - [ current_user.id ]
+      @expense.payors << User.where(id: other_payor_ids)
+    end
 
     if @expense.save
       redirect_to expenses_path, notice: "Expense created successfully"
@@ -33,7 +44,10 @@ class ExpensesController < ApplicationController
   end
 
   def show
-    @expense = current_user.expenses.find(params[:id])
+    @expense = Expense.find_by(id: params[:id], creator_id: current_user.id) ||
+              current_user.expenses.find_by(id: params[:id])
+
+    redirect_to expenses_path, alert: "Expense not found." unless @expense
   end
 
   # PATCH/PUT /expenses/:id
@@ -59,8 +73,15 @@ class ExpensesController < ApplicationController
   end
 
   def expense_params
-    params.require(:expense).permit(:title, :amount, :split_type, :category_id, :user_group_id)
-  end
+  params.require(:expense).permit(
+    :title,
+    :amount,
+    :split_type,
+    :category_id,
+    :user_group_id,
+    payor_ids: []
+  )
+end
 
   def require_login
     redirect_to login_path, alert: "Please log in." unless current_user
