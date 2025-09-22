@@ -28,6 +28,10 @@
         <% else %>
           <p><strong>Category:</strong> Not assigned</p>
         <% end %>
+
+        <p><strong>Status: </strong> <%= @expense.status %></p>
+
+
         <p><strong>Participant(s)</strong></p>
 
         <%if @expense.participants.present? %>

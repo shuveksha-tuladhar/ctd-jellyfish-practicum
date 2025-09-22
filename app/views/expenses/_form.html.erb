@@ -20,6 +20,11 @@
   </div>
 
   <div>
+    <%= f.label :status ,"Status" %>
+    <%= f.select :status, ["pending", "paid"], prompt: "Select status" %>
+  </div>
+
+  <div>
     <%= f.label :user_ids, "Split with users" %>
     <%= f.collection_select :user_ids, User.all.order(:email), :id, ->(u) { "#{u.first_name} #{u.last_name} (#{u.email})" }, {}, multiple: true %>
   </div>
