@@ -30,16 +30,22 @@
         <% end %>
 
         <p><strong>Status: </strong> <%= @expense.status %></p>
-
-
         <p><strong>Participant(s)</strong></p>
-
         <%if @expense.participants.present? %>
           <%@expense.participants.each do |participant|%>
             <p><%= participant.full_name%></p>
           <%end%>
         <%else%>
           <p> Not assigned</p>
+        <%end%>
+        <p><strong>Payment Info: </strong></p>
+        <%if @expense.payments.present?%>
+          <%@expense.payments.each do |payment|%>
+            <p><%=payment.payer.full_name%></p>
+            <p><%=number_to_currency(payment.paid_amount)%></p>
+           <%end%> 
+        <%else%>
+          <p>No payment</p>
         <%end%>
       </div>
 
