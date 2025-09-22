@@ -10,10 +10,7 @@
     <!-- Main Content -->
     <div class="main-content">
       <h1>Add New Expense</h1>
-
-      <div class="form-card">
         <%= render "form", expense: @expense %>
-      </div>
 
       <div class="button-group">
         <%= link_to "Back", (request.referer || expenses_path), class: "btn-back" %>
