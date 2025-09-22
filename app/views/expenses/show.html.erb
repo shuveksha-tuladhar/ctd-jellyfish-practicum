@@ -30,6 +30,48 @@
         <% end %>
       </div>
 
+      <div class="form-card">
+        <h2>Cost Splits</h2>
+
+        <% if @splits.present? %>
+          <ul class="splits-list">
+            <% @splits.each do |split| %>
+              <% participant = @participants[split[:participant_id]] %>
+              <% next unless participant %>
+
+              <% share = split[:share].to_f %>
+              <% css_class =
+                  if participant == current_user && share > 0
+                    "you-owe"
+                  elsif participant != current_user && share > 0
+                    "owes-you"
+                  else
+                    "settled"
+                  end
+              %>
+
+              <li class="split-item <%= css_class %>">
+                <% if participant == current_user %>
+                  <% if share > 0 %>
+                    You owe <%= number_to_currency(share) %>.
+                  <% else %>
+                    You are settled up.
+                  <% end %>
+                <% else %>
+                  <% if share > 0 %>
+                    <%= participant.full_name %> owes you <%= number_to_currency(share) %>.
+                  <% else %>
+                    <%= participant.full_name %> is settled up.
+                  <% end %>
+                <% end %>
+              </li>
+            <% end %>
+          </ul>
+        <% else %>
+          <p>No splits available for this expense.</p>
+        <% end %>
+      </div>
+
       <div class="button-group">
         <%= link_to "Back", (request.referer || expenses_path), class: "btn-back" %>
         <%= link_to "View All Expenses", expenses_path, class: "btn-view-all" %>
@@ -88,12 +130,51 @@
 
     /* Form card */
     .form-card {
-      background-color: #f9fdfb;
-      padding: 25px;
-      border-radius: 10px;
-      box-shadow: 0 3px 8px rgba(0,0,0,0.05);
-      margin-bottom: 25px;
-    }
+    background-color: #f9fdfb;
+    padding: 25px;
+    border-radius: 10px;
+    box-shadow: 0 3px 8px rgba(0,0,0,0.05);
+    margin-bottom: 25px;
+  }
+
+  .form-card h2 {
+    margin-top: 0;
+    margin-bottom: 20px;
+    color: #1d917a;
+    font-size: 22px;
+    text-align: left;
+  }
+
+  .splits-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .split-item {
+    padding: 12px 15px;
+    border-radius: 8px;
+    margin-bottom: 8px;
+    font-size: 14px;
+  }
+
+  .split-item.owes-you {
+    background-color: #e6f9f2;
+    color: #1d917a;
+    font-weight: 500;
+  }
+
+  .split-item.you-owe {
+    background-color: #fff4e6;
+    color: #ff7f50; /* subtle orange to indicate owes */
+    font-weight: 500;
+  }
+
+  .split-item.settled {
+    background-color: #f0f0f0;
+    color: #666;
+    font-style: italic;
+  }
 
     /* Buttons below form */
     .button-group {
