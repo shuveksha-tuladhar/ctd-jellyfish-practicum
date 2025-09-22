@@ -28,6 +28,15 @@
         <% else %>
           <p><strong>Category:</strong> Not assigned</p>
         <% end %>
+        <p><strong>Participant(s)</strong></p>
+
+        <%if @expense.participants.present? %>
+          <%@expense.participants.each do |participant|%>
+            <p><%= participant.full_name%></p>
+          <%end%>
+        <%else%>
+          <p> Not assigned</p>
+        <%end%>
       </div>
 
       <div class="button-group">
