@@ -49,7 +49,7 @@
             { selected: @selected_user_ids },
             { multiple: true, class: "form-multi-select" } %>
 
-      <div class="form-group" id="percentage_inputs" style="display: none;">
+      <div class="form-group" id="percentage_inputs" style="display: none;margin-top: 20px;">
         <label>Percentage Split</label>
         <div id="percentage_fields" class="flex flex-col gap-2">
         </div>
@@ -80,47 +80,42 @@ document.addEventListener("turbo:load", () => {
 
   function renderPercentageFields() {
     let participants = [];
-
-    if (document.getElementById("group-button").classList.contains("active")) {
-      participants.push(...groupSelect.querySelector("select").selectedOptions);
-    } else {
-      participants.push(...friendsSelect.querySelector("select").selectedOptions);
-    }
-
+    
+    const isGroupActive = document.getElementById("group-button").classList.contains("active");
+    const selectElement = isGroupActive ? groupSelect.querySelector("select") : friendsSelect.querySelector("select");
+  
+    participants.push(...selectElement.selectedOptions);
+  
     if (participants.length === 0) {
-      participants.push(...(
-        document.getElementById("group-button").classList.contains("active")
-          ? Array.from(groupSelect.querySelector("select").options)
-          : Array.from(friendsSelect.querySelector("select").options)
-      ));
+      percentageInputsContainer.style.display = "none";
+      percentageFields.innerHTML = ""; // clear any previous fields
+      return;
     }
-
+  
     const participantData = participants.map(opt => ({
       id: opt.value,
       label: opt.text
     }));
-
-    // Add creator if not already present
+  
     if (!participantData.some(p => p.id === creatorId)) {
       participantData.unshift({
         id: creatorId,
         label: `${creatorName} (${creatorEmail})`
       });
     }
-
+  
     const count = participantData.length;
     const defaultPercent = (100 / count).toFixed(2);
-
+  
     percentageFields.innerHTML = ""; // clear previous fields
-
+  
     participantData.forEach(p => {
       const wrapper = document.createElement("div");
-      wrapper.classList.add("flex", "gap-2", "items-center");
-
+      wrapper.classList.add("flex", "flex-col", "gap-1");
+  
       const label = document.createElement("label");
       label.textContent = p.label;
-      label.style.flex = "1";
-
+  
       const input = document.createElement("input");
       input.type = "number";
       input.min = "0";
@@ -128,15 +123,38 @@ document.addEventListener("turbo:load", () => {
       input.value = defaultPercent;
       input.name = `expense[percentages][${p.id}]`;
       input.classList.add("form-input");
-      input.style.width = "100px";
-
+  
       wrapper.appendChild(label);
       wrapper.appendChild(input);
       percentageFields.appendChild(wrapper);
     });
+  
+    // Show container since we have participants
+    percentageInputsContainer.style.display = "block";
+  }
+  
+
+  // Initialize form on load
+  function initializeForm() {
+    // Show correct share section
+    if (document.getElementById("group-button").classList.contains("active")) {
+      groupSelect.style.display = "block";
+      friendsSelect.style.display = "none";
+    } else {
+      groupSelect.style.display = "none";
+      friendsSelect.style.display = "block";
+    }
+
+    if (splitHidden.value === "percentage") {
+      percentageInputsContainer.style.display = "block";
+      renderPercentageFields();
+    } else {
+      percentageInputsContainer.style.display = "none";
+    }
   }
 
-  // Update on split type buttons
+  initializeForm();
+  
   splitButtons.forEach(button => {
     button.addEventListener("click", () => {
       splitHidden.value = button.dataset.value;
@@ -172,7 +190,7 @@ document.addEventListener("turbo:load", () => {
     });
   });
 
-  // **Listen to changes in select options to update percentages dynamically**
+  // Update percentages on select change
   const selects = [groupSelect.querySelector("select"), friendsSelect.querySelector("select")];
   selects.forEach(sel => {
     sel.addEventListener("change", () => {
@@ -520,6 +538,32 @@ form input[type="submit"]:hover {
 .btn-view-all:hover {
   background-color: #145d4d;
 }
+
+#percentage_fields > div {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 6px 10px;
+  background-color: #f0fdf9;
+  border-radius: 8px;
+}
+
+#percentage_fields label {
+  font-size: 14px;
+  font-weight: 600;
+  color: #000;
+  word-break: break-word;
+}
+
+#percentage_fields input {
+  width: 100%;
+  max-width: 120px;
+  padding: 8px 10px;
+  border-radius: 6px;
+  border: 1px solid #cce6dd;
+  font-size: 14px;
+}
+
 
 /* Responsive */
 @media (max-width: 768px) {
