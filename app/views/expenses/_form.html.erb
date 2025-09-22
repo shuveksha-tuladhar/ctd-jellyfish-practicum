@@ -12,19 +12,18 @@
       <%= f.number_field :amount, step: 0.01, required: true, class: "form-input" %>
     </div>
 
-      <div class="form-group">
-      <%= f.label :split_type, "Split Type" %>
-      <div class="button-group">
-        <%= f.hidden_field :split_type, value: @expense.split_type || "equal", id: "split_type_field" %>
-
-        <button type="button" class="split-btn <%= 'active' if @expense.split_type == 'equal' || @expense.split_type.nil? %>" data-value="equal">
-          Equal
-        </button>
-        <button type="button" class="split-btn <%= 'active' if @expense.split_type == 'percentage' %>" data-value="percentage">
-          Percentage
-        </button>
-      </div>
+    <div class="form-group">
+    <%= f.label :split_type, "Split Type" %>
+    <div class="button-group">
+      <%= f.hidden_field :split_type, value: @expense.split_type || "equal", id: "split_type_field" %>
+      <button type="button" class="split-btn <%= 'active' if (@expense.split_type || 'equal') == 'equal' %>" data-value="equal">
+        Equal
+      </button>
+      <button type="button" class="split-btn <%= 'active' if @expense.split_type == 'percentage' %>" data-value="percentage">
+        Percentage
+      </button>
     </div>
+  </div>
 
     <div class="form-group category-group">
       <%= f.label :category_id, "Category" %>
@@ -46,9 +45,11 @@
 <% end %>
 
 <script>
-  document.addEventListener("DOMContentLoaded", () => {
+  document.addEventListener("turbo:load", () => {
     const buttons = document.querySelectorAll(".split-btn");
     const hiddenField = document.getElementById("split_type_field");
+
+    if (!hiddenField || buttons.length === 0) return;
 
     buttons.forEach(button => {
       button.addEventListener("click", () => {

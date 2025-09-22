@@ -36,7 +36,7 @@
         <% if @splits.present? %>
           <ul class="splits-list">
             <% @splits.each do |split| %>
-              <% participant = @participants[split[:participant_id]] %>
+              <% participant = @participants.find { |p| p.id == split[:participant_id] } %>
               <% next unless participant %>
 
               <% share = split[:share].to_f %>

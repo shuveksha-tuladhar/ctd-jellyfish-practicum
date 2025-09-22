@@ -46,24 +46,22 @@ class ExpensesController < ApplicationController
   def show
     @expense = Expense.find_by(id: params[:id], creator_id: current_user.id) ||
                current_user.expenses.find_by(id: params[:id])
-  
+
     unless @expense
       redirect_to expenses_path, alert: "Expense not found." and return
     end
-  
-    @splits = SplitCalculator.new(@expense).call[:splits]
-  
+
     if @expense.user_group.present?
-      @participants = @expense.user_group.users.distinct.index_by(&:id)
+      @participants = @expense.user_group.users.distinct
     else
-      split_user_ids = @splits.map { |s| s[:participant_id] }
-      all_user_ids = ([@expense.creator.id] + split_user_ids).uniq
-      users = User.where(id: all_user_ids)
-      @participants = users.index_by(&:id)
+      expense_users = ExpenseUser.where(expense_id: @expense.id)
+      @participants = User.where(id: expense_users.pluck(:user_id))
     end
+
+    @splits = SplitCalculator.new(@expense, participants: @participants).call[:splits]
   end
-  
-  
+
+
   # PATCH/PUT /expenses/:id
   def update
     if @expense.update(expense_params.except(:user_ids))
