@@ -40,7 +40,7 @@
 
     <div class="form-group" id="friends_select" style="display: none;">
       <%= f.label :user_ids, "Split with users" %>
-      <%= f.collection_select :user_ids, User.all.order(:email), :id, ->(u) { "#{u.first_name} #{u.last_name} (#{u.email})" }, {}, { multiple: true, class: "form-multi-select" } %>
+      <%= f.collection_select :user_ids, User.all.order(:email), :id, ->(u) { "#{u.first_name} #{u.last_name} (#{u.email})" }, { selected: @selected_user_ids }, { multiple: true, class: "form-multi-select" } %>
     </div>
 
     <%= f.submit "Create Expense", class: "btn-submit" %>

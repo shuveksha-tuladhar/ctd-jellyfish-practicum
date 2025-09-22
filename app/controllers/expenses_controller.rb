@@ -41,6 +41,13 @@ class ExpensesController < ApplicationController
   # GET /expenses/:id/edit
   def edit
     # @expense is already set by set_expense
+
+    if @expense.user_group.blank?
+        expense_user_ids = @expense.expense_users.pluck(:user_id)
+        @selected_user_ids = User.where(id: expense_user_ids).pluck(:id)
+    else
+        @selected_user_ids = []
+    end
   end
 
   def show
