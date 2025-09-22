@@ -13,31 +13,34 @@
     </div>
 
     <div class="form-group">
-    <%= f.label :split_type, "Split Type" %>
-    <div class="button-group">
-      <%= f.hidden_field :split_type, value: @expense.split_type || "equal", id: "split_type_field" %>
-      <button type="button" class="split-btn <%= 'active' if (@expense.split_type || 'equal') == 'equal' %>" data-value="equal">
-        Equal
-      </button>
-      <button type="button" class="split-btn <%= 'active' if @expense.split_type == 'percentage' %>" data-value="percentage">
-        Percentage
-      </button>
-    </div>
-  </div>
-
-    <div class="form-group category-group">
-      <%= f.label :category_id, "Category" %>
-      <%= f.collection_select :category_id, Category.all.order(:name), :id, :name, { prompt: "Select a category" }, { class: "custom-select" } %>
+      <%= f.label :split_type, "Split Type" %>
+      <div class="button-group">
+        <%= f.hidden_field :split_type, value: @expense.split_type || "equal", id: "split_type_field" %>
+        <button type="button" class="split-btn <%= 'active' if (@expense.split_type || 'equal') == 'equal' %>" data-value="equal">
+          Equal
+        </button>
+        <button type="button" class="split-btn <%= 'active' if @expense.split_type == 'percentage' %>" data-value="percentage">
+          Percentage
+        </button>
+      </div>
     </div>
 
     <div class="form-group">
-      <%= f.label :user_ids, "Split with users" %>
-      <%= f.collection_select :user_ids, User.all.order(:email), :id, ->(u) { "#{u.first_name} #{u.last_name} (#{u.email})" }, {}, { multiple: true, class: "form-multi-select" } %>
+      <label>Share With</label>
+      <div class="button-group" id="share_toggle">
+        <button type="button" id="group-button" class="split-btn <%= 'active' if @expense.user_group_id.present? %>" data-target="group">Group</button>
+        <button type="button" id="friends-button" class="split-btn <%= 'active' if @expense.user_group_id.nil? %>" data-target="friends">Friends</button>
+      </div>
     </div>
 
-    <div class="form-group">
+    <div class="form-group" id="group_select">
       <%= f.label :user_group_id, "Group" %>
       <%= f.collection_select :user_group_id, UserGroup.all.order(:name), :id, :name, prompt: "Select a group", class: "custom-select" %>
+    </div>
+
+    <div class="form-group" id="friends_select" style="display: none;">
+      <%= f.label :user_ids, "Split with users" %>
+      <%= f.collection_select :user_ids, User.all.order(:email), :id, ->(u) { "#{u.first_name} #{u.last_name} (#{u.email})" }, {}, { multiple: true, class: "form-multi-select" } %>
     </div>
 
     <%= f.submit "Create Expense", class: "btn-submit" %>
@@ -45,21 +48,48 @@
 <% end %>
 
 <script>
-  document.addEventListener("turbo:load", () => {
-    const buttons = document.querySelectorAll(".split-btn");
-    const hiddenField = document.getElementById("split_type_field");
+document.addEventListener("turbo:load", () => {
+  const splitButtons = document.querySelectorAll(".split-btn[data-value]");
+  const splitHidden = document.getElementById("split_type_field");
 
-    if (!hiddenField || buttons.length === 0) return;
-
-    buttons.forEach(button => {
-      button.addEventListener("click", () => {
-        hiddenField.value = button.dataset.value;
-
-        buttons.forEach(btn => btn.classList.remove("active"));
+  splitButtons.forEach(button => {
+    button.addEventListener("click", () => {
+      if (splitHidden) {
+        splitHidden.value = button.dataset.value;
+        splitButtons.forEach(btn => btn.classList.remove("active"));
         button.classList.add("active");
-      });
+      }
     });
   });
+
+  const shareButtons = document.querySelectorAll("#share_toggle .split-btn");
+  const groupSelect = document.getElementById("group_select");
+  const friendsSelect = document.getElementById("friends_select");
+
+  // Set initial display based on active button
+  if (document.getElementById("group-button").classList.contains("active")) {
+    groupSelect.style.display = "block";
+    friendsSelect.style.display = "none";
+  } else {
+    groupSelect.style.display = "none";
+    friendsSelect.style.display = "block";
+  }
+
+  shareButtons.forEach(button => {
+    button.addEventListener("click", () => {
+      shareButtons.forEach(btn => btn.classList.remove("active"));
+      button.classList.add("active");
+
+      if (button.dataset.target === "group") {
+        groupSelect.style.display = "block";
+        friendsSelect.style.display = "none";
+      } else {
+        groupSelect.style.display = "none";
+        friendsSelect.style.display = "block";
+      }
+    });
+  });
+});
 </script>
 
 <style>
