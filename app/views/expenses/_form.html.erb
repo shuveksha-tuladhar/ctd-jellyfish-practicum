@@ -123,6 +123,7 @@ document.addEventListener("turbo:load", () => {
       input.type = "number";
       input.min = "0";
       input.max = "100";
+      input.step = "0.01";
       input.value = defaultPercent;
       input.name = `expense[percentages][${p.id}]`;
       input.classList.add("form-input");

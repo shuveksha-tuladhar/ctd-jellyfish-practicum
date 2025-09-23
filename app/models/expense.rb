@@ -21,5 +21,4 @@ class Expense < ApplicationRecord
   def set_default_split_type
     self.split_type ||= "equal"
   end
-
 end

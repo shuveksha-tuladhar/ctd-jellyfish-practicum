@@ -23,11 +23,11 @@ class ExpensesController < ApplicationController
   def create
     @expense = current_user.created_expenses.new(expense_params.except(:user_ids, :percentages))
 
-    participant_ids = (expense_params[:user_ids]&.reject(&:blank?) || []) + [current_user.id]
+    participant_ids = (expense_params[:user_ids]&.reject(&:blank?) || []) + [ current_user.id ]
     participant_ids.uniq.each do |id|
       @expense.expense_users.build(user_id: id)
     end
-  
+
     if @expense.split_type == "percentage" && expense_params[:percentages].present?
       expense_params[:percentages].each do |user_id, percentage|
         @expense.expense_splits.build(
@@ -36,7 +36,7 @@ class ExpensesController < ApplicationController
         )
       end
     end
-  
+
     if @expense.save
       redirect_to expenses_path, notice: "Expense created successfully"
     else
@@ -72,17 +72,31 @@ class ExpensesController < ApplicationController
       @participants = User.where(id: expense_users.pluck(:user_id))
     end
 
-    @splits = SplitCalculator.new(@expense, participants: @participants).call[:splits]
+    splits_data = nil
+    if @expense.split_type == "percentage"
+      splits_data = @expense.expense_splits.map do |split|
+        { participant_id: split.user_id, percentage: split.percentage_split.to_f }
+      end
+    end
+
+    split_type = @expense.split_type.to_sym
+
+    @splits = SplitCalculator.new(
+      @expense,
+      split_type: split_type,
+      splits_data: splits_data,
+      participants: @participants
+    ).call[:splits]
   end
 
 
-# PATCH/PUT /expenses/:id
+  # PATCH/PUT /expenses/:id
   def update
     if @expense.update(expense_params.except(:user_ids, :percentages))
 
       @expense.expense_users.where.not(user_id: @expense.creator_id).destroy_all
 
-      participant_ids = (expense_params[:user_ids]&.reject(&:blank?) || []) + [@expense.creator_id]
+      participant_ids = (expense_params[:user_ids]&.reject(&:blank?) || []) + [ @expense.creator_id ]
       participant_ids.uniq.each do |id|
         ExpenseUser.find_or_create_by!(user_id: id, expense_id: @expense.id)
       end
