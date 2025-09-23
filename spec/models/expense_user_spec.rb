@@ -15,7 +15,8 @@ RSpec.describe ExpenseUser, type: :model do
     Expense.create(
       title: "Lunch",
       amount: 20.0,
-      creator: user
+      creator: user,
+      status: "pending"
     )
   end
 
@@ -55,7 +56,8 @@ RSpec.describe ExpenseUser, type: :model do
       another_expense = Expense.create(
         title: "Dinner",
         amount: 30.0,
-        creator: user
+        creator: user,
+        status: "pending"
       )
       record = ExpenseUser.new(user: user, expense: another_expense)
       expect(record.valid?).to be true

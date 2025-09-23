@@ -7,7 +7,7 @@ RSpec.describe Expense, type: :model do
   let(:non_participant) { User.create!(first_name: "Eve", last_name: "Adams", email: "eve@example.com", password: "password", phone_number: "3333333333") }
 
   let(:category) { create(:category) }
-  let(:expense) { user.created_expenses.create!(title: "Lunch", amount: 50.0, split_type: "Equal", category_id: 1) }
+  let(:expense) { user.created_expenses.create!(title: "Lunch", amount: 50.0, split_type: "Equal", category_id: 1, status: "pending") }
 
   before do
     ExpenseUser.create!(user: participant1, expense: expense)
@@ -32,7 +32,8 @@ RSpec.describe Expense, type: :model do
       amount: 50.0,
       creator: user,
       category: category,
-      split_type: "equal"
+      split_type: "equal",
+      status: "pending"
     )
   end
 
