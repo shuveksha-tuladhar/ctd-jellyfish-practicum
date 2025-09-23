@@ -1,7 +1,7 @@
 class UsersController < ApplicationController
     before_action :set_user, only: [ :show, :edit, :update, :destroy, :upload_photo ]
     before_action :require_login, except: [ :new, :create ]
-    before_action :authorize_user!, only: [:show, :edit, :update, :destroy, :upload_photo]
+    before_action :authorize_user!, only: [ :show, :edit, :update, :destroy, :upload_photo ]
 
     include Rails.application.routes.url_helpers
 
@@ -122,8 +122,8 @@ class UsersController < ApplicationController
     end
 
     def authorize_user!
-      unless @user == current_user 
+      unless @user == current_user
         redirect_to dashboard_path, alert: "Access denied."
-      end 
-    end 
+      end
+    end
 end
