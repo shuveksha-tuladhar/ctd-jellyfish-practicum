@@ -8,11 +8,11 @@
                 <ul>
                     <% @balances.each do |other_user, amount| %>
                         <% if amount > 0 %>
-                            <li><strong><%= other_user.name %></strong> owes you $<%= '%.2f' % amount %></li>
+                            <li><strong><%= other_user.first_name %></strong> owes you $<%= '%.2f' % amount %></li>
                         <% elsif amount < 0 %>
-                            <li>You owe <strong><%= other_user.name %></strong> $ <%= '%.2f' % amount.abs %></li>
+                            <li>You owe <strong><%= other_user.first_name %></strong> $ <%= '%.2f' % amount.abs %></li>
                         <% else %>
-                            <li> You are settled up with <strong><%= other_user.name %></strong>.</li>
+                            <li> You are settled up with <strong><%= other_user.first_name %></strong>.</li>
                         <% end %>
                     <% end %>
                 </ul>
