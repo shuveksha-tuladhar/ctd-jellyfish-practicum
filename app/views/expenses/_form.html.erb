@@ -1,64 +1,67 @@
 <div id="expense_form" data-current-user-name="<%= current_user.first_name %> <%= current_user.last_name %>"
      data-current-user-email="<%= current_user.email %>" data-current-user-id="<%= current_user.id %>">
-<%= form_with model: expense, local: true do |f| %>
-  <div class="form-card">
-    <h2>Expense Details</h2>
+  <%= form_with model: expense, local: true do |f| %>
+    <div class="form-card">
+      <h2>Expense Details</h2>
 
-    <div class="form-group">
-      <%= f.label :title %>
-      <%= f.text_field :title, required: true, class: "form-input" %>
-    </div>
-
-    <div class="form-group">
-      <%= f.label :amount %>
-      <%= f.number_field :amount, step: 0.01, required: true, class: "form-input" %>
-    </div>
-
-    <div class="form-group">
-      <%= f.label :split_type, "Split Type" %>
-      <div class="button-group">
-        <%= f.hidden_field :split_type, value: @expense.split_type || "equal", id: "split_type_field" %>
-        <button type="button" class="split-btn <%= 'active' if (@expense.split_type || 'equal') == 'equal' %>" data-value="equal">
-          Equal
-        </button>
-        <button type="button" class="split-btn <%= 'active' if @expense.split_type == 'percentage' %>" data-value="percentage">
-          Percentage
-        </button>
+      <div class="form-group">
+        <%= f.label :title %>
+        <%= f.text_field :title, required: true, class: "form-input" %>
       </div>
-    </div>
 
-    <div class="form-group">
-      <label>Share With</label>
-      <div class="button-group" id="share_toggle">
-        <button type="button" id="group-button" class="split-btn <%= 'active' if @expense.user_group_id.present? %>" data-target="group">Group</button>
-        <button type="button" id="friends-button" class="split-btn <%= 'active' if @expense.user_group_id.nil? %>" data-target="friends">Friends</button>
+      <div class="form-group">
+        <%= f.label :amount %>
+        <%= f.number_field :amount, step: 0.01, required: true, class: "form-input" %>
       </div>
-    </div>
 
-    <div class="form-group" id="group_select">
-      <%= f.label :user_group_id, "Group" %>
-      <%= f.collection_select :user_group_id, UserGroup.all.order(:name), :id, :name, prompt: "Select a group", class: "custom-select" %>
-    </div>
-
-    <div class="form-group" id="friends_select" style="display: none;">
-      <%= f.label :user_ids, "Split with Friends" %>
-      <%= f.collection_select :user_ids,
-            current_user.friends.order(:email),  # only show friends
-            :id,
-            ->(u) { "#{u.first_name} #{u.last_name} (#{u.email})" },
-            { selected: @selected_user_ids },
-            { multiple: true, class: "form-multi-select" } %>
-
-      <div class="form-group" id="percentage_inputs" style="display: none;margin-top: 20px;">
-        <label>Percentage Split</label>
-        <div id="percentage_fields" class="flex flex-col gap-2">
+      <div class="form-group">
+        <%= f.label :split_type, "Split Type" %>
+        <div class="button-group">
+          <%= f.hidden_field :split_type, value: @expense.split_type || "equal", id: "split_type_field" %>
+          <button type="button" class="split-btn <%= 'active' if (@expense.split_type || 'equal') == 'equal' %>" data-value="equal">
+            Equal
+          </button>
+          <button type="button" class="split-btn <%= 'active' if @expense.split_type == 'percentage' %>" data-value="percentage">
+            Percentage
+          </button>
         </div>
       </div>
-    </div>
 
-    <%= f.submit @expense.id.present? ? "Update Expense" : "Create Expense", class: "btn-submit" %>
-  </div>
-<% end %>
+      <div class="form-group">
+        <label>Share With</label>
+        <div class="button-group" id="share_toggle">
+          <button type="button" id="group-button" class="split-btn <%= 'active' if @expense.user_group_id.present? %>" data-target="group">Group</button>
+          <button type="button" id="friends-button" class="split-btn <%= 'active' if @expense.user_group_id.nil? %>" data-target="friends">Friends</button>
+        </div>
+      </div>
+
+      <div class="form-group" id="group_select">
+        <%= f.label :user_group_id, "Group" %>
+        <%= f.collection_select :user_group_id, UserGroup.all.order(:name), :id, :name, prompt: "Select a group", class: "custom-select" %>
+      </div>
+
+      <div class="form-group" id="friends_select" style="display: none;">
+        <%= f.label :user_ids, "Split with Friends" %>
+        <%= f.collection_select :user_ids,
+              current_user.friends.order(:email),
+              :id,
+              ->(u) { "#{u.first_name} #{u.last_name} (#{u.email})" },
+              { selected: @selected_user_ids },
+              { multiple: true, class: "form-multi-select" } %>
+
+        <div class="form-group" id="percentage_inputs" style="display: none;margin-top: 20px;">
+          <label>Percentage Split</label>
+          <div id="percentage_fields" class="flex flex-col gap-2"></div>
+          <p id="percentage_warning" style="color: #ff4d4f; font-size: 13px; display:none;">
+            Total percentage must equal 100%.
+          </p>
+        </div>
+      </div>
+
+      <%= f.submit @expense.id.present? ? "Update Expense" : "Create Expense", class: "btn-submit" %>
+    </div>
+  <% end %>
+</div>
 
 <script>
 document.addEventListener("turbo:load", () => {
@@ -67,55 +70,55 @@ document.addEventListener("turbo:load", () => {
 
   const percentageInputsContainer = document.getElementById("percentage_inputs");
   const percentageFields = document.getElementById("percentage_fields");
+  const percentageWarning = document.getElementById("percentage_warning");
 
   const friendsSelect = document.getElementById("friends_select");
   const groupSelect = document.getElementById("group_select");
 
   const shareButtons = document.querySelectorAll("#share_toggle .split-btn");
-
   const expenseForm = document.getElementById("expense_form");
   const creatorId = expenseForm.dataset.currentUserId;
   const creatorName = expenseForm.dataset.currentUserName;
   const creatorEmail = expenseForm.dataset.currentUserEmail;
+  const submitButton = document.querySelector('form input[type="submit"]');
 
   function renderPercentageFields() {
     let participants = [];
-    
+
     const isGroupActive = document.getElementById("group-button").classList.contains("active");
     const selectElement = isGroupActive ? groupSelect.querySelector("select") : friendsSelect.querySelector("select");
-  
     participants.push(...selectElement.selectedOptions);
-  
+
     if (participants.length === 0) {
       percentageInputsContainer.style.display = "none";
-      percentageFields.innerHTML = ""; // clear any previous fields
+      percentageFields.innerHTML = "";
       return;
     }
-  
+
     const participantData = participants.map(opt => ({
       id: opt.value,
       label: opt.text
     }));
-  
+
     if (!participantData.some(p => p.id === creatorId)) {
       participantData.unshift({
         id: creatorId,
         label: `${creatorName} (${creatorEmail})`
       });
     }
-  
+
     const count = participantData.length;
     const defaultPercent = (100 / count).toFixed(2);
-  
-    percentageFields.innerHTML = ""; // clear previous fields
-  
+
+    percentageFields.innerHTML = "";
+
     participantData.forEach(p => {
       const wrapper = document.createElement("div");
       wrapper.classList.add("flex", "flex-col", "gap-1");
-  
+
       const label = document.createElement("label");
       label.textContent = p.label;
-  
+
       const input = document.createElement("input");
       input.type = "number";
       input.min = "0";
@@ -123,20 +126,37 @@ document.addEventListener("turbo:load", () => {
       input.value = defaultPercent;
       input.name = `expense[percentages][${p.id}]`;
       input.classList.add("form-input");
-  
+
       wrapper.appendChild(label);
       wrapper.appendChild(input);
       percentageFields.appendChild(wrapper);
     });
-  
-    // Show container since we have participants
-    percentageInputsContainer.style.display = "block";
-  }
-  
 
-  // Initialize form on load
+    percentageInputsContainer.style.display = "block";
+    validatePercentageTotal();
+  }
+
+  function validatePercentageTotal() {
+    if (splitHidden.value !== "percentage") {
+      submitButton.disabled = false;
+      percentageWarning.style.display = "none";
+      return;
+    }
+
+    const inputs = percentageFields.querySelectorAll("input");
+    let total = 0;
+    inputs.forEach(input => { total += parseFloat(input.value) || 0; });
+
+    if (Math.abs(total - 100) > 0.01) {
+      submitButton.disabled = true;
+      percentageWarning.style.display = "block";
+    } else {
+      submitButton.disabled = false;
+      percentageWarning.style.display = "none";
+    }
+  }
+
   function initializeForm() {
-    // Show correct share section
     if (document.getElementById("group-button").classList.contains("active")) {
       groupSelect.style.display = "block";
       friendsSelect.style.display = "none";
@@ -146,7 +166,6 @@ document.addEventListener("turbo:load", () => {
     }
 
     if (splitHidden.value === "percentage") {
-      percentageInputsContainer.style.display = "block";
       renderPercentageFields();
     } else {
       percentageInputsContainer.style.display = "none";
@@ -154,7 +173,7 @@ document.addEventListener("turbo:load", () => {
   }
 
   initializeForm();
-  
+
   splitButtons.forEach(button => {
     button.addEventListener("click", () => {
       splitHidden.value = button.dataset.value;
@@ -162,15 +181,14 @@ document.addEventListener("turbo:load", () => {
       button.classList.add("active");
 
       if (button.dataset.value === "percentage") {
-        percentageInputsContainer.style.display = "block";
         renderPercentageFields();
       } else {
         percentageInputsContainer.style.display = "none";
+        submitButton.disabled = false;
       }
     });
   });
 
-  // Update on share buttons
   shareButtons.forEach(button => {
     button.addEventListener("click", () => {
       shareButtons.forEach(btn => btn.classList.remove("active"));
@@ -190,17 +208,17 @@ document.addEventListener("turbo:load", () => {
     });
   });
 
-  // Update percentages on select change
   const selects = [groupSelect.querySelector("select"), friendsSelect.querySelector("select")];
   selects.forEach(sel => {
     sel.addEventListener("change", () => {
-      if (splitHidden.value === "percentage") {
-        renderPercentageFields();
-      }
+      if (splitHidden.value === "percentage") renderPercentageFields();
     });
   });
+
+  percentageFields.addEventListener("input", validatePercentageTotal);
 });
 </script>
+
 
 <style>
 /* Reset and Base Styles */
