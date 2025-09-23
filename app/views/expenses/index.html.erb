@@ -1,221 +1,214 @@
-<div>
-  <!-- Navbar -->
-  <%= render "shared/navbar" %>
-
-  <!-- Main layout -->
-  <div class="main-container">
-    <!-- Sidebar -->
-    <%= render "shared/sidebar" %>
-
-    <!-- Expenses section -->
-    <div class="profile-container">
-      <h1>Expenses List</h1>
-
-      <% if @expenses.any? %>
-        <!-- Expenses Table -->
-        <table class="expense-table">
-          <thead>
-            <tr>
-              <th>Date</th>
-              <th>Description</th>
-              <th>Category</th>
-              <th>Amount</th>
-              <th>Actions</th>
+ <!-- Navbar -->
+<%= render "shared/navbar" %>
+<!-- Main layout -->
+<div class="main-container">
+  <!-- Sidebar -->
+  <%= render "shared/sidebar" %>
+  <!-- Expenses section -->
+  <div class="profile-container">
+    <h1>Expenses List</h1>
+    <% if @expenses.any? %>
+      <!-- Expenses Table -->
+      <table class="expense-table">
+        <thead>
+          <tr>
+            <th>Date</th>
+            <th>Description</th>
+            <th>Category</th>
+            <th>Amount</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @expenses.each do |expense| %>
+            <tr class="expense-item">
+              <td><%= expense.created_at.strftime("%b %d, %Y") %></td>
+              <td><%= expense.title %></td>
+              <td><%= expense.category&.name || "Uncategorized" %></td>
+              <td><%= number_to_currency(expense.amount) %></td>
+              <td class="expense-actions">
+                <%= link_to "View", expense_path(expense), class: "action-btn view-btn" %>
+                <%= link_to "Edit", edit_expense_path(expense), class: "action-btn edit-btn" %>
+                <%= link_to "Delete", expense, data: { turbo_method: :delete, confirm: "Are you sure?" }, class: "action-btn delete-btn" %>
+              </td>
             </tr>
-          </thead>
-          <tbody>
-            <% @expenses.each do |expense| %>
-              <tr class="expense-item">
-                <td><%= expense.created_at.strftime("%b %d, %Y") %></td>
-                <td><%= expense.title %></td>
-                <td><%= expense.category&.name || "Uncategorized" %></td>
-                <td><%= number_to_currency(expense.amount) %></td>
-                <td class="expense-actions">
-                  <%= link_to "View", expense_path(expense), class: "action-btn view-btn" %>
-                  <%= link_to "Edit", edit_expense_path(expense), class: "action-btn edit-btn" %>
-                  <%= link_to "Delete", expense, data: { turbo_method: :delete, confirm: "Are you sure?" }, class: "action-btn delete-btn" %>
-                </td>
-              </tr>
-            <% end %>
-          </tbody>
-        </table>
-      <% else %>
-        <p class="empty-message">No expenses added yet. Click below to add your first expense!</p>
-      <% end %>
-
-      <!-- Add Expense Button -->
-      <%= link_to "Add Expense", new_expense_path, class: "btn add-expense-btn" %>
-    </div>
+          <% end %>
+        </tbody>
+      </table>
+    <% else %>
+      <p class="empty-message">No expenses added yet. Click below to add your first expense!</p>
+    <% end %>
+    <!-- Add Expense Button -->
+    <%= link_to "Add Expense", new_expense_path, class: "btn add-expense-btn" %>
   </div>
-
-  <style>
-    /* Reset and Base Styles */
-    body, html {
-      margin: 0;
-      padding: 0;
-      height: 100%;
-      font-family: Arial, sans-serif;
-      background-color: #f3f3f3;
-    }
-
-    /* Main Layout */
-    .main-container {
-      display: flex;
-      gap: 20px;
-      padding: 20px;
-      padding-top: 100px; 
-      box-sizing: border-box;
-      align-items: stretch; 
-      height: calc(100vh - 120px); 
-    }
-
-    .profile-container h1 {
-      margin-top: 0;ß
-      margin-bottom: 30px;
-      color: #1d917a;
-      text-align: center;
-      font-size: 28px;
+</div>
+<style>
+  /* Reset and Base Styles */
+  body, html {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    font-family: Arial, sans-serif;
+    background-color: #f3f3f3;
   }
 
-    /* Sidebar */
-    .sidebar {
-      width: 250px;
-      background-color: #fff;
+  /* Main Layout */
+  .main-container {
+    display: flex;
+    gap: 20px;
+    padding: 20px;
+    padding-top: 100px;
+    box-sizing: border-box;
+    align-items: stretch;
+    height: calc(100vh - 120px);
+  }
+
+  .profile-container h1 {
+    margin-top: 0;
+    margin-bottom: 30px;
+    color: #1d917a;
+    text-align: center;
+    font-size: 28px;
+    }
+
+  /* Sidebar */
+  .sidebar {
+    width: 250px;
+    background-color: #fff;
+    padding: 15px;
+    border-radius: 6px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    flex-shrink: 0;
+  }
+
+  /* Expenses section */
+  .profile-container {
+    flex-grow: 1;
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 6px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  }
+
+  .empty-message {
+    text-align: center;
+    font-size: 16px;
+    color: #555;
+    margin: 20px 0;
+    padding: 10px;
+    background-color: #f9f9f9;
+    border-radius: 6px;
+  }
+
+  /* Add Expense button */
+  .btn {
+    display: inline-block;
+    padding: 8px 12px;
+    background-color: #1d917a;
+    color: white;
+    text-decoration: none;
+    border-radius: 4px;
+    margin-bottom: 15px;
+  }
+
+  .btn:hover {
+    background-color: #145d4d;
+  }
+
+  /* Expense Table */
+  .expense-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 15px;
+  }
+
+  .expense-table th,
+  .expense-table td {
+    padding: 10px 12px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+  }
+
+  .expense-table th {
+    background-color: #f9f9f9;
+    font-weight: 600;
+  }
+
+  .expense-table tr:hover {
+    background-color: #f0f8f5;
+  }
+
+  /* Actions */
+  .expense-actions {
+    display: flex;
+    gap: 5px;
+  }
+
+  .action-btn {
+    display: inline-block;
+    padding: 5px 10px;
+    border-radius: 4px;
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 500;
+    transition: background-color 0.2s, color 0.2s;
+  }
+
+  .view-btn, .edit-btn {
+    background-color: #1d917a;
+    color: white;
+  }
+
+  .view-btn:hover, .edit-btn:hover {
+    background-color: #145d4d;
+  }
+
+  .delete-btn {
+    background-color: #e08c79;
+    color: white;
+  }
+
+  .delete-btn:hover {
+    background-color: #c76b5c;
+  }
+
+  .add-expense-btn {
+    margin-top: 15px;
+  }
+
+  /* Logout button */
+  .logout-btn {
+    background: white;
+    color: #1d917a;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+  }
+
+  .logout-btn:hover {
+    background-color: #0ca694;
+    color: white;
+  }
+
+  /* Responsive */
+  @media (max-width: 768px) {
+    .main-container {
+      flex-direction: column;
       padding: 15px;
-      border-radius: 6px;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-      flex-shrink: 0;
     }
 
-    /* Expenses section */
-    .profile-container {
-      flex-grow: 1;
-      background-color: #fff;
-      padding: 20px;
-      border-radius: 6px;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-    }
-
-    .empty-message {
-      text-align: center;
-      font-size: 16px;
-      color: #555;
-      margin: 20px 0;
-      padding: 10px;
-      background-color: #f9f9f9;
-      border-radius: 6px;
-    }
-
-    /* Add Expense button */
-    .btn {
-      display: inline-block;
-      padding: 8px 12px;
-      background-color: #1d917a;
-      color: white;
-      text-decoration: none;
-      border-radius: 4px;
-      margin-bottom: 15px;
-    }
-
-    .btn:hover {
-      background-color: #145d4d;
-    }
-
-    /* Expense Table */
-    .expense-table {
+    .sidebar {
       width: 100%;
-      border-collapse: collapse;
       margin-bottom: 15px;
     }
 
-    .expense-table th,
-    .expense-table td {
-      padding: 10px 12px;
-      text-align: left;
-      border-bottom: 1px solid #ddd;
+    .profile-container {
+      width: 100%;
     }
-
-    .expense-table th {
-      background-color: #f9f9f9;
-      font-weight: 600;
-    }
-
-    .expense-table tr:hover {
-      background-color: #f0f8f5;
-    }
-
-    /* Actions */
-    .expense-actions {
-      display: flex;
-      gap: 5px;
-    }
-
-    .action-btn {
-      display: inline-block;
-      padding: 5px 10px;
-      border-radius: 4px;
-      text-decoration: none;
-      font-size: 13px;
-      font-weight: 500;
-      transition: background-color 0.2s, color 0.2s;
-    }
-
-    .view-btn, .edit-btn {
-      background-color: #1d917a; 
-      color: white;
-    }
-
-    .view-btn:hover, .edit-btn:hover {
-      background-color: #145d4d; 
-    }
-
-    .delete-btn {
-      background-color: #e08c79; 
-      color: white;
-    }
-
-    .delete-btn:hover {
-      background-color: #c76b5c; 
-    }
-
-    .add-expense-btn {
-      margin-top: 15px;
-    }
-
-    /* Logout button */
-    .logout-btn {
-      background: white;
-      color: #1d917a;
-      border: none;
-      padding: 6px 12px;
-      border-radius: 4px;
-      cursor: pointer;
-      font-size: 14px;
-      text-decoration: none;
-      display: inline-flex;
-      align-items: center;
-    }
-
-    .logout-btn:hover {
-      background-color: #0ca694;
-      color: white;
-    }
-
-    /* Responsive */
-    @media (max-width: 768px) {
-      .main-container {
-        flex-direction: column;
-        padding: 15px;
-      }
-
-      .sidebar {
-        width: 100%;
-        margin-bottom: 15px;
-      }
-
-      .profile-container {
-        width: 100%;
-      }
-    }
-  </style>
-</div>
+  }
+</style>

@@ -1,3 +1,14 @@
+<% if @expense.errors.any? %>
+  <div class="error-messages">
+    <h4><%= pluralize(@expense.errors.count, "error") %> prohibited this expense from being saved:</h4>
+    <ul>
+      <% @expense.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+    </ul>
+  </div>
+<% end %>
+
 <%= form_with model: expense, local: true do |f| %>
   <div>
     <%= f.label :title %>
@@ -29,5 +40,5 @@
     <%= f.collection_select :user_group_id, UserGroup.all.order(:name), :id, :name, prompt: "Select a group" %>
   </div>
 
-  <%= f.submit "Create Expense" %>
+  <%= f.submit @expense.persisted? ? "Update Expense" : "Create Expense" %>
 <% end %>

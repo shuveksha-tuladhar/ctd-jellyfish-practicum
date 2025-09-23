@@ -1,17 +1,14 @@
 class ExpensesController < ApplicationController
   before_action :require_login
   before_action :set_expense, only: [ :show, :edit, :update, :destroy ]
+  before_action :authorize_expense_access!, only: [ :show, :edit, :update ]
 
   # GET /expenses
   def index
-    if current_user
-      @expenses = Expense
-                    .joins(:payors)
-                    .where("expenses.creator_id = ? OR users.id = ?", current_user.id, current_user.id)
-                    .distinct
-    else
-      redirect_to login_path, alert: "Please log in."
-    end
+    @expenses = Expense
+                  .joins(:payors)
+                  .where("expenses.creator_id = ? OR users.id = ?", current_user.id, current_user.id)
+                  .distinct
   end
 
   # GET /expenses/new
@@ -44,10 +41,7 @@ class ExpensesController < ApplicationController
   end
 
   def show
-    @expense = Expense.find_by(id: params[:id], creator_id: current_user.id) ||
-              current_user.expenses.find_by(id: params[:id])
-
-    redirect_to expenses_path, alert: "Expense not found." unless @expense
+    # @expense is already loaded and authorized
   end
 
   # PATCH/PUT /expenses/:id
@@ -55,18 +49,18 @@ class ExpensesController < ApplicationController
     if @expense.update(expense_params.except(:user_ids))
 
       # Replace participants except the owner
-      @expense.expense_users.where.not(user_id: @expense.user_id).destroy_all
+      @expense.expense_users.where.not(user_id: @expense.creator_id).destroy_all
 
       # Ensure owner is included
       participant_ids = (expense_params[:user_ids]&.reject(&:blank?) || []) + [ @expense.creator_id ]
 
-      participant_ids.each do |id|
+      participant_ids.uniq.each do |id|
         ExpenseUser.find_or_create_by!(user_id: id, expense_id: @expense.id)
       end
 
       redirect_to expenses_path, notice: "Expense updated successfully."
     else
-      render :edit, status: :unprocessable_content
+      render :edit, status: :unprocessable_entity
     end
   end
 
@@ -78,21 +72,35 @@ class ExpensesController < ApplicationController
 
   private
 
+  def authorize_expense_access!
+    unless @expense && (@expense.creator_id == current_user.id || @expense.users.include?(current_user))
+      redirect_to expenses_path, alert: "Access denied."
+    end
+  end
+
   def set_expense
-    @expense = current_user.created_expenses.find_by(id: params[:id])
-    redirect_to expenses_path, alert: "Expense not found." unless @expense
+    @expense = Expense
+                  .joins(:payors)
+                  .where(id: params[:id])
+                  .where("expenses.creator_id = :id OR users.id = :id", id: current_user.id)
+                  .distinct
+                  .first
+
+    unless @expense
+      redirect_to expenses_path, alert: "Access denied or expense not found."
+    end
   end
 
   def expense_params
-  params.require(:expense).permit(
-    :title,
-    :amount,
-    :split_type,
-    :category_id,
-    :user_group_id,
-    user_ids: []
-  )
-end
+    params.require(:expense).permit(
+      :title,
+      :amount,
+      :split_type,
+      :category_id,
+      :user_group_id,
+      user_ids: []
+    )
+  end
 
   def require_login
     redirect_to login_path, alert: "Please log in." unless current_user
