@@ -1,5 +1,6 @@
 <div>
   <%= render "shared/navbar" %>
+
   <!-- Main layout -->
   <div class="main-container">
 
@@ -14,29 +15,32 @@
         <div>
           <h2>Welcome, <%= current_user.first_name %> <%= current_user.last_name %>!</h2>
         </div>
-        <!-- card1 -->
+
         <div class="cards-container">
+          <!-- Total Balance -->
           <div class="card">
             <div class="title-row">
               <h3>Total Balance</h3>
               <span><i class="bi bi-currency-dollar"></i></span>
             </div>
             <p>$245.50<span class="green-text">You are owed</span></p>
-            <!-- will replace this button with link_to balances path -->
-            <button class="btn">View details</button>
+            <%= link_to "View Details", user_balances_path(@user), class:"btn" %>
           </div>
 
-          <!-- card2 -->
+          <!-- Group Expenses -->
           <div class="card">
             <div class="title-row">
               <h3>Group Expenses</h3>
               <span><i class="bi bi-people"></i></span>
             </div>
-            <p>5<span class="gray-text">Active groups</span></p>
+            <p>
+              <%= @groups.count %>
+              <span class="gray-text">Active groups</span>
+            </p>
             <%= link_to "Manage groups", user_groups_path, class:"btn" %>
           </div>
 
-          <!-- card3 -->
+          <!-- Monthly Spending -->
           <div class="card">
             <div class="title-row">
               <h3>Monthly Spending</h3>
@@ -48,22 +52,38 @@
         </div>
       </div>
 
-      <!-- Second row: Recent Activity & Right Side -->
+      <!-- Second row -->
       <div>
-        <!-- left side card -->
+        <!-- Left: Recent Activity -->
         <div class="card">
           <div class="title-row">
             <h3>Recent Activity</h3>
-            <button>View all</button>
+            <%= link_to "View all", expenses_path, class: "btn" %>
           </div>
           <ul>
-            <li>example 1</li>
-            <li>example 2</li>
-            <li>example 3</li>
+            <% @recent_activities.each do |activity| %>
+              <li>
+                <% if activity[:type] == "expense" %>
+                  <strong><%= activity[:with] %></strong>
+                  <% if activity[:owes_you] %>
+                    owes you
+                  <% else %>
+                    you owe
+                  <% end %>
+                  <strong><%= number_to_currency(activity[:amount]) %></strong>
+                  for <%= activity[:name] %>
+                <% elsif activity[:type] == "group" %>
+                  Created new group: <strong><%= activity[:name] %></strong>
+                <% elsif activity[:type] == "friend" %>
+                  Added new friend: <strong><%= activity[:name] %></strong>
+                <% end %>
+                <span class="activity-time"><%= time_ago_in_words(activity[:created_at]) %> ago</span>
+              </li>
+            <% end %>
           </ul>
         </div>
 
-        <!-- right side card -->
+        <!-- Right side cards -->
         <div class="right-cards">
           <!-- Quick Actions -->
           <div class="card">
@@ -85,12 +105,20 @@
           <div class="card">
             <div class="title-row">
               <h3>Friend Balances</h3>
-              <button>View all</button>
+              <%= link_to "View all", user_balances_path(@user), class: "btn" %>
             </div>
             <ul>
-              <li>example 1</li>
-              <li>example 2</li>
-              <li>example 3</li>
+              <% @user.friend_balances.limit(3).each do |balance| %>
+                <li>
+                  <strong><%= balance.friend_name %></strong>
+                  <% if balance.amount.positive? %>
+                    owes you
+                  <% else %>
+                    you owe
+                  <% end %>
+                  <strong><%= number_to_currency(balance.amount.abs) %></strong>
+                </li>
+              <% end %>
             </ul>
           </div>
         </div>
