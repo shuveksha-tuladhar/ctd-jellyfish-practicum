@@ -37,7 +37,7 @@
 
       <div class="form-group" id="group_select">
         <%= f.label :user_group_id, "Group" %>
-        <%= f.collection_select :user_group_id, UserGroup.all.order(:name), :id, :name, prompt: "Select a group", class: "custom-select" %>
+        <%= f.collection_select :user_group_id, current_user.user_groups.order(:name), :id, :name, prompt: "Select a group", class: "custom-select" %>
       </div>
 
       <div class="form-group" id="friends_select" style="display: none;">
