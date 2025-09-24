@@ -45,7 +45,8 @@ RSpec.describe Payment, type: :model do
       amount: 100,
       split_type: "equal",
       creator: creator,
-      user_group_id: group.id
+      user_group_id: group.id,
+      status: "pending"
     )
   end
 
