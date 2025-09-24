@@ -13,6 +13,8 @@ class Expense < ApplicationRecord
   validates :title, presence: true, length: { maximum: 100 }
   validates :amount, presence: true, numericality: { greater_than: 0 }
 
+  validates :status, presence: true
+
   # Set default split type
   after_initialize :set_default_split_type, if: :new_record?
 

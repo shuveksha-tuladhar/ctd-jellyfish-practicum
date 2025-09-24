@@ -28,7 +28,8 @@ RSpec.describe "Expenses", type: :request do
             split_type: "Equal",
             category_id: category.id,
             user_ids: [ friend.id ],
-            user_group_id: user_group.id
+            user_group_id: user_group.id,
+            status: "pending"
           }
         }
 
@@ -79,7 +80,8 @@ RSpec.describe "Expenses", type: :request do
           expense: {
             title: "New Title",
             amount: 100.0,
-            user_ids: [ new_friend.id ]
+            user_ids: [ new_friend.id ],
+            status: "pending"
           }
         }
 

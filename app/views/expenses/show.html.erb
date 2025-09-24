@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <!-- Navbar -->
 <%= render "shared/navbar" %>
 <!-- Main layout -->
@@ -26,6 +27,64 @@
       <%= link_to "Back", (request.referer.presence || expenses_path), class: "btn-back" %>
       <%= link_to "View All Expenses", expenses_path, class: "btn-view-all" %>
       <%= link_to "Edit Expense", edit_expense_path(@expense), class: "btn-view-all" %>
+=======
+<div>
+  <!-- Navbar -->
+  <%= render "shared/navbar" %>
+
+  <!-- Main layout -->
+  <div class="main-container">
+    <!-- Sidebar -->
+    <%= render "shared/sidebar" %>
+
+    <!-- Main Content -->
+    <div class="main-content">
+      <h1>Expense Details</h1>
+
+      <div class="form-card">
+        <p><strong>Title:</strong> <%= @expense.title %></p>
+        <p><strong>Amount:</strong> <%= number_to_currency(@expense.amount) %></p>
+
+        <% if @expense.creator.present? %>
+          <p><strong>Creator:</strong> <%= @expense.creator.full_name %></p>
+        <% end %>
+
+        <% if @expense.respond_to?(:split_type) && @expense.split_type.present? %>
+          <p><strong>Split Type:</strong> <%= @expense.split_type.capitalize %></p>
+        <% end %>
+
+        <% if @expense.category.present? %>
+          <p><strong>Category:</strong> <%= @expense.category.name %></p>
+        <% else %>
+          <p><strong>Category:</strong> Not assigned</p>
+        <% end %>
+
+        <p><strong>Status: </strong> <%= @expense.status %></p>
+        <p><strong>Participant(s)</strong></p>
+        <%if @expense.participants.present? %>
+          <%@expense.participants.each do |participant|%>
+            <p><%= participant.full_name%></p>
+          <%end%>
+        <%else%>
+          <p> Not assigned</p>
+        <%end%>
+        <p><strong>Payment Info: </strong></p>
+        <%if @expense.payments.present?%>
+          <%@expense.payments.each do |payment|%>
+            <p><%=payment.payer.full_name%></p>
+            <p><%=number_to_currency(payment.paid_amount)%></p>
+           <%end%> 
+        <%else%>
+          <p>No payment</p>
+        <%end%>
+      </div>
+
+      <div class="button-group">
+        <%= link_to "Back", (request.referer || expenses_path), class: "btn-back" %>
+        <%= link_to "View All Expenses", expenses_path, class: "btn-view-all" %>
+        <%= link_to "Edit Expense", edit_expense_path(@expense), class: "btn-view-all" %>
+      </div>
+>>>>>>> 9922a8423d08ac8233935f96dcdc275637e8b310
     </div>
   </div>
 </div>
