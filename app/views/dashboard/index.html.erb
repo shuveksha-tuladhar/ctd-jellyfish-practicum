@@ -46,7 +46,7 @@
               <h3>Monthly Spending</h3>
               <span><i class="bi bi-bar-chart-line"></i></span>
             </div>
-            <p>$1,240<span class="red-text">+12% from last month</span></p>
+            <p>$<%= sprintf('%.2f', @monthly_spending) %></p>
             <%= link_to "View expenses", expenses_path, class:"btn" %>
           </div>
         </div>
@@ -60,28 +60,33 @@
             <h3>Recent Activity</h3>
             <%= link_to "View all", expenses_path, class: "btn" %>
           </div>
-          <ul>
+          <ul class="activity-list">
             <% @recent_activities.each do |activity| %>
-              <li>
-                <% if activity[:type] == "expense" %>
-                  <strong><%= activity[:with] %></strong>
-                  <% if activity[:owes_you] %>
-                    owes you
-                  <% else %>
-                    you owe
+              <li class="activity-item">
+                <div class="activity-description">
+                  <% if activity[:type] == "expense" %>
+                    <strong><%= activity[:with] %></strong>
+                    <% if activity[:owes_you] %>
+                      owes you
+                    <% else %>
+                      you owe
+                    <% end %>
+                    <strong><%= number_to_currency(activity[:amount]) %></strong>
+                    for <%= activity[:name] %>
+
+                  <% elsif activity[:type] == "group" %>
+                    Created new group: <strong><%= activity[:name] %></strong>
+
+                  <% elsif activity[:type] == "friend" %>
+                    Added new friend: <strong><%= activity[:name] %></strong>
                   <% end %>
-                  <strong><%= number_to_currency(activity[:amount]) %></strong>
-                  for <%= activity[:name] %>
-                <% elsif activity[:type] == "group" %>
-                  Created new group: <strong><%= activity[:name] %></strong>
-                <% elsif activity[:type] == "friend" %>
-                  Added new friend: <strong><%= activity[:name] %></strong>
-                <% end %>
+                </div>
                 <span class="activity-time"><%= time_ago_in_words(activity[:created_at]) %> ago</span>
               </li>
             <% end %>
           </ul>
         </div>
+
 
         <!-- Right side cards -->
         <div class="right-cards">
@@ -108,17 +113,9 @@
               <%= link_to "View all", user_balances_path(@user), class: "btn" %>
             </div>
             <ul>
-              <% @user.friend_balances.limit(3).each do |balance| %>
-                <li>
-                  <strong><%= balance.friend_name %></strong>
-                  <% if balance.amount.positive? %>
-                    owes you
-                  <% else %>
-                    you owe
-                  <% end %>
-                  <strong><%= number_to_currency(balance.amount.abs) %></strong>
-                </li>
-              <% end %>
+              <li>example 1</li>
+              <li>example 2</li>
+              <li>example 3</li>
             </ul>
           </div>
         </div>
@@ -268,6 +265,30 @@
     flex-direction: column;
     gap: 20px;
   }
+
+  .activity-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.activity-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 0;
+  border-bottom: 1px solid #e0e0e0;
+  font-size: 14px;
+}
+
+.activity-description {
+  font-size: 14px;
+}
+
+.activity-time {
+  font-size: 12px;
+  color: #888;
+}
 
   /* Quick actions wrapper */
   .quick-actions-wrapper {
