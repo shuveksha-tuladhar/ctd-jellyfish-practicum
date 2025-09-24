@@ -3,6 +3,7 @@ FactoryBot.define do
     title { "Lunch" }
     amount { 25.99 }
     split_type { "equal" }
+    status { "pending" }
     association :creator, factory: :user
     association :category
     association :user_group

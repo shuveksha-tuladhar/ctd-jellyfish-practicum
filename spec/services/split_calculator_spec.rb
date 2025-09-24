@@ -16,7 +16,7 @@ RSpec.describe SplitCalculator, type: :service do
   describe "#call" do
     context "equal split between individuals" do
       it "splits the amount evenly and adjusts payer for rounding" do
-        expense = create(:expense, title: "Dinner", amount: 100.01, creator: alice)
+        expense = create(:expense, title: "Dinner", amount: 100.01, creator: alice, status: "pending")
         participants = [ alice, bob, carol ]
 
         result = SplitCalculator.new(expense, split_type: :equal, participants: participants).call
