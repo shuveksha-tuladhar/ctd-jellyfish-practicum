@@ -10,10 +10,7 @@
     <!-- Main Content -->
     <div class="main-content">
       <h1>Add New Expense</h1>
-
-      <div class="form-card">
         <%= render "form", expense: @expense %>
-      </div>
 
       <div class="button-group">
         <%= link_to "Back", (request.referer || expenses_path), class: "btn-back" %>
@@ -23,13 +20,13 @@
   </div>
 
   <style>
-  /* Reset and Base Styles */
+  /* Base Reset */
   body, html {
       margin: 0;
       padding: 0;
-      height: 100%;
       font-family: 'Segoe UI', Arial, sans-serif;
-      background-color: #f3f3f3;
+      background-color: #f3f6f5;
+      color: #333;
   }
 
   /* Main Layout */
@@ -37,19 +34,18 @@
       display: flex;
       gap: 20px;
       padding: 20px;
-      padding-top: 100px; 
-      box-sizing: border-box;
-      align-items: stretch;
+      padding-top: 100px;
       min-height: calc(100vh - 120px);
+      box-sizing: border-box;
   }
 
   /* Sidebar */
   .sidebar {
-      width: 250px;
+      width: 260px;
       background-color: #fff;
-      padding: 15px;
-      border-radius: 10px;
-      box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 4px 18px rgba(0,0,0,0.07);
       flex-shrink: 0;
   }
 
@@ -57,50 +53,59 @@
   .main-content {
       flex-grow: 1;
       background-color: #fff;
-      padding: 30px;
-      border-radius: 12px;
-      box-shadow: 0 4px 14px rgba(0,0,0,0.08);
+      padding: 35px 30px;
+      border-radius: 14px;
+      box-shadow: 0 6px 24px rgba(0,0,0,0.06);
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
   }
 
   .main-content h1 {
-      margin-top: 0;
-      margin-bottom: 30px;
+      margin: 0;
+      margin-bottom: 25px;
       color: #1d917a;
+      font-size: 30px;
       text-align: center;
-      font-size: 28px;
+      letter-spacing: 0.5px;
   }
 
-  /* Form card */
+  /* Form Card */
   .form-card {
       background-color: #f9fdfb;
-      padding: 25px;
-      border-radius: 10px;
-      box-shadow: 0 3px 8px rgba(0,0,0,0.05);
-      margin-bottom: 25px;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 6px 16px rgba(0,0,0,0.05);
+      transition: transform 0.2s, box-shadow 0.2s;
   }
 
-  /* Form styling */
+  .form-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+  }
+
+  /* Form Fields */
   form {
       display: flex;
       flex-direction: column;
-      gap: 18px;
+      gap: 20px;
   }
 
   form input, form select, form textarea {
-      padding: 10px 14px;
+      padding: 12px 16px;
       font-size: 15px;
-      border: 1px solid #cce6dd;
-      border-radius: 6px;
+      border: 1px solid #cde8e1;
+      border-radius: 8px;
+      background-color: #fff;
       width: 100%;
       box-sizing: border-box;
-      background-color: #fff;
-      transition: border-color 0.2s, box-shadow 0.2s;
+      transition: border-color 0.3s, box-shadow 0.3s;
   }
 
   form input:focus, form select:focus, form textarea:focus {
       outline: none;
       border-color: #1d917a;
-      box-shadow: 0 0 6px rgba(29, 145, 122, 0.3);
+      box-shadow: 0 0 8px rgba(29, 145, 122, 0.25);
   }
 
   form input[type="submit"] {
@@ -108,59 +113,63 @@
       color: white;
       border: none;
       cursor: pointer;
-      padding: 12px 20px;
-      border-radius: 6px;
-      font-size: 15px;
+      padding: 14px 24px;
+      font-size: 16px;
+      border-radius: 8px;
       width: fit-content;
       align-self: flex-start;
-      transition: background-color 0.2s;
+      transition: background-color 0.3s, transform 0.2s;
   }
 
   form input[type="submit"]:hover {
       background-color: #145d4d;
+      transform: translateY(-2px);
   }
 
-  /* Buttons below form */
+  /* Buttons Below Form */
   .button-group {
       display: flex;
-      gap: 15px;
+      gap: 18px;
       justify-content: center;
       flex-wrap: wrap;
+      margin-top: 10px;
   }
 
   .btn-back {
       display: inline-block;
-      padding: 10px 18px;
-      background-color: #e0e0e0;
+      padding: 12px 20px;
+      background-color: #e4e9e8;
       color: #555;
       text-decoration: none;
       border-radius: 8px;
       font-weight: 500;
-      transition: background-color 0.2s, color 0.2s;
+      transition: all 0.2s;
   }
 
   .btn-back:hover {
-      background-color: #d5d5d5;
+      background-color: #d9dedc;
       color: #333;
+      transform: translateY(-2px);
   }
 
   .btn-view-all {
       display: inline-block;
-      padding: 10px 18px;
+      padding: 12px 20px;
       background-color: #1d917a;
       color: white;
       text-decoration: none;
       border-radius: 8px;
       font-weight: 500;
-      transition: background-color 0.2s;
+      transition: background-color 0.3s, transform 0.2s;
   }
 
   .btn-view-all:hover {
       background-color: #145d4d;
+      transform: translateY(-2px);
   }
 
-  /* Logout button (if used) */
-  .logout-btn {
+  /* Logout button */
+    .logout-btn {
       background: white;
       color: #1d917a;
       border: none;
@@ -171,12 +180,12 @@
       text-decoration: none;
       display: inline-flex;
       align-items: center;
-  }
+    }
 
-  .logout-btn:hover {
+    .logout-btn:hover {
       background-color: #0ca694;
       color: white;
-  }
+    }
 
   /* Responsive */
   @media (max-width: 768px) {
@@ -187,7 +196,7 @@
 
       .sidebar {
           width: 100%;
-          margin-bottom: 15px;
+          margin-bottom: 20px;
       }
 
       .main-content {
@@ -197,10 +206,6 @@
       form input[type="submit"], .btn-back, .btn-view-all {
           width: 100%;
           text-align: center;
-      }
-
-      .button-group {
-          gap: 10px;
       }
   }
   </style>
