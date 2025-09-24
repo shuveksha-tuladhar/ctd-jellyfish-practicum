@@ -39,7 +39,7 @@ class DashboardController < ApplicationController
     # --- Combine all activities and sort ---
     @recent_activities = (@recent_expenses + @recent_groups + @recent_friends)
                            .sort_by { |a| -a[:created_at].to_i }
-                           .first(5)
+                           .first(10)
 
     # --- Monthly Spending ---
     @monthly_spending = current_user.expenses
