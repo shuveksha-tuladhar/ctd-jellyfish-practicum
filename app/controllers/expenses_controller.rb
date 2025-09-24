@@ -138,6 +138,7 @@ class ExpensesController < ApplicationController
   params.require(:expense).permit(
     :title,
     :amount,
+    :status,
     :split_type,
     :category_id,
     :user_group_id,
