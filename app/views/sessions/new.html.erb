@@ -15,11 +15,11 @@
         <%= form_with url: login_path, scope: :session, local: true, class: "form-container" do |f| %>
             <div>
                 <label>Email</label>
-                <%= f.email_field :email, class: "input-field" %>
+                <%= f.email_field :email, class: "input-field", autocomplete: "email" %>
             </div>
             <div class="password-wrapper" style="position: relative;">
                 <label>Password</label>
-                <%= f.password_field :password, class: "input-field", id: "password-field" %>
+                <%= f.password_field :password, class: "input-field", id: "password-field", autocomplete: "current-password" %>
                 <!-- Toggle icon -->
                 <i id="toggle-password" class="fa-solid fa-eye-slash"></i>
             </div>
@@ -223,7 +223,7 @@
 </style>
 
 <script>
-    document.addEventListener("DOMContentLoaded", function () {
+    document.addEventListener("turbo:load", function () {
         const togglePassword = document.getElementById("toggle-password");
         const passwordField = document.getElementById("password-field");
 

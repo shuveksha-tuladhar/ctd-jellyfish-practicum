@@ -1,6 +1,7 @@
 class UsersController < ApplicationController
     before_action :set_user, only: [ :show, :edit, :update, :destroy, :upload_photo ]
     before_action :require_login, except: [ :new, :create ]
+    before_action :authorize_user!, only: [ :show, :edit, :update, :destroy, :upload_photo ]
 
     include Rails.application.routes.url_helpers
 
@@ -17,7 +18,6 @@ class UsersController < ApplicationController
 
     # GET /users/1 or /users/1.json
     def show
-      @user = User.find(params[:id])
     end
 
     # GET /users/new
@@ -69,6 +69,7 @@ class UsersController < ApplicationController
     # DELETE /users/1
     def destroy
       @user.destroy!
+      reset_session
 
       respond_to do |format|
         format.html { redirect_to users_path, status: :see_other, notice: "User was successfully destroyed." }
@@ -81,8 +82,6 @@ class UsersController < ApplicationController
     end
 
     def upload_photo
-      @user = User.find(params[:id])
-
       if @user.update(profile_picture_params)
         flash[:notice] = "Profile picture uploaded successfully."
       else
@@ -91,7 +90,6 @@ class UsersController < ApplicationController
 
       redirect_to @user
     end
-
 
     private
     def profile_picture_params
@@ -121,5 +119,11 @@ class UsersController < ApplicationController
     def self.search(query)
       return all if query.blank?
       where("first_name ILIKE :q OR last_name ILIKE :q OR email ILIKE :q", q: "%#{query}%")
+    end
+
+    def authorize_user!
+      unless @user == current_user
+        redirect_to dashboard_path, alert: "Access denied."
+      end
     end
 end
