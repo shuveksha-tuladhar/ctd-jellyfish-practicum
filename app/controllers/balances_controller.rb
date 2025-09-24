@@ -4,6 +4,10 @@ class BalancesController < ApplicationController
     def index
       @user = current_user
       @balances = calculate_balance(@user)
+
+      @you_are_owed = @balances.values.select { |v| v > 0 }.sum 
+      @you_owe = @balances.values.select { |v| v < 0 }.sum.abs 
+      @net_balance = @you_are_owed - @you_owe 
     end
 
     private
