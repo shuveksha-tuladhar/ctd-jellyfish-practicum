@@ -38,5 +38,7 @@ Rails.application.routes.draw do
 
   get "dashboard", to: "dashboard#index", as: :dashboard
 
+  get "/users/:id/activities", to: "activities#index", as: :user_activities
+
   root "home#index"
 end
