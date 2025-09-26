@@ -18,7 +18,7 @@ Users can **create an account, add friends**, form **groups**, log **expenses** 
 
 ---
 
-<a id="user-content-description">## 📝 Description</a>
+<a id="user-content-description">📝 Description</a>
 
 CostShare simplifies financial coordination among multiple people. Users can:
 
@@ -42,7 +42,7 @@ CostShare simplifies financial coordination among multiple people. Users can:
 
 ---
 
-<a id="user-content-team">## 👥 Team Members</a>
+<a id="user-content-team">👥 Team Members</a>
 
 - Shuveksha Tuladhar
 - Abraham Flores
@@ -50,13 +50,13 @@ CostShare simplifies financial coordination among multiple people. Users can:
 
 ---
 
-<a id="user-content-demo">## 🎥 Demo</a>
+<a id="user-content-demo">🎥 Demo</a>
 
 > Coming soon — add a link to your deployed app or video walkthrough here.
 
 ---
 
-<a id="user-content-technology">## 🛠️ Technology</a>
+<a id="user-content-technology">🛠️ Technology</a>
 
 - **Frontend:** HTML, CSS, ERB (Embedded Ruby)
 - **Backend:** Ruby on Rails
@@ -68,7 +68,7 @@ CostShare simplifies financial coordination among multiple people. Users can:
 
 ---
 
-<a id="user-content-routes">## 🌐 Routes</a>
+<a id="user-content-routes">🌐 Routes</a>
 
 | HTTP Verb | Path                        | Controller#Action        | Description                          |
 |-----------|-----------------------------|-------------------------|------------------------------------|
@@ -102,7 +102,7 @@ CostShare simplifies financial coordination among multiple people. Users can:
 
 ---
 
-<a id="user-content-security">## 🔐 Security</a>
+<a id="user-content-security">🔐 Security</a>
 
 - User passwords are securely stored using bcrypt with has_secure_password
 - Users can register, log in, and log out safely with session management
@@ -111,7 +111,7 @@ CostShare simplifies financial coordination among multiple people. Users can:
 - Profile pictures are handled safely with Active Storage
 ---
 
-<a id="user-content-project-setup--development">## ⚙️ Project Setup & Development</a>
+<a id="user-content-project-setup--development">⚙️ Project Setup & Development</a>
 
 ### 🔢 Ruby Version
 
