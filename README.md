@@ -137,7 +137,6 @@ After cloning the repository:
 
 ```
 bundle install
-
 ```
 ### 🗃️ Database Creation
 ```
