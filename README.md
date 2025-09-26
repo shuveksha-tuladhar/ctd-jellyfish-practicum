@@ -148,4 +148,13 @@ rails db:create
 ```
 rails db:migrate
 ```
+### 🚀 Running the App
+```
+bin/rails s
+```
+Then open your browser and go to:
+```
+http://localhost:3000
+```
+
 
