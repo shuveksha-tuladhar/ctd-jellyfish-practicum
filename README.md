@@ -41,7 +41,7 @@ CostShare simplifies financial coordination among multiple people. Users can:
 
 ---
 
-## 🎥 Demo
+<a id="user-content-demo">## 🎥 Demo</a>
 
 > Coming soon — add a link to your deployed app or video walkthrough here.
 
