@@ -120,17 +120,17 @@ class ExpensesController < ApplicationController
   end
 
   def expense_params
-  params.require(:expense).permit(
-    :title,
-    :amount,
-    :status,
-    :split_type,
-    :category_id,
-    :user_group_id,
-    user_ids: [],
-    percentages: {}
-  )
-end
+    params.require(:expense).permit(
+      :title,
+      :amount,
+      :status,
+      :split_type,
+      :category_id,
+      :user_group_id,
+      user_ids: [],
+      percentages: {}
+    )
+  end
 
   def require_login
     redirect_to login_path, alert: "Please log in." unless current_user
