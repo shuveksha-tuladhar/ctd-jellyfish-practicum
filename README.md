@@ -137,7 +137,6 @@ After cloning the repository:
 
 ```
 bundle install
-yarn install  # only if using jsbundling or Rails 7+ asset pipeline
 
 ```
 ### 🗃️ Database Creation
