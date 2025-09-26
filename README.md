@@ -9,6 +9,7 @@ Users can **create an account, add friends**, form **groups**, log **expenses** 
 ## 📚 Table of Contents
 
 - [Description](#description)
+- [Team](#team)
 - [Demo](#demo)
 - [Technology](#technology)
 - [Routes](#routes)
@@ -41,13 +42,21 @@ CostShare simplifies financial coordination among multiple people. Users can:
 
 ---
 
+<a id="user-content-team">## 👥 Team Members</a>
+
+- Shuveksha Tuladhar
+- Abraham Flores
+- Sisi Wang
+
+---
+
 <a id="user-content-demo">## 🎥 Demo</a>
 
 > Coming soon — add a link to your deployed app or video walkthrough here.
 
 ---
 
-## 🛠️ Technology
+<a id="user-content-technology">## 🛠️ Technology</a>
 
 - **Frontend:** HTML, CSS, ERB (Embedded Ruby)
 - **Backend:** Ruby on Rails
@@ -59,7 +68,7 @@ CostShare simplifies financial coordination among multiple people. Users can:
 
 ---
 
-## 🌐 Routes
+<a id="user-content-routes">## 🌐 Routes</a>
 
 | HTTP Verb | Path                        | Controller#Action        | Description                          |
 |-----------|-----------------------------|-------------------------|------------------------------------|
@@ -93,7 +102,7 @@ CostShare simplifies financial coordination among multiple people. Users can:
 
 ---
 
-## 🔐 Security
+<a id="user-content-security>## 🔐 Security</a>
 
 - User passwords are securely stored using bcrypt with has_secure_password
 - Users can register, log in, and log out safely with session management
@@ -102,7 +111,7 @@ CostShare simplifies financial coordination among multiple people. Users can:
 - Profile pictures are handled safely with Active Storage
 ---
 
-## ⚙️ Project Setup & Development
+<a id="user-content-project-setup-development">## ⚙️ Project Setup & Development</a>
 
 ### 🔢 Ruby Version
 
@@ -131,7 +140,7 @@ bundle install
 yarn install  # only if using jsbundling or Rails 7+ asset pipeline
 
 ```
-#### 🗃️ Database Creation
+### 🗃️ Database Creation
 ```
 rails db:create
 ```
@@ -140,7 +149,3 @@ rails db:create
 rails db:migrate
 ```
 
-### 👥 Team Members
-- Shuveksha Tuladhar
-- Abraham Flores
-- Sisi Wang
