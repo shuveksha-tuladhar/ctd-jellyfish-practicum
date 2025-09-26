@@ -17,7 +17,7 @@ Users can **create an account, add friends**, form **groups**, log **expenses** 
 
 ---
 
-## 📝 Description
+<a id="user-content-description">## 📝 Description</a>
 
 CostShare simplifies financial coordination among multiple people. Users can:
 
