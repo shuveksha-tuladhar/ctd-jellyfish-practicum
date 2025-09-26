@@ -7,7 +7,7 @@ class BalancesController < ApplicationController
       @you_are_owed = summary[:you_are_owed]
       @you_owe = summary[:you_owe]
       @net_balance = summary[:net_balance]
-    end    
+    end
 
     private
 
