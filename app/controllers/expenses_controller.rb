@@ -1,6 +1,7 @@
 class ExpensesController < ApplicationController
   before_action :require_login
   before_action :set_expense, only: [ :show, :edit, :update, :destroy ]
+  before_action :authorize_expense_access!, only: [ :show, :edit, :update ]
 
   # GET /expenses
   def index
@@ -58,37 +59,7 @@ class ExpensesController < ApplicationController
   end
 
   def show
-    @expense = Expense.find_by(id: params[:id], creator_id: current_user.id) ||
-               current_user.expenses.find_by(id: params[:id])
-
-    unless @expense
-      redirect_to expenses_path, alert: "Expense not found." and return
-    end
-
-    if @expense.user_group.present?
-      @participants = @expense.user_group.users.distinct
-    else
-      expense_users = ExpenseUser.where(expense_id: @expense.id)
-      @participants = User.where(id: expense_users.pluck(:user_id))
-    end
-
-    splits_data = nil
-    if @expense.split_type == "percentage"
-      splits_data = @expense.expense_splits.map do |split|
-        { participant_id: split.user_id, percentage: split.percentage_split.to_f }
-      end
-    end
-
-    split_type = @expense.split_type.to_sym
-
-    @splits = SplitCalculator.new(
-      @expense,
-      split_type: split_type,
-      splits_data: splits_data,
-      participants: @participants
-    ).call[:splits]
   end
-
 
   # PATCH/PUT /expenses/:id
   def update
@@ -129,9 +100,23 @@ class ExpensesController < ApplicationController
 
   private
 
+  def authorize_expense_access!
+    unless @expense && (@expense.creator_id == current_user.id || @expense.users.include?(current_user))
+      redirect_to expenses_path, alert: "Access denied."
+    end
+  end
+
   def set_expense
-    @expense = current_user.created_expenses.find_by(id: params[:id])
-    redirect_to expenses_path, alert: "Expense not found." unless @expense
+    @expense = Expense
+                  .joins(:payors)
+                  .where(id: params[:id])
+                  .where("expenses.creator_id = :id OR users.id = :id", id: current_user.id)
+                  .distinct
+                  .first
+
+    unless @expense
+      redirect_to expenses_path, alert: "Access denied or expense not found."
+    end
   end
 
   def expense_params
