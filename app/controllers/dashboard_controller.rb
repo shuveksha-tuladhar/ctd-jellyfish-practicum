@@ -5,6 +5,7 @@ class DashboardController < ApplicationController
     @user = current_user
     @groups = current_user.user_groups
     @friends = current_user.friends
+    @balance_summary = current_user.balance_summary
 
     # --- Recent Expenses with participant info and split calculation ---
     @recent_expenses = current_user.expenses.includes(:participants).order(created_at: :desc).limit(5).map do |expense|
