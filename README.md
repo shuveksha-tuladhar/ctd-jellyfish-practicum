@@ -102,7 +102,7 @@ CostShare simplifies financial coordination among multiple people. Users can:
 
 ---
 
-<a id="user-content-security>## 🔐 Security</a>
+<a id="user-content-security">## 🔐 Security</a>
 
 - User passwords are securely stored using bcrypt with has_secure_password
 - Users can register, log in, and log out safely with session management
