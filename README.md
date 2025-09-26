@@ -111,7 +111,7 @@ CostShare simplifies financial coordination among multiple people. Users can:
 - Profile pictures are handled safely with Active Storage
 ---
 
-<a id="user-content-project-setup-development">## ⚙️ Project Setup & Development</a>
+<a id="user-content-project-setup--development">## ⚙️ Project Setup & Development</a>
 
 ### 🔢 Ruby Version
 
