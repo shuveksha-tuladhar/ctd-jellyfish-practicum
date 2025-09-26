@@ -18,7 +18,7 @@ Users can **create an account, add friends**, form **groups**, log **expenses** 
 
 ---
 
-<a id="user-content-description">📝 Description</a>
+<h2 id="user-content-description">📝 Description</h2>
 
 CostShare simplifies financial coordination among multiple people. Users can:
 
@@ -42,7 +42,7 @@ CostShare simplifies financial coordination among multiple people. Users can:
 
 ---
 
-<a id="user-content-team">👥 Team Members</a>
+<h2 id="user-content-team">👥 Team Members</h2>
 
 - Shuveksha Tuladhar
 - Abraham Flores
@@ -50,13 +50,13 @@ CostShare simplifies financial coordination among multiple people. Users can:
 
 ---
 
-<a id="user-content-demo">🎥 Demo</a>
+<h2 id="user-content-demo">🎥 Demo</h2>
 
 > Coming soon — add a link to your deployed app or video walkthrough here.
 
 ---
 
-<a id="user-content-technology">🛠️ Technology</a>
+<h2 id="user-content-technology">🛠️ Technology</h2>
 
 - **Frontend:** HTML, CSS, ERB (Embedded Ruby)
 - **Backend:** Ruby on Rails
@@ -68,7 +68,7 @@ CostShare simplifies financial coordination among multiple people. Users can:
 
 ---
 
-<a id="user-content-routes">🌐 Routes</a>
+<h2 id="user-content-routes">🌐 Routes</h2>
 
 | HTTP Verb | Path                        | Controller#Action        | Description                          |
 |-----------|-----------------------------|-------------------------|------------------------------------|
