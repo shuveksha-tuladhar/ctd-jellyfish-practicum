@@ -102,7 +102,7 @@ CostShare simplifies financial coordination among multiple people. Users can:
 
 ---
 
-<a id="user-content-security">🔐 Security</a>
+<h2 id="user-content-security">🔐 Security</h2>
 
 - User passwords are securely stored using bcrypt with has_secure_password
 - Users can register, log in, and log out safely with session management
@@ -111,7 +111,7 @@ CostShare simplifies financial coordination among multiple people. Users can:
 - Profile pictures are handled safely with Active Storage
 ---
 
-<a id="user-content-project-setup--development">⚙️ Project Setup & Development</a>
+<h2 id="user-content-project-setup--development">⚙️ Project Setup & Development</h2>
 
 ### 🔢 Ruby Version
 
