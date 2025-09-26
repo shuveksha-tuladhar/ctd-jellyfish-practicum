@@ -1,214 +1,307 @@
- <!-- Navbar -->
-<%= render "shared/navbar" %>
-<!-- Main layout -->
-<div class="main-container">
-  <!-- Sidebar -->
-  <%= render "shared/sidebar" %>
-  <!-- Expenses section -->
-  <div class="profile-container">
-    <h1>Expenses List</h1>
-    <% if @expenses.any? %>
-      <!-- Expenses Table -->
-      <table class="expense-table">
-        <thead>
-          <tr>
-            <th>Date</th>
-            <th>Description</th>
-            <th>Category</th>
-            <th>Amount</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          <% @expenses.each do |expense| %>
-            <tr class="expense-item">
-              <td><%= expense.created_at.strftime("%b %d, %Y") %></td>
-              <td><%= expense.title %></td>
-              <td><%= expense.category&.name || "Uncategorized" %></td>
-              <td><%= number_to_currency(expense.amount) %></td>
-              <td class="expense-actions">
-                <%= link_to "View", expense_path(expense), class: "action-btn view-btn" %>
-                <%= link_to "Edit", edit_expense_path(expense), class: "action-btn edit-btn" %>
-                <%= link_to "Delete", expense, data: { turbo_method: :delete, confirm: "Are you sure?" }, class: "action-btn delete-btn" %>
-              </td>
+
+<div>
+  <!-- Navbar -->
+  <%= render "shared/navbar" %>
+
+  <div class="main-container">
+    <!-- Sidebar -->
+    <%= render "shared/sidebar" %>
+
+    <!-- Expenses Section -->
+    <div class="profile-container">
+      <h1>Expenses List</h1>
+
+      <% if @expenses.any? %>
+        <table class="expense-table">
+          <thead>
+            <tr>
+              <th>Date</th>
+              <th>Description</th>
+              <th>Category</th>
+              <th>Amount</th>
+              <th>Paid By</th>
+              <th>Split With</th>
+              <th>Group</th>
+              <th>Actions</th>
             </tr>
-          <% end %>
-        </tbody>
-      </table>
-    <% else %>
-      <p class="empty-message">No expenses added yet. Click below to add your first expense!</p>
-    <% end %>
-    <!-- Add Expense Button -->
-    <%= link_to "Add Expense", new_expense_path, class: "btn add-expense-btn" %>
+          </thead>
+          <tbody>
+            <% @expenses.each do |expense| %>
+              <tr class="expense-item">
+                <td><%= expense.created_at.strftime("%b %d, %Y") %></td>
+                <td><%= expense.title %></td>
+                <td><%= expense.category&.name || "Uncategorized" %></td>
+                <td><%= number_to_currency(expense.amount) %></td>
+                <td>
+                  <% if expense.creator.present? %>
+                    <div class="member-circle"
+                         style="background-color: <%= color_for_user(expense.creator.id) %>;"
+                         title="<%= expense.creator.full_name %>">
+                      <%= expense.creator.first_name.first %><%= expense.creator.last_name.first %>
+                    </div>
+                  <% else %>
+                    <span class="no-members">Unknown</span>
+                  <% end %>
+                </td>
+                <td>
+                  <div class="members-list">
+                    <% participants = expense.user_group&.users || expense.payors.presence || [expense.creator].compact %>
+                    <% shown = participants.first(3) %>
+
+                    <% shown.each do |user| %>
+                      <div class="member-circle"
+                           style="background-color: <%= color_for_user(user.id) %>;"
+                           title="<%= user.full_name %>">
+                        <%= user.first_name.first %><%= user.last_name.first %>
+                      </div>
+                    <% end %>
+
+                    <% if participants.size > 3 %>
+                      <div class="member-circle more" title="and <%= participants.size - 3 %> more">
+                        +<%= participants.size - 3 %>
+                      </div>
+                    <% end %>
+
+                    <% if participants.empty? %>
+                      <span class="no-members">No participants</span>
+                    <% end %>
+                  </div>
+                </td>
+                <td><%= expense.user_group&.name || "None" %></td>
+                <td class="expense-actions">
+                  <%= link_to "View", expense_path(expense), class: "action-btn view-btn" %>
+                  <%= link_to "Edit", edit_expense_path(expense), class: "action-btn edit-btn" %>
+                  <%= link_to "Delete", expense, data: { turbo_method: :delete, confirm: "Are you sure?" }, class: "action-btn delete-btn" %>
+                </td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      <% else %>
+        <p class="empty-message">No expenses added yet. Click below to add your first expense!</p>
+      <% end %>
+
+      <%= link_to "Add Expense", new_expense_path, class: "btn add-expense-btn" %>
+    </div>
   </div>
 </div>
-<style>
-  /* Reset and Base Styles */
-  body, html {
-    margin: 0;
-    padding: 0;
-    height: 100%;
-    font-family: Arial, sans-serif;
-    background-color: #f3f3f3;
-  }
 
-  /* Main Layout */
-  .main-container {
-    display: flex;
-    gap: 20px;
-    padding: 20px;
-    padding-top: 100px;
-    box-sizing: border-box;
-    align-items: stretch;
-    height: calc(100vh - 120px);
-  }
-
-  .profile-container h1 {
-    margin-top: 0;
-    margin-bottom: 30px;
-    color: #1d917a;
-    text-align: center;
-    font-size: 28px;
+ <style>
+    body, html {
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f3f3f3;
+      color: #333;
     }
 
-  /* Sidebar */
-  .sidebar {
-    width: 250px;
-    background-color: #fff;
-    padding: 15px;
-    border-radius: 6px;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-    flex-shrink: 0;
-  }
-
-  /* Expenses section */
-  .profile-container {
-    flex-grow: 1;
-    background-color: #fff;
-    padding: 20px;
-    border-radius: 6px;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-  }
-
-  .empty-message {
-    text-align: center;
-    font-size: 16px;
-    color: #555;
-    margin: 20px 0;
-    padding: 10px;
-    background-color: #f9f9f9;
-    border-radius: 6px;
-  }
-
-  /* Add Expense button */
-  .btn {
-    display: inline-block;
-    padding: 8px 12px;
-    background-color: #1d917a;
-    color: white;
-    text-decoration: none;
-    border-radius: 4px;
-    margin-bottom: 15px;
-  }
-
-  .btn:hover {
-    background-color: #145d4d;
-  }
-
-  /* Expense Table */
-  .expense-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-bottom: 15px;
-  }
-
-  .expense-table th,
-  .expense-table td {
-    padding: 10px 12px;
-    text-align: left;
-    border-bottom: 1px solid #ddd;
-  }
-
-  .expense-table th {
-    background-color: #f9f9f9;
-    font-weight: 600;
-  }
-
-  .expense-table tr:hover {
-    background-color: #f0f8f5;
-  }
-
-  /* Actions */
-  .expense-actions {
-    display: flex;
-    gap: 5px;
-  }
-
-  .action-btn {
-    display: inline-block;
-    padding: 5px 10px;
-    border-radius: 4px;
-    text-decoration: none;
-    font-size: 13px;
-    font-weight: 500;
-    transition: background-color 0.2s, color 0.2s;
-  }
-
-  .view-btn, .edit-btn {
-    background-color: #1d917a;
-    color: white;
-  }
-
-  .view-btn:hover, .edit-btn:hover {
-    background-color: #145d4d;
-  }
-
-  .delete-btn {
-    background-color: #e08c79;
-    color: white;
-  }
-
-  .delete-btn:hover {
-    background-color: #c76b5c;
-  }
-
-  .add-expense-btn {
-    margin-top: 15px;
-  }
-
-  /* Logout button */
-  .logout-btn {
-    background: white;
-    color: #1d917a;
-    border: none;
-    padding: 6px 12px;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 14px;
-    text-decoration: none;
-    display: inline-flex;
-    align-items: center;
-  }
-
-  .logout-btn:hover {
-    background-color: #0ca694;
-    color: white;
-  }
-
-  /* Responsive */
-  @media (max-width: 768px) {
     .main-container {
-      flex-direction: column;
+      display: flex;
+      gap: 20px;
+      padding: 20px;
+      padding-top: 100px;
+      align-items: flex-start;
+      min-height: calc(100vh - 120px);
+      box-sizing: border-box;
+    }
+
+    .sidebar {
+      width: 260px;
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 4px 18px rgba(0,0,0,0.07);
+      flex-shrink: 0;
+  }
+
+    .profile-container {
+      flex-grow: 1;
+      background-color: #fff;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+    }
+
+    .profile-container h1 {
+      text-align: center;
+      color: #1d917a;
+      font-size: 30px;
+      margin-bottom: 35px;
+    }
+
+    .expense-table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0 8px;
+    }
+
+    .expense-table th, .expense-table td {
+      padding: 12px 15px;
+      text-align: left;
+    }
+
+    .expense-table th {
+      color: #1d917a;
+      font-weight: 700;
+      text-transform: uppercase;
+      padding: 14px 15px;
+      font-size: 14px;
+      border-radius: 8px 8px 0 0;
+      box-shadow: inset 0 -1px 0 rgba(0,0,0,0.05);
+    }
+
+    .expense-table td {
+      padding: 12px 15px;
+    }
+
+    .expense-table tr.expense-item {
+      background-color: #fdfdfd;
+      border-radius: 10px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.04);
+      transition: transform 0.15s ease, box-shadow 0.15s ease;
+    }
+
+    .expense-table tr.expense-item:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    }
+
+    .members-list {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+
+    .member-circle {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-weight: bold;
+      font-size: 14px;
+      cursor: default;
+    }
+
+    .member-circle.more {
+      background-color: #555;
+      font-size: 12px;
+    }
+
+    .no-members {
+      color: #999;
+      font-size: 13px;
+      font-style: italic;
+    }
+
+    .expense-actions {
+      display: flex;
+      gap: 6px;
+    }
+
+    .action-btn {
+      padding: 6px 12px;
+      border-radius: 6px;
+      font-size: 13px;
+      font-weight: 500;
+      text-decoration: none;
+      transition: 0.2s;
+    }
+
+    .view-btn, .edit-btn {
+      background-color: #1d917a;
+      color: white;
+    }
+
+    .view-btn:hover, .edit-btn:hover {
+      background-color: #145d4d;
+    }
+
+    .delete-btn {
+      background-color: #e08c79;
+      color: white;
+    }
+
+    .add-expense-btn {
+      display: inline-block;
+      padding: 12px 18px;
+      background-color: #1d917a;
+      color: white;
+      font-weight: 500;
+      text-decoration: none;
+      border-radius: 8px;
+      margin-top: 20px;
+      transition: 0.2s;
+    }
+
+    .add-expense-btn:hover {
+      background-color: #145d4d;
+    }
+
+    .empty-message {
+      text-align: center;
       padding: 15px;
+      background-color: #f0f9f6;
+      border-radius: 10px;
+      margin: 25px 0;
+      color: #555;
+      font-size: 16px;
+    }
+    
+    /* Logout button */
+    .logout-btn {
+      background: white;
+      color: #1d917a;
+      border: none;
+      padding: 6px 12px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 14px;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
     }
 
     .sidebar {
       width: 100%;
       margin-bottom: 15px;
     }
+    /* Responsive */
+    @media (max-width: 768px) {
+      .main-container {
+        flex-direction: column;
+        padding: 15px;
+      }
 
-    .profile-container {
-      width: 100%;
+      .sidebar {
+        width: 100%;
+        margin-bottom: 15px;
+      }
+
+      .main-content {
+        width: 100%;
+      }
+
+      .button-group {
+        gap: 10px;
+      }
+
+      .profile-container {
+        width: 100%;
+      }
+
+      .expense-table th, .expense-table td {
+        padding: 10px 8px;
+        font-size: 14px;
+      }
+
+      .member-circle {
+        width: 32px;
+        height: 32px;
+        font-size: 13px;
+      }
     }
   }
 </style>

@@ -1,49 +1,496 @@
-<% if @expense.errors.any? %>
-  <div class="error-messages">
-    <h4><%= pluralize(@expense.errors.count, "error") %> prohibited this expense from being saved:</h4>
-    <ul>
-      <% @expense.errors.full_messages.each do |msg| %>
-        <li><%= msg %></li>
-      <% end %>
-    </ul>
-  </div>
-<% end %>
 
-<%= form_with model: expense, local: true do |f| %>
-  <div>
-    <%= f.label :title %>
-    <%= f.text_field :title, required: true %>
-  </div>
+<div id="expense_form" data-current-user-name="<%= current_user.first_name %> <%= current_user.last_name %>"
+     data-current-user-email="<%= current_user.email %>" data-current-user-id="<%= current_user.id %>">
+  <%= form_with model: expense, local: true do |f| %>
+    <div class="form-card">
+      <h2>Expense Details</h2>
 
-  <div>
-    <%= f.label :amount %>
-    <%= f.number_field :amount, step: 0.01, required: true %>
-  </div>
+      <div class="form-group">
+        <%= f.label :title %>
+        <%= f.text_field :title, required: true, class: "form-input" %>
+      </div>
 
-  <div>
-    <%= f.label :split_type %>
-    <%= f.select :split_type, options_for_select([["Equal", "equal"], ["Percentage", "percentage"]], expense.split_type || "equal"), prompt: "Select split type" %>
-  </div>
+      <div class="form-group">
+        <%= f.label :amount %>
+        <%= f.number_field :amount, step: 0.01, required: true, class: "form-input" %>
+      </div>
 
-  <div>
-    <%= f.label :category_id, "Category" %>
-    <%= f.collection_select :category_id, Category.all.order(:name), :id, :name, prompt: "Select a category" %>
-  </div>
+      <div class="form-group">
+        <%= f.label :split_type, "Split Type" %>
+        <div class="button-group">
+          <%= f.hidden_field :split_type, value: @expense.split_type || "equal", id: "split_type_field" %>
+          <button type="button" class="split-btn <%= 'active' if (@expense.split_type || 'equal') == 'equal' %>" data-value="equal">
+            Equal
+          </button>
+          <button type="button" class="split-btn <%= 'active' if @expense.split_type == 'percentage' %>" data-value="percentage">
+            Percentage
+          </button>
+        </div>
+      </div>
 
-  <div>
-    <%= f.label :status ,"Status" %>
-    <%= f.select :status, ["pending", "paid"], prompt: "Select status" , required: true%>
-  </div>
+      <div class="form-group">
+        <label>Share With</label>
+        <div class="button-group" id="share_toggle">
+          <button type="button" id="group-button" class="split-btn <%= 'active' if @expense.user_group_id.present? %>" data-target="group">Group</button>
+          <button type="button" id="friends-button" class="split-btn <%= 'active' if @expense.user_group_id.nil? %>" data-target="friends">Friends</button>
+        </div>
+      </div>
 
-  <div>
-    <%= f.label :user_ids, "Split with users" %>
-    <%= f.collection_select :user_ids, User.all.order(:email), :id, ->(u) { "#{u.first_name} #{u.last_name} (#{u.email})" }, {}, multiple: true %>
-  </div>
+      <div>
+        <%= f.label :status ,"Status" %>
+        <%= f.select :status, ["pending", "paid"], prompt: "Select status" , required: true%>
+      </div>
 
-  <div>
-    <%= f.label :user_group_id, "Group" %>
-    <%= f.collection_select :user_group_id, UserGroup.all.order(:name), :id, :name, prompt: "Select a group" %>
-  </div>
+      <div class="form-group" id="group_select">
+        <%= f.label :user_group_id, "Group" %>
+        <%= f.collection_select :user_group_id, current_user.user_groups.order(:name), :id, :name, prompt: "Select a group", class: "custom-select" %>
+      </div>
 
-  <%= f.submit @expense.persisted? ? "Update Expense" : "Create Expense" %>
-<% end %>
+      <%= render "split_with_friends", f: f %>
+
+      <%= f.submit @expense.id.present? ? "Update Expense" : "Create Expense", class: "btn-submit" %>
+    </div>
+  <% end %>
+</div>
+
+<script>
+document.addEventListener("turbo:load", () => {
+  const groupSelect = document.getElementById("group_select");
+  const friendsSelect = document.getElementById("friends_select");
+  const shareButtons = document.querySelectorAll("#share_toggle .split-btn");
+  const splitHidden = document.getElementById("split_type_field");
+
+  function initializeShareToggle() {
+    if (document.getElementById("group-button").classList.contains("active")) {
+      groupSelect.style.display = "block";
+      friendsSelect.style.display = "none";
+    } else {
+      groupSelect.style.display = "none";
+      friendsSelect.style.display = "block";
+    }
+  }
+
+  shareButtons.forEach(button => {
+    button.addEventListener("click", () => {
+      shareButtons.forEach(btn => btn.classList.remove("active"));
+      button.classList.add("active");
+      initializeShareToggle();
+    });
+  });
+
+  initializeShareToggle();
+
+  // Split type buttons toggle (equal / percentage)
+  const splitButtons = document.querySelectorAll(".split-btn[data-value]");
+  const submitButton = document.querySelector('form input[type="submit"]');
+
+  splitButtons.forEach(button => {
+    button.addEventListener("click", () => {
+      splitHidden.value = button.dataset.value;
+      splitButtons.forEach(btn => btn.classList.remove("active"));
+      button.classList.add("active");
+    });
+  });
+});
+</script>
+
+<style>
+/* Reset and Base Styles */
+body, html {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  font-family: 'Segoe UI', Arial, sans-serif;
+  background-color: #f3f3f3;
+  color: #333;
+}
+
+/* Main Layout */
+.main-container {
+  display: flex;
+  gap: 20px;
+  padding: 20px;
+  padding-top: 100px; 
+  box-sizing: border-box;
+  align-items: stretch;
+  min-height: calc(100vh - 120px);
+}
+
+/* Sidebar */
+.sidebar {
+  width: 250px;
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+  flex-shrink: 0;
+}
+
+/* Main Content */
+.main-content {
+  flex-grow: 1;
+  background-color: #ffffff;
+  padding: 40px;
+  border-radius: 12px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.main-content:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.12);
+}
+
+.main-content h1 {
+  color: #1d917a;
+  font-size: 32px;
+  font-weight: 700;
+  text-align: center;
+  margin: 0 0 25px 0;
+}
+
+.main-content p {
+  font-size: 15px;
+  line-height: 1.6;
+  color: #444;
+}
+
+/* Form Card */
+.form-card {
+  background-color: #f9fdfb;
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: 0 4px 14px rgba(0,0,0,0.06);
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.form-card h2 {
+  margin: 0 0 15px 0;
+  color: #1d917a;
+  font-size: 22px;
+  font-weight: 600;
+}
+
+/* Form Group Container */
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 18px;
+}
+
+/* Form Labels */
+.form-group label {
+  font-weight: 600;
+  color: #1d917a;
+  font-size: 15px;
+  margin-bottom: 4px;
+}
+
+/* Form Inputs, Selects, Textareas */
+.form-group input,
+.form-group select,
+.form-group textarea {
+  padding: 12px 14px;
+  font-size: 15px;
+  border: 1px solid #cce6dd;
+  border-radius: 8px;
+  background-color: #fff;
+  width: 100%;
+  box-sizing: border-box;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+/* Focus state */
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+  outline: none;
+  border-color: #1d917a;
+  box-shadow: 0 0 6px rgba(29, 145, 122, 0.3);
+}
+
+/* Disabled/Read-only */
+.form-group input[disabled],
+.form-group select[disabled],
+.form-group textarea[disabled] {
+  background-color: #f5f5f5;
+  color: #999;
+  cursor: not-allowed;
+}
+
+/* Helper Text / Errors */
+.form-group .helper-text,
+.form-group .error-text {
+  font-size: 13px;
+  color: #ff4d4f; /* Red for errors */
+  margin-top: 4px;
+}
+
+/* Buttons inside form group */
+.form-group .button-group {
+  display: flex;
+  gap: 12px;
+  margin-top: 8px;
+}
+
+/* Split buttons inside form group */
+.split-btn {
+  flex: 1;
+  padding: 12px 0;
+  border-radius: 10px;
+  border: none;
+  background: linear-gradient(135deg, #f0fdf9, #c6f7e1);
+  color: #1d917a;
+  font-weight: 600;
+  cursor: pointer;
+  text-align: center;
+  transition: all 0.3s ease;
+  box-shadow: 0 3px 6px rgba(0,0,0,0.08);
+}
+
+.split-btn.active {
+  background: linear-gradient(135deg, #1d917a, #14735b);
+  color: white;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+}
+
+.split-btn:hover {
+  background: linear-gradient(135deg, #d1fcf1, #a0f0d0);
+  transform: translateY(-2px);
+}
+
+/* Custom select for category or other selects */
+.custom-select {
+  appearance: none;
+  cursor: pointer;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+}
+
+/* Form Inputs */
+form input, form select, form textarea {
+  padding: 12px 14px;
+  font-size: 15px;
+  border: 1px solid #cce6dd;
+  border-radius: 8px;
+  width: 100%;
+  box-sizing: border-box;
+  background-color: #fff;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+form input:focus, form select:focus, form textarea:focus {
+  outline: none;
+  border-color: #1d917a;
+  box-shadow: 0 0 6px rgba(29, 145, 122, 0.3);
+}
+
+form input[type="submit"] {
+  background-color: #1d917a;
+  color: white;
+  border: none;
+  cursor: pointer;
+  padding: 12px 20px;
+  border-radius: 8px;
+  font-size: 15px;
+  width: fit-content;
+  transition: background-color 0.2s, transform 0.2s;
+}
+
+form input[type="submit"]:hover {
+  background-color: #145d4d;
+  transform: translateY(-2px);
+}
+
+/* Split Buttons */
+.split-buttons .button-group {
+  display: flex;
+  gap: 12px;
+  margin-top: 8px;
+}
+
+.split-btn {
+  flex: 1;
+  padding: 12px 0;
+  border-radius: 10px;
+  border: none;
+  background: linear-gradient(135deg, #f0fdf9, #c6f7e1);
+  color: #1d917a;
+  font-weight: 600;
+  cursor: pointer;
+  text-align: center;
+  transition: all 0.3s ease;
+  box-shadow: 0 3px 6px rgba(0,0,0,0.08);
+}
+
+.split-btn:hover {
+  background: linear-gradient(135deg, #d1fcf1, #a0f0d0);
+  transform: translateY(-2px);
+  box-shadow: 0 5px 12px rgba(0,0,0,0.12);
+}
+
+.split-btn.active {
+  background: linear-gradient(135deg, #1d917a, #14735b);
+  color: white;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+}
+
+/* Category Dropdown */
+.custom-select {
+  width: 100%;
+  padding: 12px 14px;
+  font-size: 15px;
+  border: 1px solid #cce6dd;
+  border-radius: 8px;
+  background-color: #fff;
+  appearance: none;
+  cursor: pointer;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+}
+
+.custom-select:focus {
+  outline: none;
+  border-color: #1d917a;
+  box-shadow: 0 0 6px rgba(29, 145, 122, 0.3);
+}
+
+/* Cost Splits */
+.splits-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.split-item {
+  padding: 12px 15px;
+  border-radius: 8px;
+  margin-bottom: 8px;
+  font-size: 14px;
+}
+
+.split-item.owes-you {
+  background-color: #e6f9f2;
+  color: #1d917a;
+  font-weight: 500;
+}
+
+.split-item.you-owe {
+  background-color: #fff4e6;
+  color: #ff7f50;
+  font-weight: 500;
+}
+
+.split-item.settled {
+  background-color: #f0f0f0;
+  color: #666;
+  font-style: italic;
+}
+
+/* Button Group */
+.button-group {
+  display: flex;
+  gap: 15px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.btn-back {
+  display: inline-block;
+  padding: 10px 20px;
+  background-color: #e0e0e0;
+  color: #555;
+  text-decoration: none;
+  border-radius: 8px;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.btn-back:hover {
+  background-color: #d5d5d5;
+  color: #333;
+}
+
+.btn-view-all {
+  display: inline-block;
+  padding: 10px 20px;
+  background-color: #1d917a;
+  color: white;
+  text-decoration: none;
+  border-radius: 8px;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.btn-view-all:hover {
+  background-color: #145d4d;
+}
+
+#percentage_fields > div {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 6px 10px;
+  background-color: #f0fdf9;
+  border-radius: 8px;
+}
+
+#percentage_fields label {
+  font-size: 14px;
+  font-weight: 600;
+  color: #000;
+  word-break: break-word;
+}
+
+#percentage_fields input {
+  width: 100%;
+  max-width: 120px;
+  padding: 8px 10px;
+  border-radius: 6px;
+  border: 1px solid #cce6dd;
+  font-size: 14px;
+}
+
+
+/* Responsive */
+@media (max-width: 768px) {
+  .main-container {
+    flex-direction: column;
+    padding: 15px;
+  }
+
+  .sidebar {
+    width: 100%;
+    margin-bottom: 15px;
+  }
+
+  .main-content {
+    width: 100%;
+    padding: 25px;
+  }
+
+  form input[type="submit"], .btn-back, .btn-view-all {
+    width: 100%;
+    text-align: center;
+  }
+
+  .split-buttons .button-group {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .form-group {
+    gap: 6px;
+  }
+
+  .split-btn {
+    flex: 1 1 100%;
+}
+}
+</style>
+

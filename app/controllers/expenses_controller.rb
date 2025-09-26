@@ -18,16 +18,23 @@ class ExpensesController < ApplicationController
 
   # POST /expenses
   def create
-    @expense = current_user.created_expenses.new(expense_params.except(:user_ids))
-    if @expense.save
+    @expense = current_user.created_expenses.new(expense_params.except(:user_ids, :percentages))
 
-      ExpenseUser.create!(user_id: current_user.id, expense_id: @expense.id)
+    participant_ids = (expense_params[:user_ids]&.reject(&:blank?) || []) + [ current_user.id ]
+    participant_ids.uniq.each do |id|
+      @expense.expense_users.build(user_id: id)
+    end
 
-      expense_params[:user_ids]&.reject(&:blank?)&.each do |id|
-        ExpenseUser.create!(user_id: id, expense_id: @expense.id)
+    if @expense.split_type == "percentage" && expense_params[:percentages].present?
+      expense_params[:percentages].each do |user_id, percentage|
+        @expense.expense_splits.build(
+          user_id: user_id,
+          percentage_split: percentage.to_f
+        )
       end
+    end
 
-
+    if @expense.save
       redirect_to expenses_path, notice: "Expense created successfully"
     else
       render :new, status: :unprocessable_entity
@@ -38,24 +45,42 @@ class ExpensesController < ApplicationController
   # GET /expenses/:id/edit
   def edit
     # @expense is already set by set_expense
+
+    if @expense.user_group.blank?
+        expense_user_ids = @expense.expense_users.pluck(:user_id)
+        @selected_user_ids = User.where(id: expense_user_ids).pluck(:id)
+    else
+        @selected_user_ids = []
+    end
   end
 
   def show
-    # @expense is already loaded and authorized
   end
+
 
   # PATCH/PUT /expenses/:id
   def update
-    if @expense.update(expense_params.except(:user_ids))
+    if @expense.update(expense_params.except(:user_ids, :percentages))
 
-      # Replace participants except the owner
       @expense.expense_users.where.not(user_id: @expense.creator_id).destroy_all
 
-      # Ensure owner is included
       participant_ids = (expense_params[:user_ids]&.reject(&:blank?) || []) + [ @expense.creator_id ]
 
       participant_ids.uniq.each do |id|
         ExpenseUser.find_or_create_by!(user_id: id, expense_id: @expense.id)
+      end
+
+      if @expense.split_type == "percentage" && expense_params[:percentages].present?
+        @expense.expense_splits.destroy_all
+
+        expense_params[:percentages].each do |user_id, percentage|
+          @expense.expense_splits.create!(
+            user_id: user_id,
+            percentage_split: percentage.to_f
+          )
+        end
+      else
+        @expense.expense_splits.destroy_all
       end
 
       redirect_to expenses_path, notice: "Expense updated successfully."
@@ -63,6 +88,7 @@ class ExpensesController < ApplicationController
       render :edit, status: :unprocessable_entity
     end
   end
+
 
   # DELETE /expenses/:id
   def destroy
@@ -92,16 +118,17 @@ class ExpensesController < ApplicationController
   end
 
   def expense_params
-    params.require(:expense).permit(
-      :title,
-      :amount,
-      :status,
-      :split_type,
-      :category_id,
-      :user_group_id,
-      user_ids: []
-    )
-  end
+  params.require(:expense).permit(
+    :title,
+    :amount,
+    :status,
+    :split_type,
+    :category_id,
+    :user_group_id,
+    user_ids: [],
+    percentages: {}
+  )
+end
 
   def require_login
     redirect_to login_path, alert: "Please log in." unless current_user
