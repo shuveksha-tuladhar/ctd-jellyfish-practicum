@@ -45,23 +45,7 @@
         <%= f.collection_select :user_group_id, current_user.user_groups.order(:name), :id, :name, prompt: "Select a group", class: "custom-select" %>
       </div>
 
-      <div class="form-group" id="friends_select" style="display: none;">
-        <%= f.label :user_ids, "Split with Friends" %>
-        <%= f.collection_select :user_ids,
-              current_user.friends.order(:email),
-              :id,
-              ->(u) { "#{u.first_name} #{u.last_name} (#{u.email})" },
-              { selected: @selected_user_ids },
-              { multiple: true, class: "form-multi-select" } %>
-
-        <div class="form-group" id="percentage_inputs" style="display: none;margin-top: 20px;">
-          <label>Percentage Split</label>
-          <div id="percentage_fields" class="flex flex-col gap-2"></div>
-          <p id="percentage_warning" style="color: #ff4d4f; font-size: 13px; display:none;">
-            Total percentage must equal 100%.
-          </p>
-        </div>
-      </div>
+      <%= render "split_with_friends", f: f %>
 
       <%= f.submit @expense.id.present? ? "Update Expense" : "Create Expense", class: "btn-submit" %>
     </div>
@@ -70,99 +54,12 @@
 
 <script>
 document.addEventListener("turbo:load", () => {
-  const splitButtons = document.querySelectorAll(".split-btn[data-value]");
+  const groupSelect = document.getElementById("group_select");
+  const friendsSelect = document.getElementById("friends_select");
+  const shareButtons = document.querySelectorAll("#share_toggle .split-btn");
   const splitHidden = document.getElementById("split_type_field");
 
-  const percentageInputsContainer = document.getElementById("percentage_inputs");
-  const percentageFields = document.getElementById("percentage_fields");
-  const percentageWarning = document.getElementById("percentage_warning");
-
-  const friendsSelect = document.getElementById("friends_select");
-  const groupSelect = document.getElementById("group_select");
-
-  const shareButtons = document.querySelectorAll("#share_toggle .split-btn");
-  const expenseForm = document.getElementById("expense_form");
-  const creatorId = expenseForm.dataset.currentUserId;
-  const creatorName = expenseForm.dataset.currentUserName;
-  const creatorEmail = expenseForm.dataset.currentUserEmail;
-  const submitButton = document.querySelector('form input[type="submit"]');
-
-  function renderPercentageFields() {
-    let participants = [];
-
-    const isGroupActive = document.getElementById("group-button").classList.contains("active");
-    const selectElement = isGroupActive ? groupSelect.querySelector("select") : friendsSelect.querySelector("select");
-    participants.push(...selectElement.selectedOptions);
-
-    if (participants.length === 0) {
-      percentageInputsContainer.style.display = "none";
-      percentageFields.innerHTML = "";
-      return;
-    }
-
-    const participantData = participants.map(opt => ({
-      id: opt.value,
-      label: opt.text
-    }));
-
-    if (!participantData.some(p => p.id === creatorId)) {
-      participantData.unshift({
-        id: creatorId,
-        label: `${creatorName} (${creatorEmail})`
-      });
-    }
-
-    const count = participantData.length;
-    const defaultPercent = (100 / count).toFixed(2);
-
-    percentageFields.innerHTML = "";
-
-    participantData.forEach(p => {
-      const wrapper = document.createElement("div");
-      wrapper.classList.add("flex", "flex-col", "gap-1");
-
-      const label = document.createElement("label");
-      label.textContent = p.label;
-
-      const input = document.createElement("input");
-      input.type = "number";
-      input.min = "0";
-      input.max = "100";
-      input.step = "0.01";
-      input.value = defaultPercent;
-      input.name = `expense[percentages][${p.id}]`;
-      input.classList.add("form-input");
-
-      wrapper.appendChild(label);
-      wrapper.appendChild(input);
-      percentageFields.appendChild(wrapper);
-    });
-
-    percentageInputsContainer.style.display = "block";
-    validatePercentageTotal();
-  }
-
-  function validatePercentageTotal() {
-    if (splitHidden.value !== "percentage") {
-      submitButton.disabled = false;
-      percentageWarning.style.display = "none";
-      return;
-    }
-
-    const inputs = percentageFields.querySelectorAll("input");
-    let total = 0;
-    inputs.forEach(input => { total += parseFloat(input.value) || 0; });
-
-    if (Math.abs(total - 100) > 0.01) {
-      submitButton.disabled = true;
-      percentageWarning.style.display = "block";
-    } else {
-      submitButton.disabled = false;
-      percentageWarning.style.display = "none";
-    }
-  }
-
-  function initializeForm() {
+  function initializeShareToggle() {
     if (document.getElementById("group-button").classList.contains("active")) {
       groupSelect.style.display = "block";
       friendsSelect.style.display = "none";
@@ -170,61 +67,31 @@ document.addEventListener("turbo:load", () => {
       groupSelect.style.display = "none";
       friendsSelect.style.display = "block";
     }
-
-    if (splitHidden.value === "percentage") {
-      renderPercentageFields();
-    } else {
-      percentageInputsContainer.style.display = "none";
-    }
   }
 
-  initializeForm();
+  shareButtons.forEach(button => {
+    button.addEventListener("click", () => {
+      shareButtons.forEach(btn => btn.classList.remove("active"));
+      button.classList.add("active");
+      initializeShareToggle();
+    });
+  });
+
+  initializeShareToggle();
+
+  // Split type buttons toggle (equal / percentage)
+  const splitButtons = document.querySelectorAll(".split-btn[data-value]");
+  const submitButton = document.querySelector('form input[type="submit"]');
 
   splitButtons.forEach(button => {
     button.addEventListener("click", () => {
       splitHidden.value = button.dataset.value;
       splitButtons.forEach(btn => btn.classList.remove("active"));
       button.classList.add("active");
-
-      if (button.dataset.value === "percentage") {
-        renderPercentageFields();
-      } else {
-        percentageInputsContainer.style.display = "none";
-        submitButton.disabled = false;
-      }
     });
   });
-
-  shareButtons.forEach(button => {
-    button.addEventListener("click", () => {
-      shareButtons.forEach(btn => btn.classList.remove("active"));
-      button.classList.add("active");
-
-      if (button.dataset.target === "group") {
-        groupSelect.style.display = "block";
-        friendsSelect.style.display = "none";
-      } else {
-        groupSelect.style.display = "none";
-        friendsSelect.style.display = "block";
-      }
-
-      if (splitHidden.value === "percentage") {
-        renderPercentageFields();
-      }
-    });
-  });
-
-  const selects = [groupSelect.querySelector("select"), friendsSelect.querySelector("select")];
-  selects.forEach(sel => {
-    sel.addEventListener("change", () => {
-      if (splitHidden.value === "percentage") renderPercentageFields();
-    });
-  });
-
-  percentageFields.addEventListener("input", validatePercentageTotal);
 });
 </script>
-
 
 <style>
 /* Reset and Base Styles */
