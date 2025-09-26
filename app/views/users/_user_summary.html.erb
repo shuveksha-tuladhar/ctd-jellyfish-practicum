@@ -74,31 +74,42 @@
         </div>
 
         <!-- Right section -->
+        <% balance = current_user.balance_summary %>
+
         <div class="summary-section">
             <div class="summary-card">
                 <h3>Account Summary</h3>
                 <div>
-                    <label>Member Since</label>
-                    <p>March 15, 2022</p>
+                <label>Member Since</label>
+                <p><%= current_user.created_at.strftime("%B %d, %Y") %></p>
                 </div>
                 <div>
-                    <label>Next Billing Date</label>
-                    <p>June 15, 2023</p>
+                <label>Next Billing Date</label>
+                <p>June 15, 2023</p>
                 </div>
             </div>
+
             <div class="summary-card">
                 <h3>Overall Balance</h3>
-                <div><label>You are owed</label><p>$245.40</p></div>
-                <div><label>You own</label><p>$78.25</p></div>
+                <div>
+                <label>You are owed</label>
+                <p>$<%= '%.2f' % balance[:you_are_owed] %></p>
+                </div>
+                <div>
+                <label>You owe</label>
+                <p>$<%= '%.2f' % balance[:you_owe] %></p>
+                </div>
             </div>
+
             <div class="summary-card">
                 <div>
-                    <h3>Net Balance</h3>
-                    <p>+$167.25</p>
+                <h3>Net Balance</h3>
+                <p>
+                    <%= balance[:net_balance] >= 0 ? "+$#{'%.2f' % balance[:net_balance]}" : "-$#{'%.2f' % balance[:net_balance].abs}" %>
+                </p>
                 </div>
-                <button class="view-details-btn">View Details</button>
+                <%= link_to "View Details", user_balances_path(current_user), class: "view-details-btn" %>
             </div>
-            
         </div>
     </div>
 </div>
@@ -242,6 +253,8 @@ body, html {
     border-radius: 4px;
     cursor: pointer;
     margin-top: 10px;
+    text-decoration: none;
+    font-size: 14px;
 }
 .view-details-btn:hover {
     background-color: #0ca694;
