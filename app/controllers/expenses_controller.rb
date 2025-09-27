@@ -115,7 +115,7 @@ class ExpensesController < ApplicationController
                   .first
 
     unless @expense
-      redirect_to expenses_path, alert: "Access denied or expense not found."
+      redirect_to expenses_path, alert: "Expense not found."
     end
   end
 
