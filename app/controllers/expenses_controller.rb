@@ -1,6 +1,7 @@
 class ExpensesController < ApplicationController
   before_action :require_login
   before_action :set_expense, only: [ :show, :edit, :update, :destroy ]
+  before_action :authorize_expense_access!, only: [ :show, :edit, :update ]
 
   # GET /expenses
   def index
@@ -89,7 +90,6 @@ class ExpensesController < ApplicationController
     ).call[:splits]
   end
 
-
   # PATCH/PUT /expenses/:id
   def update
     if @expense.update(expense_params.except(:user_ids, :percentages))
@@ -129,23 +129,37 @@ class ExpensesController < ApplicationController
 
   private
 
+  def authorize_expense_access!
+    unless @expense && (@expense.creator_id == current_user.id || @expense.users.include?(current_user))
+      redirect_to expenses_path, alert: "Access denied."
+    end
+  end
+
   def set_expense
-    @expense = current_user.created_expenses.find_by(id: params[:id])
-    redirect_to expenses_path, alert: "Expense not found." unless @expense
+    @expense = Expense
+                  .joins(:payors)
+                  .where(id: params[:id])
+                  .where("expenses.creator_id = :id OR users.id = :id", id: current_user.id)
+                  .distinct
+                  .first
+
+    unless @expense
+      redirect_to expenses_path, alert: "Expense not found."
+    end
   end
 
   def expense_params
-  params.require(:expense).permit(
-    :title,
-    :amount,
-    :status,
-    :split_type,
-    :category_id,
-    :user_group_id,
-    user_ids: [],
-    percentages: {}
-  )
-end
+    params.require(:expense).permit(
+      :title,
+      :amount,
+      :status,
+      :split_type,
+      :category_id,
+      :user_group_id,
+      user_ids: [],
+      percentages: {}
+    )
+  end
 
   def require_login
     redirect_to login_path, alert: "Please log in." unless current_user
