@@ -59,6 +59,35 @@ class ExpensesController < ApplicationController
   end
 
   def show
+    @expense = Expense.find_by(id: params[:id], creator_id: current_user.id) ||
+               current_user.expenses.find_by(id: params[:id])
+
+    unless @expense
+      redirect_to expenses_path, alert: "Expense not found." and return
+    end
+
+    if @expense.user_group.present?
+      @participants = @expense.user_group.users.distinct
+    else
+      expense_users = ExpenseUser.where(expense_id: @expense.id)
+      @participants = User.where(id: expense_users.pluck(:user_id))
+    end
+
+    splits_data = nil
+    if @expense.split_type == "percentage"
+      splits_data = @expense.expense_splits.map do |split|
+        { participant_id: split.user_id, percentage: split.percentage_split.to_f }
+      end
+    end
+
+    split_type = @expense.split_type.to_sym
+
+    @splits = SplitCalculator.new(
+      @expense,
+      split_type: split_type,
+      splits_data: splits_data,
+      participants: @participants
+    ).call[:splits]
   end
 
   # PATCH/PUT /expenses/:id
