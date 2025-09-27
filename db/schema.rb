@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_09_23_003519) do
+ActiveRecord::Schema[8.0].define(version: 2025_09_26_200100) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -84,15 +84,6 @@ ActiveRecord::Schema[8.0].define(version: 2025_09_23_003519) do
     t.index ["user_id"], name: "index_expenses_on_user_id"
   end
 
-  create_table "expenses_users", force: :cascade do |t|
-    t.bigint "expense_id", null: false
-    t.bigint "user_id", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["expense_id"], name: "index_expenses_users_on_expense_id"
-    t.index ["user_id"], name: "index_expenses_users_on_user_id"
-  end
-
   create_table "friendships", force: :cascade do |t|
     t.bigint "user_id", null: false
     t.bigint "friend_id", null: false
@@ -145,6 +136,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_09_23_003519) do
     t.string "password_digest"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.date "next_billing_date"
   end
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
@@ -155,8 +147,6 @@ ActiveRecord::Schema[8.0].define(version: 2025_09_23_003519) do
   add_foreign_key "expense_users", "users"
   add_foreign_key "expenses", "user_groups"
   add_foreign_key "expenses", "users"
-  add_foreign_key "expenses_users", "expenses"
-  add_foreign_key "expenses_users", "users"
   add_foreign_key "friendships", "users"
   add_foreign_key "friendships", "users", column: "friend_id"
   add_foreign_key "group_members", "user_groups"

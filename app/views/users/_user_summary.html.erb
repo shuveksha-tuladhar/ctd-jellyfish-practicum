@@ -85,7 +85,7 @@
                 </div>
                 <div>
                 <label>Next Billing Date</label>
-                <p>June 15, 2023</p>
+                <p><%= current_user.next_billing_date.strftime("%B %d, %Y") if current_user.next_billing_date.present? %></p>
                 </div>
             </div>
 
