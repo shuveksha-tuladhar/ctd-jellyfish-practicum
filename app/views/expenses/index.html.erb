@@ -92,25 +92,21 @@
       background-color: #f3f3f3;
       color: #333;
     }
-
+      /* Main container and layout */
     .main-container {
       display: flex;
       gap: 20px;
       padding: 20px;
-      padding-top: 100px;
-      align-items: flex-start;
-      min-height: calc(100vh - 120px);
+      padding-top: 100px; 
       box-sizing: border-box;
+      background-color: #f0f0f0; 
+      min-height: 100vh; 
     }
 
-    .sidebar {
-      width: 260px;
-      background-color: #fff;
-      padding: 20px;
-      border-radius: 12px;
-      box-shadow: 0 4px 18px rgba(0,0,0,0.07);
-      flex-shrink: 0;
-  }
+    .sidebar ul li {
+      border-bottom: none;
+      padding: 10px 0; 
+    }
 
     .profile-container {
       flex-grow: 1;
