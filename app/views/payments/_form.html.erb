@@ -1,16 +1,10 @@
 <div>
-  <%= render "shared/navbar" %>
-  <div class="main-container" >
-    <%= render "shared/sidebar" %>
-    <div class="center-part">
-      <% if current_user %>
-        <%= link_to "View All", user_payments_path(current_user&.id || @user&.id), class: "btn view-all-btn" %>
-      <% end %>
-      
-      <%= render "shared/flash" %>
+  <div class="center-part">
 
+    <%= render "shared/flash" %>
+    
       <div class="payment-container">
-        <h2 class="title">New Payment</h2>
+       
         <%= form_with(model: [@user, @payment], local: true) do |f| %>
           <div class="form-row">
             <%=f.label :expense_id, "Expense"%>
@@ -43,10 +37,14 @@
             <% end %>
           </div>
         <% end %>
+         <% if current_user %>
+        <%= link_to "View All", user_payments_path(current_user&.id || @user&.id), class: "btn view-all-btn" %>
+      <% end %>
       </div>
     </div>
   </div>
 </div>
+
 <style>
   /* Reset and Base Styles */
     body, html {
@@ -56,15 +54,16 @@
         font-family: Arial, sans-serif;
         background-color: #f3f3f3;
     }
-    /* Main container and layout */
-    .main-container {
-      display: flex;
-      gap: 20px;
-      padding: 20px;
-      padding-top: 100px;
-      box-sizing: border-box;
-      background-color: #f0f0f0;
-      min-height: 100vh;
+
+  /* Main container and layout */
+  .main-container {
+    display: flex;
+    gap: 20px;
+    padding: 20px;
+    padding-top: 100px;
+    box-sizing: border-box;
+    background-color: #f0f0f0;
+    min-height: 100vh;
   }
 
   .sidebar ul li {
@@ -100,8 +99,9 @@
 
     .form-row {
       display: flex;
-      flex-direction: column; /* label above input */
-      margin-bottom: 15px;    /* space between rows */
+      flex-direction: column; 
+      margin-bottom: 15px;
+      color: #1d917a;    
       }
 
       .form-row label {

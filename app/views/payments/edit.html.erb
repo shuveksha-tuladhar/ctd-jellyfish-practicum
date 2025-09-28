@@ -2,10 +2,10 @@
     <%= render "shared/navbar" %>
     <div class="main-container" >
         <%= render "shared/sidebar" %>
-        <div class="edit-expense">
+        <div class="form-container">
             <%= render "shared/flash" %>
-            <div>       
-                <h2 class="title">Edit Payment</h2>
+             <h2 class="title">Edit Payment</h2>
+            <div class="form-expense">       
                 <%= render "payments/form"%>
             </div>
         </div>
@@ -32,6 +32,22 @@
       min-height: 100vh;
   }
 
+ .form-container {
+  flex: 1;
+  background: #fff;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+}
+
+.title {
+    text-align: center;
+    font-size: 28px;
+    font-weight: bold;
+    margin-bottom: 20px;
+    color: #1d917a; 
+    }
+    
   .sidebar ul li {
     border-bottom: none;
     padding: 10px 0;
