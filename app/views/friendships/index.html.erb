@@ -15,9 +15,7 @@
       <!-- Friendships Section -->
       <div class="friends-container">
         <div class="link-container">
-          <%= link_to users_path, class: "search-link" do %>
-            <i class="fa fa-search"></i>Search friends
-          <% end %>
+          <%= link_to "Search Friends", users_path, class: "search-link btn-primary" %>
         </div>
         <h2>Friends</h2>
         <div class="user-grid">
@@ -91,6 +89,26 @@
   .sidebar ul li {
     border-bottom: none;
     padding: 10px 0;
+  }
+
+  .btn-primary {
+    display: inline-block;
+    padding: 10px 18px;
+    font-size: 15px;
+    font-weight: bold;
+    border-radius: 6px;
+    background-color: #1d917a;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+    text-decoration: none;
+    text-align: center;
+    transition: all 0.2s ease;
+  }
+
+  .btn-primary:hover {
+    background-color: #0ca694;
+    transform: translateY(-1px);
   }
 
   .friendship-container {
@@ -177,19 +195,6 @@
 .link-container {
   text-align: right;
   margin-top: 1rem;
-}
-.search-link {
-  display: inline-flex;
-  text-align: right;
-  align-items: center;
-  gap: 6px; 
-  text-decoration: none;
-  color: #0ca694;
-  font-weight: 600;
-}
-
-.search-link:hover {
-  color: #0a807a;
 }
 
 

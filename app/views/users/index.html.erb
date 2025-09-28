@@ -4,26 +4,18 @@
     <%= render "shared/sidebar" %>
     <div class="profile-container">
       <%= content_for :title, "Users" %>
-      <div>
-        <%= link_to "View friends", user_friendships_path(current_user), class: "view-all-friends" %>
-      </div>
-      <h3 class="section-title">Users</h3>
-      <!-- Search Form -->
-      <div class="search-container">
-        <%= form_with url: users_path, method: :get, local: true do %>
-          <%= text_field_tag :query, params[:query], placeholder: "Search by name or email", class: "search-input" %>
-          <%= submit_tag "Search", class: "btn search-btn" %>
-        <% end %>
-      </div>
-      <% if flash[:alert] %>
-        <p class="notice-message"><%= flash[:alert] %></p>
-      <% end %>
 
-      <div class="search-container">
-        <%= form_with url: users_path, method: :get, local: true do %>
-          <%= text_field_tag :query, params[:query], placeholder: "Search by name or email", class: "search-input" %>
-          <%= submit_tag "Search", class: "btn search-btn" %>
-        <% end %>
+      <div class="groups-header">
+          <h1>Users</h1>
+        <!-- Search + Create Button container -->
+        <div class="groups-controls">
+          <%= form_with url: users_path, class: "search-form", method: :get, local: true do %>
+            <%= text_field_tag :query, params[:query], placeholder: "Search by name or email", class: "search-input" %>
+            <%= submit_tag "Search", class: "btn-primary" %>
+          <% end %>
+
+          <%= link_to "View friends", user_friendships_path(current_user), class: "btn-primary" %>
+        </div>
       </div>
 
       <% if flash[:alert] %>
@@ -116,12 +108,12 @@
 }
 
 .search-input {
+  flex: 1;
   padding: 8px 10px;
-  width: 60%;
-  max-width: 300px;
   border: 1px solid #ddd;
   border-radius: 6px;
   margin-right: 8px;
+  min-width: 280px;
 }
 
 .view-all-friends {
@@ -255,10 +247,65 @@
   background-color: #f9f9f9;
   border-radius: 6px;
 }
+/* Groups Header */
+.groups-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+}
+
+.groups-controls {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.search-form {
+  display: flex;
+  gap: 10px;
+}
+.search-input {
+  flex: 1;
+  padding: 10px 14px;
+  font-size: 15px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  outline: none;
+  transition: border 0.2s ease, box-shadow 0.2s ease;
+  min-width: 280px;
+}
+
+.search-input:focus {
+  border-color: #1d917a;
+  box-shadow: 0 0 6px rgba(29,145,122,0.3);
+}
+
+.btn-primary {
+  display: inline-block;
+  padding: 10px 18px;
+  font-size: 15px;
+  font-weight: bold;
+  border-radius: 6px;
+  background-color: #1d917a;
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  text-decoration: none;
+  text-align: center;
+  transition: all 0.2s ease;
+}
+
+.btn-primary:hover {
+  background-color: #0ca694;
+  transform: translateY(-1px);
+}
 
 
 /* Responsive */
 @media (max-width: 768px) {
+  h1 {
+    font-size: 24px;
+  }
   .search-input {
     width: 80%;
   }
@@ -272,6 +319,48 @@
     flex-direction: column;
     padding-top: 80px;
   }
+  .groups-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+    margin-bottom: 20px;
+  }
+  .groups-controls {
+    gap: 8px;
+    width: 100%;
+    justify-content: space-between;
+    flex-wrap: wrap;
+  }
+  .search-form {
+    display: flex;
+    flex-wrap: wrap; 
+    gap: 8px;
+    flex-grow: 1;
+  }
+  .search-input {
+    flex: 1 1 150px; 
+    min-width: 150px;
+  }
+
+  .btn-primary {
+    font-size: 14px;
+    flex-shrink: 0;  
+    white-space: nowrap; 
+  }
+  input[type="submit"].btn-primary {
+  padding: 10px 12px;
+  font-size: 14px;
+  font-weight: bold;
+  line-height: 1.2;
+  border-radius: 6px;
+  background-color: #1d917a;
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  text-align: center;
+  transition: all 0.2s ease;
+  height: auto; 
+}
 }
 
 </style>
