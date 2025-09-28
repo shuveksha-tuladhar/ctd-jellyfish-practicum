@@ -4,9 +4,7 @@
     <%= render "shared/flash" %>
     
       <div class="payment-container">
-        <h2 class="title">
-          <%= action_name == "new" ? "New Payment" : "Edit Payment" %>
-        </h2>
+       
         <%= form_with(model: [@user, @payment], local: true) do |f| %>
           <div class="form-row">
             <%=f.label :expense_id, "Expense"%>
@@ -102,7 +100,8 @@
     .form-row {
       display: flex;
       flex-direction: column; 
-      margin-bottom: 15px;   
+      margin-bottom: 15px;
+      color: #1d917a;    
       }
 
       .form-row label {

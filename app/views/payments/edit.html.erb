@@ -4,6 +4,7 @@
         <%= render "shared/sidebar" %>
         <div class="form-container">
             <%= render "shared/flash" %>
+             <h2 class="title">Edit Payment</h2>
             <div class="form-expense">       
                 <%= render "payments/form"%>
             </div>
@@ -38,6 +39,15 @@
   border-radius: 10px;
   box-shadow: 0 4px 10px rgba(0,0,0,0.08);
 }
+
+.title {
+    text-align: center;
+    font-size: 28px;
+    font-weight: bold;
+    margin-bottom: 20px;
+    color: #1d917a; 
+    }
+    
   .sidebar ul li {
     border-bottom: none;
     padding: 10px 0;
