@@ -44,9 +44,9 @@ CostShare simplifies financial coordination among multiple people. Users can:
 
 <h2 id="user-content-team">👥 Team Members</h2>
 
-- Shuveksha Tuladhar
-- Abraham Flores
-- Sisi Wang
+- [Shuveksha Tuladhar](https://github.com/shuveksha-tuladhar)
+- [Abraham Flores](https://github.com/abrahamflres)
+- [Sisi Wang](https://github.com/Sisi-tech)
 
 ---
 
