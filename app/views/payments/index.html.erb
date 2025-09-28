@@ -7,7 +7,9 @@
       <div class="table-wraper">
         <table class="payments-table">
           <tr>
-            <th>Name</th>
+   
+            <th>Payer</th>
+            <th>Payee</th>
             <th>Amount</th>
             <th>Payment</th>
             <th>Action</th>
@@ -17,8 +19,9 @@
             <% @payments.each do |payment| %>
               <tr>
                 <td><%= payment.payer.first_name %></td>
+                <td><%= payment.payee.first_name %></td>
                 <td><%= payment.owed_amount %></td>
-                <td><%= link_to "Show", user_payment_path(@user.id, payment) %></td>
+                <td><%= link_to "Show", user_payment_path(@user.id, payment) ,class: "pay-btn"%></td>
                 <td><button class="pay-btn">Pay</button></td>
               </tr>
             <% end %>

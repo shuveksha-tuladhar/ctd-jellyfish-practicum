@@ -11,13 +11,15 @@
             <%=f.collection_select :expense_id, @expenses, :id, :title, prompt: "Select Expense"%>
           </div>
           <div class="form-row">
-            <%=f.label :payer_id%>
-            <%=f.text_field :payee_id%>
+            <%= f.label :payer_id, "Payer" %>
+            <%= f.collection_select :payer_id, [@user], :id, :first_name, selected: @user.id, disabled: true %>
           </div>
+
           <div class="form-row">
-            <%=f.label :payee_id, "Friends"%>
-            <%= f.collection_select :payer_id, @user.friends, :id, :first_name, prompt: "Select a friend"%>
+            <%= f.label :payee_id, "Friends" %>
+            <%= f.collection_select :payee_id, @user.friends, :id, :first_name, prompt: "Select a friend" %>
           </div>
+
           <div class="form-row">
             <%=f.label :user_group_id, "User Group"%>
             <%=f.collection_select :user_group_id, UserGroup.all.order(:name), :id, :name,{prompt: "None"} %>
