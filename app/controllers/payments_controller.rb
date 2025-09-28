@@ -10,7 +10,7 @@ class PaymentsController < ApplicationController
   end
 
   def new
-   @payment = @user.payments_made.new
+   @payment = @user.payments_made.new(payee_id: current_user.id)
    @expenses = @user.expenses
   end
 
