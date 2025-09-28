@@ -6,9 +6,37 @@
     
     <div class="activity-container">
       <h2><strong>📋 User Activity</strong></h2>
+      
+       <div class="card">
+          <ul class="activity-list">
+            <% @recent_activities.each do |activity| %>
+              <li class="activity-item">
+                <div class="activity-description">
+                  <% if activity[:type] == "expense" %>
+                    <strong><%= activity[:with] %></strong>
+                    <% if activity[:owes_you] %>
+                      owes you
+                    <% else %>
+                      you owe
+                    <% end %>
+                    <strong><%= number_to_currency(activity[:amount]) %></strong>
+                    for <%= activity[:name] %>
+
+                  <% elsif activity[:type] == "group" %>
+                    Created new group: <strong><%= activity[:name] %></strong>
+
+                  <% elsif activity[:type] == "friend" %>
+                    Added new friend: <strong><%= activity[:name] %></strong>
+                  <% end %>
+                </div>
+                <span class="activity-time"><%= time_ago_in_words(activity[:created_at]) %> ago</span>
+              </li>
+            <% end %>
+          </ul>
+        </div>
+
     </div>
       
-
   </div>
 </div>
 
