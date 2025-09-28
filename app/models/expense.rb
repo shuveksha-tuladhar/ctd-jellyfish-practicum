@@ -5,6 +5,8 @@ class Expense < ApplicationRecord
   belongs_to :creator, class_name: "User", foreign_key: "creator_id"
   belongs_to :category, optional: true
   belongs_to :user_group, optional: true
+  belongs_to :user
+  belongs_to :expense
 
   has_many :payors, through: :expense_users, source: :user
   has_many :payments, dependent: :destroy
