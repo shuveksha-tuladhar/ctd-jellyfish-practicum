@@ -11,8 +11,8 @@ FactoryBot.define do
         group = create(:user_group, creator: user)
         category = create(:category)
 
-        create_list(:expense, 3, creator: user, user_group: group, category: category) do |expense|
-          # add user as a participant in the join table
+        expenses = create_list(:expense, 3, creator: user, user_group: group, category: category)
+        expenses.each do |expense|
           create(:expense_user, user: user, expense: expense)
         end
       end
