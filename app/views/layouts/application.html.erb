@@ -28,15 +28,11 @@
 </head>
 
   <body>
-    <% if flash[:notice] %>
-      <div class="notice"><%= flash[:notice] %></div>
-    <% end %>
-
-    <% if flash[:alert] %>
-      <div class="alert"><%= flash[:alert] %></div>
-    <% end %>
-    <main class="container">
-      <%= yield %>
-    </main>
+  <% flash.each do |key, message| %>
+    <div class="<%= key %>"><%= message %></div>
+  <% end %>
+  <main class="container">
+    <%= yield %>
+  </main>
   </body>
 </html>
