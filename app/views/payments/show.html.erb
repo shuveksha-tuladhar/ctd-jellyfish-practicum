@@ -1,29 +1,53 @@
 <div>
-    <%= render "shared/navbar" %>
-    <div class="main-container" >
-        <%= render "shared/sidebar" %>
-        <div class="show-expense">
-            <%= render "shared/flash" %>
-            <div>
-                <h2><%= @payment.expense.title%></h2>
-                <%= button_to "Delete", user_payment_path(@user.id, @payment.id), method: :delete, class: "btn" %>
-                <%= link_to "Edit", edit_user_payment_path(@user.id, @payment), class: "btn" %>
-            </div>
-        </div>
-    </div>
-</div>
+  <%= render "shared/navbar" %>
 
-<style>
+  <div class="main-container">
+    <%= render "shared/sidebar" %>
+
+    <div class="show-expense">
+      <%= render "shared/flash" %>
+
+      <div class="expense-card">
+        <h2 class="expense-title"><%= @payment.expense.title %></h2>
+
+        <div class="expense-details">
+          <p><span class="label">Description:</span> <%= @payment.expense.title.presence || "No description" %></p>
+          <p><span class="label">Category:</span> <%= @payment.expense.category&.name || "Uncategorized" %></p>
+          <p><span class="label">Amount:</span> <%= number_to_currency(@payment.expense.amount) %></p>
+          <p><span class="label">Paid By:</span>
+            <% if @payment.expense.creator.present? %>
+              <%= @payment.expense.creator.full_name %>
+            <% else %>
+              Unknown
+            <% end %>
+          </p>
+          <p><span class="label">Group:</span> <%= @payment.expense.user_group&.name || "None" %></p>
+        </div>
+
+        <div class="actions">
+          <%= link_to "Edit", edit_user_payment_path(@user.id, @payment), class: "btn edit-btn" %>
+          <%= button_to "Delete", user_payment_path(@user.id, @payment.id), method: :delete, data: { confirm: "Are you sure?" }, class: "btn delete-btn" %>
+        </div>
+          
+      <div class="back-button">
+        <%= link_to "Back", user_payments_path(@user), class: "btn-back" %>
+      </div>
+
+      </div>
+    </div>
+  </div>
+
+  <style>
   /* Reset and Base Styles */
-    body, html {
-        margin: 0;
-        padding: 0;
-        height: 100%;
-        font-family: Arial, sans-serif;
-        background-color: #f3f3f3;
-    }
-    /* Main container and layout */
-    .main-container {
+  body, html {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      font-family: Arial, sans-serif;
+      background-color: #f3f3f3;
+  }
+
+  .main-container {
       display: flex;
       gap: 20px;
       padding: 20px;
@@ -34,46 +58,125 @@
   }
 
   .sidebar ul li {
-    border-bottom: none;
-    padding: 10px 0;
+      border-bottom: none;
+      padding: 10px 0;
   }
-    .show-expense {
+
+  .show-expense {
       display: flex;
       flex-direction: column;
-      min-height: calc(100vh - 100px);
-      margin: 0 auto;
+      align-items: center;
+      padding: 30px 15px;
       width: 100%;
-    }
-      .btn {
-        text-decoration: none;
-        width: auto;
-        padding: 8px 16px;
-        margin-top: 15px;
-        background-color: #1d917a;
-        color: white;
-        border: none;
-        border-radius: 4px;
-        cursor: pointer;
-        font-size: 14px;
+  }
+
+  .back-button {
+      width: 100%;
+      max-width: 750px;
+      margin-bottom: 20px;
+  }
+
+  .btn-back {
+      display: inline-block;
+      padding: 10px 16px;
+      background-color: #e0e0e0;
+      color: #555;
+      border-radius: 8px;
+      text-decoration: none;
+      font-weight: 500;
+      transition: 0.2s;
+  }
+
+  .btn-back:hover {
+      background-color: #d5d5d5;
+      color: #333;
+  }
+
+  .expense-card {
+      background: #fff;
+      border-radius: 15px;
+      padding: 30px;
+      max-width: 750px;
+      width: 100%;
+      box-shadow: 0 8px 25px rgba(0,0,0,0.08);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+
+  .expense-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 12px 30px rgba(0,0,0,0.12);
+  }
+
+  .expense-title {
+      color: #1d917a;
+      font-size: 28px;
+      margin-bottom: 25px;
+      text-align: center;
+  }
+
+  .expense-details p {
+      font-size: 16px;
+      margin-bottom: 12px;
+      line-height: 1.6;
+  }
+
+  .label {
+      font-weight: 600;
+      color: #333;
+  }
+
+  .actions {
+      margin-top: 25px;
+      display: flex;
+      gap: 15px;
+      justify-content: center;
+  }
+
+  .btn {
+      padding: 10px 18px;
+      font-size: 15px;
+      font-weight: 500;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: 0.2s;
+      text-decoration: none;
+  }
+
+  .edit-btn {
+      background-color: #1d917a;
+      color: white;
+  }
+
+  .edit-btn:hover {
+      background-color: #145d4d;
+  }
+
+  .delete-btn {
+      background-color: #e08c79;
+      color: white;
+  }
+
+  .delete-btn:hover {
+      background-color: #c94f3f;
+  }
+
+  @media (max-width: 768px) {
+      .expense-card {
+          padding: 20px;
       }
 
-      .btn:hover {
-        background-color: #0ca694;
+      .expense-title {
+          font-size: 24px;
       }
 
-    /* Responsive layout */
-    @media (max-width: 768px) {
-      .sidebar {
-          position: static;
-          height: auto;
-          width: 100%;
-          overflow-y: visible;
+      .expense-details p {
+          font-size: 15px;
       }
-      .main-container {
-        flex-direction: column;
-        padding-top: 80px;
+
+      .actions {
+          flex-direction: column;
+          gap: 10px;
       }
-    }
-</style>
-
-
+  }
+  </style>
+</div>
