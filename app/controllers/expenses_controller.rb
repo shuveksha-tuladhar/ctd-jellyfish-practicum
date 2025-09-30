@@ -7,6 +7,7 @@ class ExpensesController < ApplicationController
   def index
     if current_user
       @expenses = Expense
+                    .order(created_at: :desc)
                     .joins(:payors)
                     .where("expenses.creator_id = ? OR users.id = ?", current_user.id, current_user.id)
                     .distinct

@@ -12,15 +12,21 @@ class ActivitiesController < ApplicationController
                       expense.expense_users.map(&:user).find { |u| u != current_user }
       end
 
+      splits_result = SplitCalculator.new(expense, split_type: :equal).call
 
-      @recent_activities << {
-        type: "expense",
-        name: expense.title,
-        amount: expense.amount,
-        with: other_user&.full_name || "Unknown",
-        owes_you: expense.creator_id == current_user.id,
-        created_at: expense.created_at
-      }
+      splits_result[:splits].map do |split|
+        participant = User.find(split[:participant_id])
+        next if participant == current_user # skip self
+
+        @recent_activities << {
+          type: "expense",
+          name: expense.title,
+          amount: split[:share],
+          with: other_user&.full_name || "Unknown",
+          owes_you: expense.creator_id == current_user.id,
+          created_at: expense.created_at
+        }
+      end.compact
     end
 
     # Recent groups
