@@ -7,3 +7,10 @@
 #   ["Action", "Comedy", "Drama", "Horror"].each do |genre_name|
 #     MovieGenre.find_or_create_by!(name: genre_name)
 #   end
+
+# Import seed files
+load Rails.root.join("db", "seeds", "add_categories.rb")
+load Rails.root.join("db", "seeds", "add_users.rb")
+load Rails.root.join("db", "seeds", "add_friend.rb")
+load Rails.root.join("db", "seeds", "add_group.rb")
+load Rails.root.join("db", "seeds", "add_expenses.rb")

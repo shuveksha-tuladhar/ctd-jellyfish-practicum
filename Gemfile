@@ -55,8 +55,9 @@ group :development, :test do
 
   gem "factory_bot_rails"
   gem "faker"
-  gem "devise"
 end
+
+gem "devise"
 
 group :development do
   # Use console on exceptions pages [https://github.com/rails/web-console]
@@ -67,7 +68,15 @@ group :test do
   gem "shoulda-matchers", "~> 6.5"
 end
 
-# Postgres
-gem "pg"
+# Postgres for development and test
+gem "pg", groups: [ :development, :test ]
+
+# SQLite3 for production
+gem "sqlite3", groups: [ :production ]
 
 gem "rspec-rails", "~> 8.0", groups: [ :development, :test ]
+
+
+group :test do
+  gem 'simplecov', require: false
+end

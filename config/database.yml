@@ -7,8 +7,8 @@
 default: &default
   adapter: postgresql
   encoding: unicode
-  username: myappuser
-  password: mypassword
+  username: postgres
+  password: password
   host: localhost
   pool: 5
 
@@ -29,16 +29,20 @@ test:
 production:
   primary:
     <<: *default
+    adapter: sqlite3
     database: storage/production.sqlite3
   cache:
     <<: *default
+    adapter: sqlite3
     database: storage/production_cache.sqlite3
     migrations_paths: db/cache_migrate
   queue:
     <<: *default
+    adapter: sqlite3
     database: storage/production_queue.sqlite3
     migrations_paths: db/queue_migrate
   cable:
     <<: *default
+    adapter: sqlite3
     database: storage/production_cable.sqlite3
     migrations_paths: db/cable_migrate
